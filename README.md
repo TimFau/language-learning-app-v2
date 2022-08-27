@@ -1,11 +1,15 @@
-# Project is still in development phase, but works (with plenty of bugs)
+# Language Learning App V2
 
-## To test the current version of this project go to https://timfau.github.io/language-learning-app/
+## This project exists publically only to document my progress. It is still in the development phase and is currently not usable outside of my local environment. If you try to run it locally, it will not work correctly due to the missing env file.
 
-
-Idea came after seeing this : https://www.reddit.com/r/lifehacks/comments/b81zqh/using_google_sheets_to_translate_batches_of_words/
-
-I liked having a list to add all the words I wanted to learn, but wanted a way to quiz myself on them.
+This project builds on the functionality built for [version 1](https://github.com/TimFau/language-learning-app). Goals include:
+- Integrating backend functionality with Directus, including:
+    - Account functionality
+    - The ability to create, manage, and delete user lists within the app
+    - The ability to import lists from Google sheets and save them in the app's backend
+- Decoupling from relying solely on Google Sheets for getting and storing data.
+- Switching to Typescript as a learning experience and for ease of maintinence
+- Creating a better base application that I can use to implement various other functionality I have been wanting to build
 
 ## Running Project Locally
 
