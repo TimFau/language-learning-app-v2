@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import UserLists from '../Account/UserLists';
+import UserLists from './UserLists';
 
 const useStyles = makeStyles({
     wrapper: {

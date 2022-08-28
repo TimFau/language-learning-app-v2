@@ -1,15 +1,15 @@
 import React from 'react';
 
-import FlashCard from '../MainApp/Modes/FlashCard';
-import WordBank from '../MainApp/Modes/WordBank';
-import Keyboard from '../MainApp/Modes/Keyboard';
+import FlashCard from './Modes/FlashCard';
+import WordBank from './Modes/WordBank';
+import Keyboard from './Modes/Keyboard';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Dialog from '@mui/material/Dialog';
 import Icon from '@mui/material/Icon';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from '../MainApp/MainApp';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from './MainApp';
 
 
 type RootState = {

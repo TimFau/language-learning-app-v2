@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 
-import MainApp from './components/MainApp/MainApp';
+import MainApp from './components/Deck/MainApp';
 import {cookieExists} from './scripts/Helpers';
 import Cookies from 'universal-cookie';
 

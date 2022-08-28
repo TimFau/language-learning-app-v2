@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppSelector } from 'hooks'; 
 import { Grid, Card, CardActions, CardContent, Button, Typography, CircularProgress } from '@mui/material/';
-import AddNewListComponent from '../Modals/AddNewList';
+import AddNewListComponent from './AddNewList';
 
 // Displays all the lists that a logged in user has added to their profile
 

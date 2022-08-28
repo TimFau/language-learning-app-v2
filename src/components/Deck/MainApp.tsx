@@ -3,16 +3,16 @@ import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { wordBankHelper } from '../../scripts/Helpers';
-import ProgressBar from '../ProgressBar';
+import ProgressBar from './ProgressBar';
 import BottomButtonsContainer from './BottomButtonsContainer';
 
 import Nav from '../Nav';
-import Deck from '../Pages/Deck';
-import GuestPage from '../Pages/Guest'
-import Account from '../Pages/LoggedIn';
+import Deck from './Deck';
+import LoggedOut from '../LoggedOut'
+import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
-import DeckDialog from '../Modals/DeckDialog';
-import Login from '../Modals/Login';
+import DeckDialog from './DeckDialog';
+import Login from '../LoggedOut/Login';
 import Cookies from 'universal-cookie';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
 
@@ -274,13 +274,6 @@ class TranslationApp extends React.Component<PropsFromRedux, RootState> {
             this.setLogOutDialogClose();
         }
     };
-
-    //Lifecycle hooks
-    componentDidMount() {
-        if (!cookies.get('prevViewed')) {
-            this.props.openIntro();
-        }
-    }
   
   render() {
       return (
@@ -315,7 +308,7 @@ class TranslationApp extends React.Component<PropsFromRedux, RootState> {
                 : null }
                 {((!this.props.deckStarted) && (this.props.userToken === undefined || this.props.userToken === '')) &&
                     <React.Fragment>
-                        <GuestPage />
+                        <LoggedOut />
                         <DemoDecksDrawer 
                             deckOptions={this.deckOptions}
                             open={this.props.demoDrawerOpen}
@@ -324,7 +317,7 @@ class TranslationApp extends React.Component<PropsFromRedux, RootState> {
                     </React.Fragment>
                 }
                 {(!this.props.deckStarted && this.props.userToken) &&
-                    <Account deckOptions={this.deckOptions} />
+                    <LoggedIn deckOptions={this.deckOptions} />
                 }
                 <DeckDialog
                     inputMode={this.state.inputMode}
