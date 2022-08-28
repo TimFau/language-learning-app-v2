@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
@@ -30,25 +30,23 @@ const theme = createTheme(adaptV4Theme({
 	},
 }));
 
-class TranslationApp extends React.Component<PropsFromRedux> {
-	componentDidMount () {
+function TranslationApp(props: PropsFromRedux) {
+	useEffect(() => {
 		if (cookieExists('token')) {
-			this.props.setUserToken(cookies.get('token'));
+			props.setUserToken(cookies.get('token'));
 		}
-	}
-	render() {
-    	return (
-			<AuthContextProvider>
-            <BrowserRouter>
-				<StyledEngineProvider injectFirst>
-                    <ThemeProvider theme={theme}>
-                        <MainApp />
-                    </ThemeProvider>
-                </StyledEngineProvider>
-			</BrowserRouter>
-			</AuthContextProvider>
-        );
-	}
+	})
+	return (
+		<AuthContextProvider>
+		<BrowserRouter>
+			<StyledEngineProvider injectFirst>
+				<ThemeProvider theme={theme}>
+					<MainApp />
+				</ThemeProvider>
+			</StyledEngineProvider>
+		</BrowserRouter>
+		</AuthContextProvider>
+	);
 }
 
 const mapDispatchToProps = {
