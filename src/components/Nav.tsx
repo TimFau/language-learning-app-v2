@@ -1,5 +1,7 @@
+import React, { useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation } from 'react-router-dom';
+import AuthContext from 'context/auth-context';
 import { AppBar, Button } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
 import ToolBar from '@mui/material/Toolbar';
@@ -27,7 +29,7 @@ interface NavProps {
 export default function Nav(props: NavProps) {
     const dispatch = useAppDispatch();
     const deckStarted = useAppSelector((state) => state.deckStarted);
-    const userToken = useAppSelector((state) => state.token);
+    const authCtx = useContext(AuthContext);
     const classes = useStyles(props);
     let pathName = useLocation().pathname;
 
@@ -48,7 +50,7 @@ export default function Nav(props: NavProps) {
                 <Button onClick={() => goToDeckSelector()}
                 >Exit Deck</Button>
                 : ''}
-                {userToken === '' ?
+                {authCtx.userToken === '' ?
                 <Button
                     onClick={() => dispatch({type: 'modals/setLoginOpen', value: true})}
                     className="login"

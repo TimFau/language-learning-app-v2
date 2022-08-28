@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
-import React, { useState } from 'react';
-import { useAppSelector } from 'hooks';
+import React, { useState, useContext } from 'react';
+import AuthContext from 'context/auth-context';
 
 interface AddNewListModalProps {
     userId: string,
@@ -15,7 +15,7 @@ export default function AddNewListModal(props: AddNewListModalProps) {
     const [deckId, setDeckId] = useState('');
     const [deckErrorMsg, setDeckErrorMsg] = useState('');
 
-    const userToken = useAppSelector((state) => state.token)
+    const authCtx = useContext(AuthContext);
     const userId = props.userId
     const dialogOpen = props.addListDialogOpen;
 
@@ -44,7 +44,7 @@ export default function AddNewListModal(props: AddNewListModalProps) {
         })
         // Add list to user_lists
         function sendPost() {
-            let listsUrl = "https://d3pdj2cb.directus.app/graphql?access_token=" + userToken;
+            let listsUrl = "https://d3pdj2cb.directus.app/graphql?access_token=" + authCtx.userToken;
             fetch(listsUrl, {
                 method: 'POST',
                 headers: {

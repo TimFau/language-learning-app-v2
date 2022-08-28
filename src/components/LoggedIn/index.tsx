@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import UserLists from './UserLists';
+import AuthContext from 'context/auth-context';
 
 const useStyles = makeStyles({
     wrapper: {
@@ -16,7 +17,7 @@ interface LoggedInProps {
 
 export default function Account(props: LoggedInProps) {
 
-    const userToken = useAppSelector((state) => state.token)
+    const authCtx = useContext(AuthContext);
     const userName = useAppSelector((state) => state.userName)
     const [userId, setUserId] = useState('');
     const [isReady, setIsReady] = useState(false);
@@ -25,7 +26,7 @@ export default function Account(props: LoggedInProps) {
     const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
 
     function getAccountDetails() {
-        fetch(endpoint + "?access_token=" + userToken, {
+        fetch(endpoint + "?access_token=" + authCtx.userToken, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

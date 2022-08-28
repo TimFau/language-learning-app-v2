@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { AuthContextProvider } from 'context/auth-context';
 
 import MainApp from './components/Deck/MainApp';
 import {cookieExists} from './scripts/Helpers';
@@ -37,6 +38,7 @@ class TranslationApp extends React.Component<PropsFromRedux> {
 	}
 	render() {
     	return (
+			<AuthContextProvider>
             <BrowserRouter>
 				<StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme}>
@@ -44,6 +46,7 @@ class TranslationApp extends React.Component<PropsFromRedux> {
                     </ThemeProvider>
                 </StyledEngineProvider>
 			</BrowserRouter>
+			</AuthContextProvider>
         );
 	}
 }
