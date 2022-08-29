@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
@@ -21,12 +21,7 @@ const useStyles = makeStyles({
     }
 })
 
-interface NavProps {
-    logout: (event: React.UIEvent<HTMLElement>) => void,
-}
-
-
-export default function Nav(props: NavProps) {
+export default function Nav(props: any) {
     const dispatch = useAppDispatch();
     const deckStarted = useAppSelector((state) => state.deckStarted);
     const authCtx = useContext(AuthContext);
@@ -52,12 +47,12 @@ export default function Nav(props: NavProps) {
                 : ''}
                 {authCtx.userToken === '' ?
                 <Button
-                    onClick={() => dispatch({type: 'modals/setLoginOpen', value: true})}
+                    onClick={() => authCtx.onLoginOpen(true, false)}
                     className="login"
                 >Login</Button>
                 : 
                 <Button
-                    onClick={props.logout}
+                    onClick={authCtx.onLogout}
                     color="secondary"
                     className="login"
                 >Logout</Button>

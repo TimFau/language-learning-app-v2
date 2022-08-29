@@ -1,17 +1,10 @@
-import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { AuthContextProvider } from 'context/auth-context';
 
 import MainApp from './components/Deck/MainApp';
-import {cookieExists} from './scripts/Helpers';
-import Cookies from 'universal-cookie';
 
 import './css/main.scss';
-
-// Global Vars
-const cookies = new Cookies();
 
 const theme = createTheme(adaptV4Theme({
 	palette: {
@@ -30,12 +23,7 @@ const theme = createTheme(adaptV4Theme({
 	},
 }));
 
-function TranslationApp(props: PropsFromRedux) {
-	useEffect(() => {
-		if (cookieExists('token')) {
-			props.setUserToken(cookies.get('token'));
-		}
-	})
+export default function TranslationApp() {
 	return (
 		<AuthContextProvider>
 		<BrowserRouter>
@@ -48,13 +36,3 @@ function TranslationApp(props: PropsFromRedux) {
 		</AuthContextProvider>
 	);
 }
-
-const mapDispatchToProps = {
-	setUserToken: (value: string) => ({type: 'user/setToken', value: value})
-};
-
-const connector = connect(null, mapDispatchToProps)
-
-type PropsFromRedux = ConnectedProps<typeof connector>
-
-export default connector(TranslationApp);

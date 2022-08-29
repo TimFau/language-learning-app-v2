@@ -49,9 +49,8 @@ export default function Account(props: LoggedInProps) {
             if(!response.ok) {
                 console.log('bad response', response)
                 const resError = (data && data.message) || response.status;
-                dispatch({type: 'user/setToken', value: ''})
-                dispatch({type: 'modals/setLoginOpen', value: true})
-                dispatch({type: 'user/setNewUser', value: false})
+                authCtx.onLogout()
+                authCtx.onLoginOpen(true, false);
                 return Promise.reject(resError);
             }
                 dispatch({type: 'user/setUserName', value: data.data.users_me.first_name})

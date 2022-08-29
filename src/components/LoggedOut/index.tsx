@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
+import AuthContext from 'context/auth-context';
 
 import { Paper, Card, TextField, Button, Link } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
@@ -100,6 +101,8 @@ export default function GuestPage(props: object) {
     const [userPassword, setUserPassword] = React.useState('');
     const [alertMsg, setAlertMsg] = React.useState('');
     const [fieldWithError, setFieldWithError] = React.useState('');
+
+    const authCtx = useContext(AuthContext);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         switch (event.target.name) {
@@ -209,9 +212,8 @@ export default function GuestPage(props: object) {
                     }
                     return false
                 } else {
-                    dispatch({type: 'user/setNewUser', value: true})
-                    dispatch({type: 'modals/setLoginOpen', value: true})
-                    setAlertMsg('')
+                    authCtx.onLoginOpen(true, true);
+                    setAlertMsg('');
                     return true
                 }
             })
@@ -292,7 +294,7 @@ export default function GuestPage(props: object) {
                 }
                 <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Submit</Button>
                 <div>
-                    <Link underline="hover" onClick={() => dispatch({type: 'modals/setLoginOpen', value: true})}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
+                    <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
                 </div>
             </Card>
         </Paper>

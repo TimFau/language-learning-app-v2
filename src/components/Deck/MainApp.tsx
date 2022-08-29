@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
-
 import { wordBankHelper } from '../../scripts/Helpers';
+import AuthContext from 'context/auth-context';
+
 import ProgressBar from './ProgressBar';
 import BottomButtonsContainer from './BottomButtonsContainer';
 
@@ -13,7 +14,6 @@ import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import DeckDialog from './DeckDialog';
 import Login from '../LoggedOut/Login';
-import Cookies from 'universal-cookie';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
 
 // global vars
@@ -21,13 +21,14 @@ var langOneArr: string[];
 var langTwoArr: string[];
 var langOneArrInit: string[];
 var langTwoArrInit: string[];
-const cookies = new Cookies();
 
 export type handleSubmitType = React.FormEvent<HTMLInputElement | HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
 
 export type keyboardModeHandleChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
 
 function TranslationApp (props: PropsFromRedux) {
+    const authCtx = useContext(AuthContext);
+
     // State Functions
     const [language1, setLanguage1] = useState<string | undefined>('');
     const [language2, setLanguage2] = useState<string | undefined>('');
@@ -190,8 +191,7 @@ function TranslationApp (props: PropsFromRedux) {
             setLogOutDialogOpen(true)
         } else {
             props.setDeckStartedFalse();
-            cookies.remove('token', { path: '/' });
-            props.setUserToken();
+            authCtx.onLogout();
             setLogOutDialogOpen(false);
         }
     };
@@ -226,7 +226,7 @@ function TranslationApp (props: PropsFromRedux) {
                     />
                 </Deck>
             : null }
-            {((!props.deckStarted) && (props.userToken === undefined || props.userToken === '')) &&
+            {((!props.deckStarted) && (authCtx.userToken === undefined || authCtx.userToken === '')) &&
                 <React.Fragment>
                     <LoggedOut />
                     <DemoDecksDrawer 
@@ -236,7 +236,7 @@ function TranslationApp (props: PropsFromRedux) {
                     />
                 </React.Fragment>
             }
-            {(!props.deckStarted && props.userToken) &&
+            {(!props.deckStarted && authCtx.userToken) &&
                 <LoggedIn deckOptions={deckOptions} />
             }
             <DeckDialog
@@ -298,15 +298,12 @@ interface mapStateToPropsProps {
     deckStarted: boolean,
     deckDialogOpen: boolean,
     demoDrawerOpen: boolean,
-    userToken: string,
-    token: string
 }
 
 const mapStateToProps = (state: mapStateToPropsProps) => ({
     deckStarted: state.deckStarted,
     deckDialogOpen: state.deckDialogOpen,
     demoDrawerOpen: state.demoDrawerOpen,
-    userToken: state.token
 })
 
 const mapDispatchToProps = {
@@ -316,7 +313,6 @@ const mapDispatchToProps = {
     setDeckStartedFalse: () => ({type: 'deck/setDeckStarted', value: false}),
     setDemoDrawerOpen: () => ({type: 'deck/setDemoDrawer', value: true}),
     setDemoDrawerClosed: () => ({type: 'deck/setDemoDrawer', value: false}),
-    setUserToken: () => ({type: 'user/setToken', value: ''})
 }
 
 const connector = connect(mapStateToProps, mapDispatchToProps)

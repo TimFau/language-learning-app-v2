@@ -4,8 +4,6 @@ const initialState = {
     demoDrawerOpen: false,
     introOpen: false,
     loginOpen: false,
-    newUser: false,
-    token: '',
     userName: ''
 };
 
@@ -36,16 +34,6 @@ export const reducer = (state = initialState, action: any) => {
             return {
                 ...state,
                 loginOpen: action.value
-            }
-        case 'user/setNewUser':
-            return {
-                ...state,
-                newUser: action.value
-            }
-        case 'user/setToken':
-            return {
-                ...state,
-                token: action.value
             }
         case 'user/setUserName':
             return {
