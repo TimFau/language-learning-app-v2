@@ -1,5 +1,4 @@
-import React from 'react';
-
+import ProgressBar from './ProgressBar';
 import FlashCard from './Modes/FlashCard';
 import WordBank from './Modes/WordBank';
 import Keyboard from './Modes/Keyboard';
@@ -24,19 +23,22 @@ type RootState = {
     showAnswer: boolean,
     randomNum: number,
     langOneArrLength: number,
+    initialCount: number,
     handleSubmit: (event: handleSubmitType) => void,
     showAnswerFc: () => void,
     getCard: () => void,
     archiveCard: () => void,
     keyboardModeHandleChange: (event: keyboardModeHandleChangeEvent) => void,
     goToDeckSelector: () => void,
-    children: React.ReactNode
 }
 
 function Deck(props: RootState) {
     return (
         <div className="wrapper">
-            {props.children /* Progress bar */}
+            <ProgressBar 
+                langOneArrLength={props.langOneArrLength}
+                initialCount={props.initialCount}
+            />
             <form onSubmit={props.handleSubmit}  id="mainApp">
                 {props.inputMode === 'Flashcard' ?
                     <FlashCard 

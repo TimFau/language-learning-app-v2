@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { wordBankHelper } from '../../scripts/Helpers';
 import AuthContext from 'context/auth-context';
 
-import ProgressBar from './ProgressBar';
 import BottomButtonsContainer from './BottomButtonsContainer';
 
 import Nav from '../Nav';
@@ -219,12 +218,8 @@ function TranslationApp (props: PropsFromRedux) {
                     wordBank={wordBank}
                     goToDeckSelector={goToDeckSelector}
                     langOneArrLength={langOneArr.length}
-                >
-                    <ProgressBar 
-                    langOneArrLength={langOneArr.length}
                     initialCount={initialCount}
-                    />
-                </Deck>
+                />
             : null }
             {((!props.deckStarted) && (authCtx.userToken === undefined || authCtx.userToken === '')) &&
                 <React.Fragment>
