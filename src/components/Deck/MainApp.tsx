@@ -221,7 +221,7 @@ function TranslationApp (props: PropsFromRedux) {
                     initialCount={initialCount}
                 />
             : null }
-            {((!props.deckStarted) && (authCtx.userToken === undefined || authCtx.userToken === '')) &&
+            {((!props.deckStarted) && (authCtx.userToken === '')) &&
                 <React.Fragment>
                     <LoggedOut />
                     <DemoDecksDrawer 
