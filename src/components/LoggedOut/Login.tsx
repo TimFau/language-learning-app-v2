@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useAppSelector, useAppDispatch } from 'hooks'; 
-import Cookies from 'universal-cookie';
+import React, { useContext, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -9,8 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-
-const cookies = new Cookies();
+import AuthContext from 'context/auth-context';
 
 export default function Login() {
 
@@ -19,9 +16,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const loginOpen = useAppSelector((state) => state.loginOpen);
-    const isNewUser = useAppSelector((state) => state.newUser);
-    const dispatch = useAppDispatch();
+    const authCtx = useContext(AuthContext);
 
     const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
 
@@ -71,12 +66,7 @@ export default function Login() {
                 }
                 return false
             } else {
-                let cookieExpires = new Date();
-                cookieExpires.setMinutes(cookieExpires.getMinutes() + 20);
-                cookies.set('token', data.data.auth_login.access_token, { path: '/', expires: cookieExpires });
-                dispatch({type: 'user/setToken', value: data.data.auth_login.access_token})
-                dispatch({type: 'modals/setLoginOpen', value: false})
-                dispatch({type: 'user/setNewUser', value: false})
+                authCtx.onLogin(data.data.auth_login.access_token)
                 return true
             }
         })
@@ -94,13 +84,13 @@ export default function Login() {
     }
 
     return (
-        <Dialog open={loginOpen} onClose={() => dispatch({type: 'modals/setLoginOpen', value: false})} className="login-dialog">
+        <Dialog open={authCtx.loginOpen} onClose={() => authCtx.onLoginOpen(false, false)} className="login-dialog">
             <DialogTitle>
-                {isNewUser ? 'Account Created!' : 'Login'}
+                {authCtx.isNewUser ? 'Account Created!' : 'Login'}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {isNewUser && 'Please login below'}
+                    {authCtx.isNewUser && 'Please login below'}
                 </DialogContentText>
                 <TextField 
                     autoFocus

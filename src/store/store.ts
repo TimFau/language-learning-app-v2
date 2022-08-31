@@ -7,8 +7,6 @@ export const store = configureStore({
         demoDrawerOpen: Boolean,
         introOpen: Boolean,
         loginOpen: Boolean,
-        newUser: Boolean,
-        token: String,
         userName: String
     }
 })

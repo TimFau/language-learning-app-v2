@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import UserLists from '../Account/UserLists';
+import UserLists from './UserLists';
+import AuthContext from 'context/auth-context';
 
 const useStyles = makeStyles({
     wrapper: {
@@ -16,7 +17,7 @@ interface LoggedInProps {
 
 export default function Account(props: LoggedInProps) {
 
-    const userToken = useAppSelector((state) => state.token)
+    const authCtx = useContext(AuthContext);
     const userName = useAppSelector((state) => state.userName)
     const [userId, setUserId] = useState('');
     const [isReady, setIsReady] = useState(false);
@@ -25,7 +26,7 @@ export default function Account(props: LoggedInProps) {
     const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
 
     function getAccountDetails() {
-        fetch(endpoint + "?access_token=" + userToken, {
+        fetch(endpoint + "?access_token=" + authCtx.userToken, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -48,9 +49,8 @@ export default function Account(props: LoggedInProps) {
             if(!response.ok) {
                 console.log('bad response', response)
                 const resError = (data && data.message) || response.status;
-                dispatch({type: 'user/setToken', value: ''})
-                dispatch({type: 'modals/setLoginOpen', value: true})
-                dispatch({type: 'user/setNewUser', value: false})
+                authCtx.onLogout()
+                authCtx.onLoginOpen(true, false);
                 return Promise.reject(resError);
             }
                 dispatch({type: 'user/setUserName', value: data.data.users_me.first_name})

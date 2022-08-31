@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useAppSelector } from 'hooks'; 
+import { useEffect, useState, useContext } from 'react';
 import { Grid, Card, CardActions, CardContent, Button, Typography, CircularProgress } from '@mui/material/';
-import AddNewListComponent from '../Modals/AddNewList';
+import AddNewListComponent from './AddNewList';
+import AuthContext from './../../context/auth-context';
 
 // Displays all the lists that a logged in user has added to their profile
 
@@ -23,7 +23,7 @@ export default function UserLists(props: UserListsProps) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState<itemsChild[]>([]);
     const [addListDialogOpen, setAddListDialogOpen] = useState(false);
-    const userToken = useAppSelector((state) => state.token)
+    const authCtx = useContext(AuthContext);
     const userId = props.userId
 
     function getUsersLists (userToken: string, userId: string) {
@@ -72,8 +72,8 @@ export default function UserLists(props: UserListsProps) {
     }
   
     useEffect(() => {
-        getUsersLists(userToken, userId)
-    }, [userToken, userId])
+        getUsersLists(authCtx.userToken, userId)
+    }, [authCtx, userId])
   
     if (error) {
       return <div>Error: {error}</div>;
@@ -102,7 +102,7 @@ export default function UserLists(props: UserListsProps) {
                 ))}
             </Grid>
             <Button size="large" onClick={() => setAddListDialogOpen(true)}>Add New</Button>
-            <AddNewListComponent userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersLists(userToken, userId)} />
+            <AddNewListComponent userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersLists(authCtx.userToken, userId)} />
         </div>
       )
     } else {

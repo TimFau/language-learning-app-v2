@@ -1,16 +1,10 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { AuthContextProvider } from 'context/auth-context';
 
-import MainApp from './components/MainApp/MainApp';
-import {cookieExists} from './scripts/Helpers';
-import Cookies from 'universal-cookie';
+import MainApp from './components/Deck/MainApp';
 
 import './css/main.scss';
-
-// Global Vars
-const cookies = new Cookies();
 
 const theme = createTheme(adaptV4Theme({
 	palette: {
@@ -29,31 +23,16 @@ const theme = createTheme(adaptV4Theme({
 	},
 }));
 
-class TranslationApp extends React.Component<PropsFromRedux> {
-	componentDidMount () {
-		if (cookieExists('token')) {
-			this.props.setUserToken(cookies.get('token'));
-		}
-	}
-	render() {
-    	return (
-            <BrowserRouter>
-				<StyledEngineProvider injectFirst>
-                    <ThemeProvider theme={theme}>
-                        <MainApp />
-                    </ThemeProvider>
-                </StyledEngineProvider>
-			</BrowserRouter>
-        );
-	}
+export default function TranslationApp() {
+	return (
+		<AuthContextProvider>
+		<BrowserRouter>
+			<StyledEngineProvider injectFirst>
+				<ThemeProvider theme={theme}>
+					<MainApp />
+				</ThemeProvider>
+			</StyledEngineProvider>
+		</BrowserRouter>
+		</AuthContextProvider>
+	);
 }
-
-const mapDispatchToProps = {
-	setUserToken: (value: string) => ({type: 'user/setToken', value: value})
-};
-
-const connector = connect(null, mapDispatchToProps)
-
-type PropsFromRedux = ConnectedProps<typeof connector>
-
-export default connector(TranslationApp);
