@@ -44,7 +44,7 @@ export default function AddNewListModal(props: AddNewListModalProps) {
         })
         // Add list to user_lists
         function sendPost() {
-            let listsUrl = "https://d3pdj2cb.directus.app/graphql?access_token=" + authCtx.userToken;
+            let listsUrl = `${process.env.REACT_APP_API_BASE}?access_token=` + authCtx.userToken;
             fetch(listsUrl, {
                 method: 'POST',
                 headers: {

@@ -23,7 +23,7 @@ export default function Account(props: LoggedInProps) {
     const [isReady, setIsReady] = useState(false);
     const dispatch = useAppDispatch();
     const classes = useStyles();
-    const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
+    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
 
     function getAccountDetails() {
         fetch(endpoint + "?access_token=" + authCtx.userToken, {

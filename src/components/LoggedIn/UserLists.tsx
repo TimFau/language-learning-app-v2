@@ -27,7 +27,7 @@ export default function UserLists(props: UserListsProps) {
     const userId = props.userId
 
     function getUsersLists (userToken: string, userId: string) {
-        let listsUrl = "https://d3pdj2cb.directus.app/graphql?access_token=" + userToken;
+        let listsUrl = `${process.env.REACT_APP_API_BASE}?access_token=` + userToken;
         fetch(listsUrl, {
             method: 'POST',
             headers: {

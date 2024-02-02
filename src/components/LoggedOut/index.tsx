@@ -13,7 +13,7 @@ import hpBackground from '../../images/hp-background.jpg';
 //
 
 const apiToken = process.env.REACT_APP_API_TOKEN;
-const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
+const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
 
 const useStyles = makeStyles({
     paper: {

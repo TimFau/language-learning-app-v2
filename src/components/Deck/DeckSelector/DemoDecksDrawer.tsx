@@ -22,24 +22,21 @@ interface DemoDeckDrawerProps {
 export default function DemoDecks(props: DemoDeckDrawerProps) {
     const [error, setError] = useState('');
     const [items, setItems] = useState<listItem[]>([]);
-    
-    const apiToken = process.env.REACT_APP_API_TOKEN;
-    const endpoint = 'https://d3pdj2cb.directus.app/graphql';
 
-    // Note: the empty deps array [] means
-    // this useEffect will run once
-    // similar to componentDidMount()
     useEffect(() => {
+        const apiToken = process.env.REACT_APP_API_TOKEN;
+        const endpoint = process.env.REACT_APP_API_BASE;
+
         fetch(endpoint + '?access_token=' + apiToken, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 query: `
                     query {
-                        Demo_Lists {
+                        demo_lists {
                             id
                             list_name
                             list_id
@@ -51,7 +48,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
         .then(res => res.json())
         .then(
         (result) => {
-            setItems(result.data.Demo_Lists);
+            setItems(result.data.demo_lists);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -61,7 +58,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
             console.log(error);
         }
         )
-    }, [apiToken])
+    }, [])
   
     if (error) {
       return (

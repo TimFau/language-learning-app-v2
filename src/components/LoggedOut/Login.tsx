@@ -18,7 +18,7 @@ export default function Login() {
 
     const authCtx = useContext(AuthContext);
 
-    const endpoint = 'https://d3pdj2cb.directus.app/graphql/system';
+    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
 
     function login() {
         fetch(endpoint, {
