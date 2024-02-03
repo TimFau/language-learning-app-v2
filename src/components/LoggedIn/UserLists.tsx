@@ -37,8 +37,8 @@ export default function UserLists(props: UserListsProps) {
             body: JSON.stringify({
                 query: `
                     query {
-                        User_lists(filter: {
-                            user_id: {
+                        public_lists(filter: {
+                            user_created: {
                                 id: {
                                     _eq: "${userId}"
                                 }
@@ -49,7 +49,7 @@ export default function UserLists(props: UserListsProps) {
                             date_created
                             list_name
                             list_id
-                            user_id {
+                            user_created {
                                 id
                             }
                         }
@@ -60,8 +60,9 @@ export default function UserLists(props: UserListsProps) {
         .then(res => res.json())
         .then(
         (result) => {
+            console.log(result.data)
             setIsLoaded(true);
-            setItems(result.data.User_lists);
+            setItems(result.data.public_lists);
         },
         (error) => {
             setIsLoaded(true);
@@ -106,6 +107,6 @@ export default function UserLists(props: UserListsProps) {
         </div>
       )
     } else {
-        return <div>Error</div>
+        return <div>Unkown Error</div>
     }
   }

@@ -16,7 +16,6 @@ export default function AddNewListModal(props: AddNewListModalProps) {
     const [deckErrorMsg, setDeckErrorMsg] = useState('');
 
     const authCtx = useContext(AuthContext);
-    const userId = props.userId
     const dialogOpen = props.addListDialogOpen;
 
     function handleChange (event: React.ChangeEvent<HTMLInputElement>) {
@@ -54,11 +53,10 @@ export default function AddNewListModal(props: AddNewListModalProps) {
                 body: JSON.stringify({
                     query: `
                     mutation {
-                        create_User_lists_item (data: {
+                        create_public_lists_item (data: {
                             status: "published",
                             list_name: "${deckName}" ,
                             list_id: "${deckId}"
-                            user_id: "${userId}"
                         }) {
                             status
                             list_name
