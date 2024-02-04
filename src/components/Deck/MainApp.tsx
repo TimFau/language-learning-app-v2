@@ -1,18 +1,19 @@
 import React, { useState, useContext } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
+
 import { wordBankHelper } from '../../scripts/Helpers';
 import AuthContext from 'context/auth-context';
 
-import BottomButtonsContainer from './BottomButtonsContainer';
-
 import Nav from '../Nav';
-import Deck from './Deck';
+import Deck from '../../pages/Deck';
 import LoggedOut from '../LoggedOut'
 import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import DeckDialog from './DeckDialog';
 import Login from '../LoggedOut/Login';
+import BottomButtonsContainer from './BottomButtonsContainer';
+
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
 
 // global vars
@@ -35,20 +36,16 @@ function TranslationApp (props: PropsFromRedux) {
     const [langTo, setLangTo] = useState<Array<string>>([]);
     const [translationInputValue, setTranslationInputValue] = useState<string>('');
     const [wordBank, setWordBank] = useState<Array<string>>([]);
-    // const [deckLoadingMsg, setDeckLoadingMsg] = useState<string>('');
     const [translateMode, setTranslateMode] = useState<string>('1to2');
     const [inputMode, setInputMode] = useState<string>('Flashcard');
     const [checkAccents] = useState<boolean>(false);
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [incorrect, setIncorrect] = useState<boolean>(false);
-    // const [deckLoadingError, setDeckLoadingError] = useState<boolean>(false);
-    // const [currentListId, setCurrentListId] = useState<string>('');
     const [currentListName, setCurrentListName] = useState<string>('');
     const [deckDataLoaded, setDeckDataLoaded] = useState<boolean>(false);
     const [logOutDialogOpen, setLogOutDialogOpen] = useState<boolean>(false);
     const [randomNum, setRandomNum] = useState<number>(0);
-    // const [randomNum2, setRandomNum2] = useState<number>(0);
     const [initialCount, setInitialCount] = useState<number>(0);
 
     // Original Functions
@@ -76,11 +73,8 @@ function TranslationApp (props: PropsFromRedux) {
                 setLanguage2(langTwoArr.shift());
                 setInitialCount(langOneArr.length);
                 setRandomNum(Math.floor(Math.random() * langOneArr.length));
-                // setRandomNum2((Math.floor(Math.random() * langOneArr.length) - 4));
                 setSuccess(false);
                 setIncorrect(false);
-                // setDeckLoadingError(false);
-                // setDeckLoadingMsg('');
                 setDeckDataLoaded(true);
                 langOneArrInit = langOneArr.slice();
                 langTwoArrInit = langTwoArr.slice();
@@ -88,8 +82,6 @@ function TranslationApp (props: PropsFromRedux) {
             })
             .catch((error) => {
                 console.error('Error', error);
-                // setDeckLoadingError(true);
-                // setDeckLoadingMsg('There was an issue loading the deck. Please check the Spreadsheet ID and share settings.');
                 props.setDeckDialogClose();
             })
     }
@@ -100,7 +92,6 @@ function TranslationApp (props: PropsFromRedux) {
             langTwoArr.splice(randomNum, 1);
         }
         setRandomNum(Math.floor(Math.random() * langOneArr.length));
-        // setRandomNum2(Math.floor(Math.random() * langOneArrInit.length));
         setSuccess(false);
         setIncorrect(false);
         setTranslationInputValue('');
@@ -175,7 +166,6 @@ function TranslationApp (props: PropsFromRedux) {
         setDeckDataLoaded(false);
         getDeckData(listId)
         setCurrentListName(listName);
-        // setCurrentListId(listId);
         props.setDemoDrawerClosed();
         props.setDeckDialogOpen();
     }
@@ -196,96 +186,104 @@ function TranslationApp (props: PropsFromRedux) {
     };
   
     return (
-        <BrowserRouter>
+    <>
         <Nav logout={() => logout(false)} />
         <div className={"container main-container " + inputMode}>
-            {props.deckStarted ?
-                <Deck
-                    handleSubmit={handleSubmit}
-                    inputMode={inputMode}
-                    showAnswerFc={showAnswerFc}
-                    showAnswer={showAnswer}
-                    getCard={getCard}
-                    archiveCard={archiveCard}
-                    langTo={langTo}
-                    langFrom={langFrom}
-                    randomNum={randomNum}
-                    translateMode={translateMode}
-                    language1={language1}
-                    language2={language2}
-                    translationInputValue={translationInputValue}
-                    keyboardModeHandleChange={keyboardModeHandleChange}
-                    wordBank={wordBank}
-                    goToDeckSelector={goToDeckSelector}
-                    langOneArrLength={langOneArr.length}
-                    initialCount={initialCount}
+            <Routes>
+                <Route path="/" element={
+                    <>
+                        {((!props.deckStarted) && (authCtx.userToken === '')) &&
+                            <>
+                                <LoggedOut />
+                                <DemoDecksDrawer 
+                                    open={props.demoDrawerOpen}
+                                    onClose={props.setDemoDrawerClosed}
+                                />
+                            </>
+                        }
+                        {(!props.deckStarted && authCtx.userToken) &&
+                            <LoggedIn />
+                        }
+                    </>
+                } />
+                <Route path="/deck" element={
+                    <>
+                        <Deck
+                            handleSubmit={handleSubmit}
+                            inputMode={inputMode}
+                            showAnswerFc={showAnswerFc}
+                            showAnswer={showAnswer}
+                            getCard={getCard}
+                            archiveCard={archiveCard}
+                            langTo={langTo}
+                            langFrom={langFrom}
+                            randomNum={randomNum}
+                            translateMode={translateMode}
+                            language1={language1}
+                            language2={language2}
+                            translationInputValue={translationInputValue}
+                            keyboardModeHandleChange={keyboardModeHandleChange}
+                            wordBank={wordBank}
+                            goToDeckSelector={goToDeckSelector}
+                            langOneArrLength={langOneArr?.length}
+                            initialCount={initialCount}
+                            deckOptions={deckOptions}
+                        />
+                        {inputMode !== 'Flashcard' && props.deckStarted &&
+                            <BottomButtonsContainer 
+                                handleSubmit={handleSubmit}
+                                translateMode={translateMode}
+                                getCard={getCard}
+                                randomNum={randomNum}
+                                langOneArr={langOneArr}
+                                langTwoArr={langTwoArr}
+                                success={success}
+                                incorrect={incorrect}
+                                showAnswer={showAnswer}
+                            />
+                        }
+                        <DeckDialog
+                            inputMode={inputMode}
+                            currentListName={currentListName}
+                            setInputMode={setInputMode}
+                            setDialogClosed={props.setDeckDialogClose}
+                            deckDialogOpen={props.deckDialogOpen}
+                            setTranslationMode1={setTranslationMode1}
+                            setTranslationMode2={setTranslationMode2}
+                            translateMode={translateMode}
+                            language1={language1}
+                            language2={language2}
+                            startDeck={startDeck}
+                            deckDataLoaded={deckDataLoaded}
+                        />
+                        <Dialog
+                            open={logOutDialogOpen}
+                            onClose={() => setLogOutDialogOpen(false)}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                            {"Logout and close deck?"}
+                            </DialogTitle>
+                            <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Logging out now will close the current deck without saving your progress. Would you like to continue?
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button onClick={() => setLogOutDialogOpen(false)}>No</Button>
+                            <Button onClick={() => logout(true)} autoFocus>
+                                Yes
+                            </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </>
+                }
                 />
-            : null }
-            {((!props.deckStarted) && (authCtx.userToken === '')) &&
-                <React.Fragment>
-                    <LoggedOut />
-                    <DemoDecksDrawer 
-                        deckOptions={deckOptions}
-                        open={props.demoDrawerOpen}
-                        onClose={props.setDemoDrawerClosed}
-                    />
-                </React.Fragment>
-            }
-            {(!props.deckStarted && authCtx.userToken) &&
-                <LoggedIn deckOptions={deckOptions} />
-            }
-            <DeckDialog
-                inputMode={inputMode}
-                currentListName={currentListName}
-                setInputMode={setInputMode}
-                setDialogClosed={props.setDeckDialogClose}
-                deckDialogOpen={props.deckDialogOpen}
-                setTranslationMode1={setTranslationMode1}
-                setTranslationMode2={setTranslationMode2}
-                translateMode={translateMode}
-                language1={language1}
-                language2={language2}
-                startDeck={startDeck}
-                deckDataLoaded={deckDataLoaded}
-            >
-            </DeckDialog>
-                {inputMode !== 'Flashcard' && props.deckStarted ?
-                    <BottomButtonsContainer 
-                        handleSubmit={handleSubmit}
-                        translateMode={translateMode}
-                        getCard={getCard}
-                        randomNum={randomNum}
-                        langOneArr={langOneArr}
-                        langTwoArr={langTwoArr}
-                        success={success}
-                        incorrect={incorrect}
-                        showAnswer={showAnswer}
-                    />
-            : null }
-            </div>
+            </Routes>
+        </div>
         <Login />
-        <Dialog
-            open={logOutDialogOpen}
-            onClose={() => setLogOutDialogOpen(false)}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-            {"Logout and close deck?"}
-            </DialogTitle>
-            <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-                Logging out now will close the current deck without saving your progress. Would you like to continue?
-            </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={() => setLogOutDialogOpen(false)}>No</Button>
-            <Button onClick={() => logout(true)} autoFocus>
-                Yes
-            </Button>
-            </DialogActions>
-        </Dialog>
-        </BrowserRouter>
+    </>
     )
 }
 

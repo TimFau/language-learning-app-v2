@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import { AppBar, Button } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
@@ -27,10 +27,12 @@ export default function Nav(props: any) {
     const authCtx = useContext(AuthContext);
     const classes = useStyles(props);
     let pathName = useLocation().pathname;
+    const navigate = useNavigate();
 
     function goToDeckSelector() {
         dispatch({type: 'deck/setDeckStarted', value: false});
         dispatch({type: 'deck/setDialog', value: false});
+        navigate('/')
     }
 
     return (

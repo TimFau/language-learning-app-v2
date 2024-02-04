@@ -1,14 +1,15 @@
-import ProgressBar from './ProgressBar';
-import FlashCard from './Modes/FlashCard';
-import WordBank from './Modes/WordBank';
-import Keyboard from './Modes/Keyboard';
+import ProgressBar from '../components/Deck/ProgressBar';
+import FlashCard from '../components/Deck/Modes/FlashCard';
+import WordBank from '../components/Deck/Modes/WordBank';
+import Keyboard from '../components/Deck/Modes/Keyboard';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Dialog from '@mui/material/Dialog';
 import Icon from '@mui/material/Icon';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from './MainApp';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from '../components/Deck/MainApp';
+import { useEffect } from 'react';
 
 
 type RootState = {
@@ -30,9 +31,18 @@ type RootState = {
     archiveCard: () => void,
     keyboardModeHandleChange: (event: keyboardModeHandleChangeEvent) => void,
     goToDeckSelector: () => void,
+    deckOptions: (listName: string, listId: string) => void
 }
 
 function Deck(props: RootState) {
+    const queryParams = new URLSearchParams(window.location.search)
+    const name: any = queryParams.get("name")
+    const id: any = queryParams.get("id")
+
+    useEffect(() => {
+        props.deckOptions(name, id)
+    }, [name, id])
+
     return (
         <div className="wrapper">
             <ProgressBar 

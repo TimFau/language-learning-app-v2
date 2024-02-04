@@ -11,11 +11,7 @@ const useStyles = makeStyles({
     }
 });
 
-interface LoggedInProps {
-    deckOptions: (listName: string, listId: string) => void
-}
-
-export default function Account(props: LoggedInProps) {
+export default function Account() {
 
     const authCtx = useContext(AuthContext);
     const userName = useAppSelector((state) => state.userName)
@@ -65,15 +61,14 @@ export default function Account(props: LoggedInProps) {
 
     useEffect(function () {
         getAccountDetails();
-    }) 
-    
+    })
     
     return (
         <div className={classes.wrapper + ' wrapper'} id="account">
             {isReady ? 
             <div>
                 <h1>Welcome, {userName}</h1>
-                <UserLists userId={userId} deckOptions={props.deckOptions} />
+                <UserLists userId={userId} />
             </div>
             :
             <CircularProgress />

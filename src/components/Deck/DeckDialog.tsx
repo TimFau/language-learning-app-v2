@@ -13,7 +13,7 @@ interface deckDialogProps {
     currentListName: string,
     deckDataLoaded: boolean,
     deckDialogOpen: boolean,
-    children: React.ReactNode,
+    children?: React.ReactNode,
     startDeck: () => void,
     setInputMode: (mode: string) => void,
     setDialogClosed: () => void,
