@@ -36,7 +36,13 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
             body: JSON.stringify({
                 query: `
                     query {
-                        demo_lists {
+                        public_lists(
+                            filter: {
+                                include_in_demo: {
+                                    _eq: true
+                                }
+                            }
+                        ) {
                             id
                             list_name
                             list_id
@@ -48,7 +54,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
         .then(res => res.json())
         .then(
         (result) => {
-            setItems(result.data.demo_lists);
+            setItems(result.data.public_lists);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow

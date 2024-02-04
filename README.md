@@ -1,18 +1,21 @@
 # Language Learning App V2
 
-## This project exists publicly only to document my progress. It is still in the development phase and is currently not usable outside of my local environment. If you try to run it locally, it will not work correctly due to the missing env file.
+## This project is publicly available to document my progress in developing a language learning quiz/flashcard app. However, please note that it is still in the development phase and is not currently functional outside of my local environment. If you attempt to run it locally, it will not work correctly due to the missing env file.
 
-This project builds on the functionality built for [version 1](https://github.com/TimFau/language-learning-app). Goals include:
+This project builds on the functionality built for [version 1](https://github.com/TimFau/language-learning-app). 
+
+The main goals of this version (V2) are as follows:
 - Integrating backend functionality with Directus, including:
     - Account functionality
-    - The ability to create, manage, and delete user lists within the app
-    - The ability to import lists from Google sheets and save them in the app's backend
-- Decoupling from relying solely on Google Sheets for getting and storing data.
-- Switching to Typescript as a learning experience and for ease of maintenance
-- Creating a better base application that I can use to implement various other functionality I have been wanting to build
+    - User list management within the app
+    - Importing lists from Google Sheets and saving them in the app's backend
+    - Saving user progress in the app's backend
+    - Reducing dependency on Google Sheets by introducing new ways to retrieve and store data.
+- Transitioning to Typescript to enhance learning opportunities and simplify maintenance.
+- Creating a robust foundation for implementing various new functionalities.
 
 ## Running Project Locally
 
-Make sure you are running node 14.
+Before running the project, please ensure that you have Node.js version 14 installed.
 
-Run the command 'npm run start'
+To start the application, use the command 'npm run start'.

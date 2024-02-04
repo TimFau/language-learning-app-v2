@@ -28,7 +28,7 @@ export default function AddNewListModal(props: AddNewListModalProps) {
 
     function addNewList () {
         // Check if valid
-        let request = "https://opensheet.vercel.app/" + deckId + "/Sheet1";
+        let request = `${process.env.REACT_APP_GOOGLE_SHEET_API}/${deckId}/Sheet1`;
         fetch(request, {mode: 'cors'})
         .then( response => {
             if (response.status === 200) {
