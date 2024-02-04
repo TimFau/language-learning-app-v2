@@ -5,7 +5,7 @@ import ProgressBar from '../components/Deck/ProgressBar';
 import FlashCard from '../components/Deck/Modes/FlashCard';
 import WordBank from '../components/Deck/Modes/WordBank';
 import Keyboard from '../components/Deck/Modes/Keyboard';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from '../components/Deck/MainApp';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from './../types';
 import DeckDialog from '../components/Deck/DeckDialog';
 import BottomButtonsContainer from '../components/Deck/BottomButtonsContainer';
 

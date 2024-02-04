@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
@@ -12,10 +12,6 @@ import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import Login from '../LoggedOut/Login';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
-
-export type handleSubmitType = React.FormEvent<HTMLInputElement | HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
-
-export type keyboardModeHandleChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>;
 
 function TranslationApp (props: PropsFromRedux) {
     const authCtx = useContext(AuthContext);
