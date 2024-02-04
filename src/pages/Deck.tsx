@@ -6,6 +6,7 @@ import WordBank from '../components/Deck/Modes/WordBank';
 import Keyboard from '../components/Deck/Modes/Keyboard';
 import { keyboardModeHandleChangeEvent, handleSubmitType } from '../components/Deck/MainApp';
 import DeckDialog from '../components/Deck/DeckDialog';
+import BottomButtonsContainer from '../components/Deck/BottomButtonsContainer';
 
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -43,7 +44,11 @@ type RootState = {
     setTranslationMode2: () => void,
     startDeck: () => void,
     deckDataLoaded: boolean,
-    setDeckDialogClose: () => void
+    setDeckDialogClose: () => void,
+    langOneArr: string[],
+    langTwoArr: string[],
+    success: boolean,
+    incorrect: boolean
 }
 
 function Deck(props: RootState) {
@@ -128,6 +133,19 @@ function Deck(props: RootState) {
                     <Button variant="contained" onClick={props.goToDeckSelector}>Return to Deck Loader</Button>
                 </ButtonGroup>
             </Dialog>
+            {props.inputMode !== 'Flashcard' &&
+                <BottomButtonsContainer 
+                    handleSubmit={props.handleSubmit}
+                    translateMode={props.translateMode}
+                    getCard={props.getCard}
+                    randomNum={props.randomNum}
+                    langOneArr={props.langOneArr}
+                    langTwoArr={props.langTwoArr}
+                    success={props.success}
+                    incorrect={props.incorrect}
+                    showAnswer={props.showAnswer}
+                />
+            }
         </div>
     )
 }

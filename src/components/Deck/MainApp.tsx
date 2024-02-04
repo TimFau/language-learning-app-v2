@@ -11,7 +11,6 @@ import LoggedOut from '../LoggedOut'
 import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import Login from '../LoggedOut/Login';
-import BottomButtonsContainer from './BottomButtonsContainer';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
 
@@ -236,20 +235,11 @@ function TranslationApp (props: PropsFromRedux) {
                             startDeck={startDeck}
                             deckDataLoaded={deckDataLoaded}
                             setDeckDialogClose={props.setDeckDialogClose}
+                            langOneArr={langOneArr}
+                            langTwoArr={langTwoArr}
+                            success={success}
+                            incorrect={incorrect}
                         />
-                        {inputMode !== 'Flashcard' && props.deckStarted &&
-                            <BottomButtonsContainer 
-                                handleSubmit={handleSubmit}
-                                translateMode={translateMode}
-                                getCard={getCard}
-                                randomNum={randomNum}
-                                langOneArr={langOneArr}
-                                langTwoArr={langTwoArr}
-                                success={success}
-                                incorrect={incorrect}
-                                showAnswer={showAnswer}
-                            />
-                        }
                         <Dialog
                             open={logOutDialogOpen}
                             onClose={() => setLogOutDialogOpen(false)}
