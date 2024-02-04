@@ -10,7 +10,6 @@ import Deck from '../../pages/Deck';
 import LoggedOut from '../LoggedOut'
 import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
-import DeckDialog from './DeckDialog';
 import Login from '../LoggedOut/Login';
 import BottomButtonsContainer from './BottomButtonsContainer';
 
@@ -228,6 +227,15 @@ function TranslationApp (props: PropsFromRedux) {
                             langOneArrLength={langOneArr?.length}
                             initialCount={initialCount}
                             deckOptions={deckOptions}
+                            currentListName={currentListName}
+                            setInputMode={setInputMode}
+                            setDialogClosed={props.setDeckDialogClose}
+                            deckDialogOpen={props.deckDialogOpen}
+                            setTranslationMode1={setTranslationMode1}
+                            setTranslationMode2={setTranslationMode2}
+                            startDeck={startDeck}
+                            deckDataLoaded={deckDataLoaded}
+                            setDeckDialogClose={props.setDeckDialogClose}
                         />
                         {inputMode !== 'Flashcard' && props.deckStarted &&
                             <BottomButtonsContainer 
@@ -242,20 +250,6 @@ function TranslationApp (props: PropsFromRedux) {
                                 showAnswer={showAnswer}
                             />
                         }
-                        <DeckDialog
-                            inputMode={inputMode}
-                            currentListName={currentListName}
-                            setInputMode={setInputMode}
-                            setDialogClosed={props.setDeckDialogClose}
-                            deckDialogOpen={props.deckDialogOpen}
-                            setTranslationMode1={setTranslationMode1}
-                            setTranslationMode2={setTranslationMode2}
-                            translateMode={translateMode}
-                            language1={language1}
-                            language2={language2}
-                            startDeck={startDeck}
-                            deckDataLoaded={deckDataLoaded}
-                        />
                         <Dialog
                             open={logOutDialogOpen}
                             onClose={() => setLogOutDialogOpen(false)}

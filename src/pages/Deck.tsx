@@ -1,15 +1,18 @@
+import { useEffect } from 'react';
+
 import ProgressBar from '../components/Deck/ProgressBar';
 import FlashCard from '../components/Deck/Modes/FlashCard';
 import WordBank from '../components/Deck/Modes/WordBank';
 import Keyboard from '../components/Deck/Modes/Keyboard';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from '../components/Deck/MainApp';
+import DeckDialog from '../components/Deck/DeckDialog';
+
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Dialog from '@mui/material/Dialog';
 import Icon from '@mui/material/Icon';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from '../components/Deck/MainApp';
-import { useEffect } from 'react';
 
 
 type RootState = {
@@ -25,13 +28,22 @@ type RootState = {
     randomNum: number,
     langOneArrLength: number,
     initialCount: number,
+    currentListName: string,
     handleSubmit: (event: handleSubmitType) => void,
     showAnswerFc: () => void,
     getCard: () => void,
     archiveCard: () => void,
     keyboardModeHandleChange: (event: keyboardModeHandleChangeEvent) => void,
     goToDeckSelector: () => void,
-    deckOptions: (listName: string, listId: string) => void
+    deckOptions: (listName: string, listId: string) => void,
+    setInputMode: React.Dispatch<React.SetStateAction<string>>,
+    setDialogClosed: React.Dispatch<React.SetStateAction<string>>,
+    deckDialogOpen: boolean,
+    setTranslationMode1: () => void,
+    setTranslationMode2: () => void,
+    startDeck: () => void,
+    deckDataLoaded: boolean,
+    setDeckDialogClose: () => void
 }
 
 function Deck(props: RootState) {
@@ -86,6 +98,20 @@ function Deck(props: RootState) {
                     </WordBank>
                 : null }
             </form>
+            <DeckDialog
+                inputMode={props.inputMode}
+                currentListName={props.currentListName}
+                setInputMode={props.setInputMode}
+                setDialogClosed={props.setDeckDialogClose}
+                deckDialogOpen={props.deckDialogOpen}
+                setTranslationMode1={props.setTranslationMode1}
+                setTranslationMode2={props.setTranslationMode2}
+                translateMode={props.translateMode}
+                language1={props.language1}
+                language2={props.language2}
+                startDeck={props.startDeck}
+                deckDataLoaded={props.deckDataLoaded}
+            />
             <Dialog id="success-modal" open={props.langOneArrLength === 0}>
                 <Icon color="primary" className="congrats-icon">emoji_events</Icon>
                 <DialogTitle>
