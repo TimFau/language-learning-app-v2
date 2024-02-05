@@ -24,7 +24,8 @@ type RootState = {
     setDeckDialogClose: () => void,
     setDeckDialogOpen: () => void,
     setDeckStartedFalse: () => void,
-    setDeckStartedTrue: () => void
+    setDeckStartedTrue: () => void,
+    deckStarted: boolean
 }
 
 // global vars
@@ -55,8 +56,6 @@ function Deck(props: RootState) {
     const [deckDataLoaded, setDeckDataLoaded] = useState<boolean>(false);
     const [randomNum, setRandomNum] = useState<number>(0);
     const [initialCount, setInitialCount] = useState<number>(0);
-
-    // State functions
     const [checkAccents] = useState<boolean>(false);
 
     // Original Functions
@@ -265,6 +264,13 @@ function Deck(props: RootState) {
                     <Button variant="contained" onClick={goToDeckSelector}>Return to Deck Loader</Button>
                 </ButtonGroup>
             </Dialog>
+            {/* TODO: Re-build functionality for DialogLogoutWarning. Temporarily, the logout option is hidden from the deck page. */}
+            {/* <DialogLogoutWarning 
+                setDeckStartedTrue={props.setDeckStartedTrue}
+                logOutDialogOpen={logOutDialogOpen}
+                setLogOutDialogOpen={setLogOutDialogOpen}
+                logout={logout}
+            /> */}
             {inputMode !== 'Flashcard' &&
                 <BottomButtonsContainer 
                     handleSubmit={handleSubmit}

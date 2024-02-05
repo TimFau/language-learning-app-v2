@@ -47,12 +47,13 @@ export default function Nav(props: any) {
                 <Button onClick={() => goToDeckSelector()}
                 >Exit Deck</Button>
                 : ''}
-                {authCtx.userToken === '' ?
+                {authCtx.userToken === '' &&
                 <Button
                     onClick={() => authCtx.onLoginOpen(true, false)}
                     className="login"
                 >Login</Button>
-                : 
+                }
+                {authCtx.userToken !== '' && !pathName.includes("/deck") &&
                 <Button
                     onClick={authCtx.onLogout}
                     color="secondary"

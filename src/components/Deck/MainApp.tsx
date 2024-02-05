@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
@@ -11,30 +11,19 @@ import LoggedIn from '../LoggedIn';
 import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import Login from '../LoggedOut/Login';
 
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material/';
-
 function TranslationApp (props: PropsFromRedux) {
     const authCtx = useContext(AuthContext);
-
-    // State Functions
-    const [logOutDialogOpen, setLogOutDialogOpen] = useState<boolean>(false);
 
     // Temporarily hard code inputMode during refactor
     const inputMode = 'flashcard';
 
-    function logout(endDeck = false) {
-        if (props.deckStarted && !endDeck) {
-            setLogOutDialogOpen(true)
-        } else {
-            props.setDeckStartedFalse();
-            authCtx.onLogout();
-            setLogOutDialogOpen(false);
-        }
+    function logout() {
+        authCtx.onLogout();
     };
   
     return (
     <>
-        <Nav logout={() => logout(false)} />
+        <Nav logout={() => logout()} />
         <div className={"container main-container " + inputMode}>
             <Routes>
                 <Route path="/" element={
@@ -59,30 +48,10 @@ function TranslationApp (props: PropsFromRedux) {
                             deckDialogOpen={props.deckDialogOpen}
                             setDeckDialogOpen={props.setDeckDialogOpen}
                             setDeckDialogClose={props.setDeckDialogClose}
-                            setDeckStartedFalse={props.setDeckStartedFalse}
+                            deckStarted={props.deckStarted}
                             setDeckStartedTrue={props.setDeckStartedTrue}
+                            setDeckStartedFalse={props.setDeckStartedFalse}
                         />
-                        <Dialog
-                            open={logOutDialogOpen}
-                            onClose={() => setLogOutDialogOpen(false)}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                        >
-                            <DialogTitle id="alert-dialog-title">
-                            {"Logout and close deck?"}
-                            </DialogTitle>
-                            <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Logging out now will close the current deck without saving your progress. Would you like to continue?
-                            </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                            <Button onClick={() => setLogOutDialogOpen(false)}>No</Button>
-                            <Button onClick={() => logout(true)} autoFocus>
-                                Yes
-                            </Button>
-                            </DialogActions>
-                        </Dialog>
                     </>
                 }
                 />
