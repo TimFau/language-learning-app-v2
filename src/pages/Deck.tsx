@@ -192,98 +192,100 @@ function Deck(props: RootState) {
     }, [name, id])
 
     return (
-        <div className="wrapper">
-            <ProgressBar 
-                langOneArrLength={langOneArr?.length}
-                initialCount={initialCount}
-            />
-            <form onSubmit={handleSubmit}  id="mainApp">
-                {inputMode === 'Flashcard' ?
-                    <FlashCard 
-                    showAnswerFc={showAnswerFc}
-                    showAnswer={showAnswer}
-                    getCard={getCard}
-                    archiveCard={archiveCard}
-                    langTo={langTo}
-                    langFrom={langFrom}
-                    randomNum={randomNum}
-                    >
-                        Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                    </FlashCard>
-                : null }
-                {inputMode === 'Keyboard' ?
-                    <Keyboard 
-                        langTo={langTo}
-                        langFrom={langFrom}
-                        randomNum={randomNum}
-                        translationInputValue={translationInputValue}
-                        keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
-                    >
-                        Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                    </Keyboard>
-                : null }
-                {inputMode === 'Wordbank' ?
-                    <WordBank 
-                        langTo={langTo}
-                        langFrom={langFrom}
-                        randomNum={randomNum}
-                        wordBank={wordBank}
-                        keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
-                    >
-                        Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                    </WordBank>
-                : null }
-            </form>
-            <DeckDialog
-                inputMode={inputMode}
-                currentListName={currentListName}
-                setInputMode={setInputMode}
-                setDialogClosed={props.setDeckDialogClose}
-                deckDialogOpen={props.deckDialogOpen}
-                setTranslationMode1={setTranslationMode1}
-                setTranslationMode2={setTranslationMode2}
-                translateMode={translateMode}
-                language1={language1}
-                language2={language2}
-                startDeck={startDeck}
-                deckDataLoaded={deckDataLoaded}
-            />
-            <Dialog id="success-modal" open={langOneArr?.length === 0}>
-                <Icon color="primary" className="congrats-icon">emoji_events</Icon>
-                <DialogTitle>
-                    Congratulations!
-                </DialogTitle>
-                <DialogContent>
-                    <h3>You've finished the list!</h3>
-                </DialogContent>
-                <ButtonGroup
-                    color="primary"
-                    variant="outlined"
-                    fullWidth
-                >
-                    <Button variant="contained" onClick={goToDeckSelector}>Return to Deck Loader</Button>
-                </ButtonGroup>
-            </Dialog>
-            {/* TODO: Re-build functionality for DialogLogoutWarning. Temporarily, the logout option is hidden from the deck page. */}
-            {/* <DialogLogoutWarning 
-                setDeckStartedTrue={props.setDeckStartedTrue}
-                logOutDialogOpen={logOutDialogOpen}
-                setLogOutDialogOpen={setLogOutDialogOpen}
-                logout={logout}
-            /> */}
-            {inputMode !== 'Flashcard' &&
-                <BottomButtonsContainer 
-                    handleSubmit={handleSubmit}
-                    translateMode={translateMode}
-                    getCard={getCard}
-                    randomNum={randomNum}
-                    langOneArr={langOneArr}
-                    langTwoArr={langTwoArr}
-                    success={success}
-                    incorrect={incorrect}
-                    showAnswer={showAnswer}
+        <div className={"container main-container " + inputMode}>
+            <div className="wrapper">
+                <ProgressBar 
+                    langOneArrLength={langOneArr?.length}
+                    initialCount={initialCount}
                 />
-            }
+                <form onSubmit={handleSubmit}  id="mainApp">
+                    {inputMode === 'Flashcard' ?
+                        <FlashCard 
+                        showAnswerFc={showAnswerFc}
+                        showAnswer={showAnswer}
+                        getCard={getCard}
+                        archiveCard={archiveCard}
+                        langTo={langTo}
+                        langFrom={langFrom}
+                        randomNum={randomNum}
+                        >
+                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                        </FlashCard>
+                    : null }
+                    {inputMode === 'Keyboard' ?
+                        <Keyboard 
+                            langTo={langTo}
+                            langFrom={langFrom}
+                            randomNum={randomNum}
+                            translationInputValue={translationInputValue}
+                            keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
+                        >
+                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                        </Keyboard>
+                    : null }
+                    {inputMode === 'Wordbank' ?
+                        <WordBank 
+                            langTo={langTo}
+                            langFrom={langFrom}
+                            randomNum={randomNum}
+                            wordBank={wordBank}
+                            keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
+                        >
+                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                        </WordBank>
+                    : null }
+                </form>
+                <DeckDialog
+                    inputMode={inputMode}
+                    currentListName={currentListName}
+                    setInputMode={setInputMode}
+                    setDialogClosed={props.setDeckDialogClose}
+                    deckDialogOpen={props.deckDialogOpen}
+                    setTranslationMode1={setTranslationMode1}
+                    setTranslationMode2={setTranslationMode2}
+                    translateMode={translateMode}
+                    language1={language1}
+                    language2={language2}
+                    startDeck={startDeck}
+                    deckDataLoaded={deckDataLoaded}
+                />
+                <Dialog id="success-modal" open={langOneArr?.length === 0}>
+                    <Icon color="primary" className="congrats-icon">emoji_events</Icon>
+                    <DialogTitle>
+                        Congratulations!
+                    </DialogTitle>
+                    <DialogContent>
+                        <h3>You've finished the list!</h3>
+                    </DialogContent>
+                    <ButtonGroup
+                        color="primary"
+                        variant="outlined"
+                        fullWidth
+                    >
+                        <Button variant="contained" onClick={goToDeckSelector}>Return to Deck Loader</Button>
+                    </ButtonGroup>
+                </Dialog>
+                {/* TODO: Re-build functionality for DialogLogoutWarning. Temporarily, the logout option is hidden from the deck page. */}
+                {/* <DialogLogoutWarning 
+                    setDeckStartedTrue={props.setDeckStartedTrue}
+                    logOutDialogOpen={logOutDialogOpen}
+                    setLogOutDialogOpen={setLogOutDialogOpen}
+                    logout={logout}
+                /> */}
+                {inputMode !== 'Flashcard' &&
+                    <BottomButtonsContainer 
+                        handleSubmit={handleSubmit}
+                        translateMode={translateMode}
+                        getCard={getCard}
+                        randomNum={randomNum}
+                        langOneArr={langOneArr}
+                        langTwoArr={langTwoArr}
+                        success={success}
+                        incorrect={incorrect}
+                        showAnswer={showAnswer}
+                    />
+                }
+            </div>
         </div>
     )
 }

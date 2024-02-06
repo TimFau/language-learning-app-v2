@@ -64,15 +64,17 @@ export default function Account() {
     })
     
     return (
-        <div className={classes.wrapper + ' wrapper'} id="account">
-            {isReady ? 
-            <div>
-                <h1>Welcome, {userName}</h1>
-                <UserLists userId={userId} />
+        <div className="container main-container">
+            <div className={classes.wrapper + ' wrapper'} id="account">
+                {isReady ? 
+                <div>
+                    <h1>Welcome, {userName}</h1>
+                    <UserLists userId={userId} />
+                </div>
+                :
+                <CircularProgress />
+                }
             </div>
-            :
-            <CircularProgress />
-            }
         </div>
     )
 }

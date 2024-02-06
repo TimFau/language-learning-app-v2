@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import AuthContext from 'context/auth-context';
 
+import DemoDecksDrawer from '../Deck/DeckSelector/DemoDecksDrawer';
+
 import { Paper, Card, TextField, Button, Link } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert } from '@mui/material';
@@ -92,7 +94,12 @@ const useStyles = makeStyles({
     }
 });
 
-export default function GuestPage(props: object) {
+type LoggedOutProps = {
+    open: boolean,
+    onClose: (event: React.UIEvent<HTMLElement>) => void,
+}
+
+export default function GuestPage(props: LoggedOutProps) {
     const classes = useStyles(props);
     const dispatch = useDispatch();
     const [firstName, setFirstName] = React.useState('');
@@ -223,80 +230,86 @@ export default function GuestPage(props: object) {
         }
     }
     return (
-        <Paper elevation={0} square={true} className={classes.paper}>
-            <div className={classes.copy}>
-                <h1>Easy to Use Flashcards <span className={classes.span}>For Learning New Languages</span></h1>
-                <p>Create your own flashcards, work banks, and quizzes; all with one deck.</p>
-                <div className={classes.howItWorks}>
-                    <span>See how it works:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
+        <div className="container main-container">
+            <Paper elevation={0} square={true} className={classes.paper}>
+                <div className={classes.copy}>
+                    <h1>Easy to Use Flashcards <span className={classes.span}>For Learning New Languages</span></h1>
+                    <p>Create your own flashcards, work banks, and quizzes; all with one deck.</p>
+                    <div className={classes.howItWorks}>
+                        <span>See how it works:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
+                    </div>
                 </div>
-            </div>
-            <Card className={classes.form}>
-                <h3>Create an account</h3>
-                <form>
-                    <TextField
-                        autoComplete="fname"
-                        name="firstName"
-                        variant="outlined"
-                        required
-                        id="firstName"
-                        className="input"
-                        fullWidth
-                        label="First Name"
-                        autoFocus
-                        value={firstName}
-                        onChange={handleChange}
-                        error={fieldWithError === 'firstName'}
-                    />
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="lastName"
-                        className="input"
-                        label="Last Name"
-                        name="lastName"
-                        autoComplete="lname"
-                        value={lastName}
-                        onChange={handleChange}
-                        error={fieldWithError === 'lastName'}
-                    />
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="email"
-                        className="input"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        value={userEmail}
-                        onChange={handleChange}
-                        error={fieldWithError === 'email'}
-                    />
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        className="input"
-                        autoComplete="current-password"
-                        value={userPassword}
-                        onChange={handleChange}
-                        error={fieldWithError === 'password'}
-                    />
-                </form>
-                {alertMsg !== '' &&
-                    <Alert severity="warning" className={classes.alert}>{alertMsg}</Alert>
-                }
-                <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Submit</Button>
-                <div>
-                    <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
-                </div>
-            </Card>
-        </Paper>
+                <Card className={classes.form}>
+                    <h3>Create an account</h3>
+                    <form>
+                        <TextField
+                            autoComplete="fname"
+                            name="firstName"
+                            variant="outlined"
+                            required
+                            id="firstName"
+                            className="input"
+                            fullWidth
+                            label="First Name"
+                            autoFocus
+                            value={firstName}
+                            onChange={handleChange}
+                            error={fieldWithError === 'firstName'}
+                        />
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="lastName"
+                            className="input"
+                            label="Last Name"
+                            name="lastName"
+                            autoComplete="lname"
+                            value={lastName}
+                            onChange={handleChange}
+                            error={fieldWithError === 'lastName'}
+                        />
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="email"
+                            className="input"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            value={userEmail}
+                            onChange={handleChange}
+                            error={fieldWithError === 'email'}
+                        />
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            className="input"
+                            autoComplete="current-password"
+                            value={userPassword}
+                            onChange={handleChange}
+                            error={fieldWithError === 'password'}
+                        />
+                    </form>
+                    {alertMsg !== '' &&
+                        <Alert severity="warning" className={classes.alert}>{alertMsg}</Alert>
+                    }
+                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Submit</Button>
+                    <div>
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
+                    </div>
+                </Card>
+            </Paper>
+            <DemoDecksDrawer 
+                open={props.open}
+                onClose={props.onClose}
+            />
+        </div>
     )
 }

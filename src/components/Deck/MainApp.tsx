@@ -8,55 +8,40 @@ import Nav from '../Nav';
 import Deck from '../../pages/Deck';
 import LoggedOut from '../LoggedOut'
 import LoggedIn from '../LoggedIn';
-import DemoDecksDrawer from './DeckSelector/DemoDecksDrawer';
 import Login from '../LoggedOut/Login';
 
 function TranslationApp (props: PropsFromRedux) {
     const authCtx = useContext(AuthContext);
-
-    // Temporarily hard code inputMode during refactor
-    const inputMode = 'flashcard';
-
-    function logout() {
-        authCtx.onLogout();
-    };
   
     return (
     <>
-        <Nav logout={() => logout()} />
-        <div className={"container main-container " + inputMode}>
-            <Routes>
-                <Route path="/" element={
-                    <>
-                        {((!props.deckStarted) && (authCtx.userToken === '')) &&
-                            <>
-                                <LoggedOut />
-                                <DemoDecksDrawer 
-                                    open={props.demoDrawerOpen}
-                                    onClose={props.setDemoDrawerClosed}
-                                />
-                            </>
-                        }
-                        {(!props.deckStarted && authCtx.userToken) &&
-                            <LoggedIn />
-                        }
-                    </>
-                } />
-                <Route path="/deck" element={
-                    <>
-                        <Deck
-                            deckDialogOpen={props.deckDialogOpen}
-                            setDeckDialogOpen={props.setDeckDialogOpen}
-                            setDeckDialogClose={props.setDeckDialogClose}
-                            deckStarted={props.deckStarted}
-                            setDeckStartedTrue={props.setDeckStartedTrue}
-                            setDeckStartedFalse={props.setDeckStartedFalse}
-                        />
-                    </>
+        <Nav logout={() => authCtx.onLogout()} />
+        <Routes>
+            <Route path="/" element={
+                <>
+                {authCtx.userToken === '' &&
+                    <LoggedOut 
+                        open={props.demoDrawerOpen}
+                        onClose={props.setDemoDrawerClosed}
+                    />
                 }
+                {authCtx.userToken !== '' &&
+                    <LoggedIn />
+                }
+                </>
+            } />
+            <Route path="/deck" element={
+                <Deck
+                    deckDialogOpen={props.deckDialogOpen}
+                    setDeckDialogOpen={props.setDeckDialogOpen}
+                    setDeckDialogClose={props.setDeckDialogClose}
+                    deckStarted={props.deckStarted}
+                    setDeckStartedTrue={props.setDeckStartedTrue}
+                    setDeckStartedFalse={props.setDeckStartedFalse}
                 />
-            </Routes>
-        </div>
+            }
+            />
+        </Routes>
         <Login />
     </>
     )
