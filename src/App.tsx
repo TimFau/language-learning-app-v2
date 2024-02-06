@@ -2,7 +2,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { AuthContextProvider } from 'context/auth-context';
 
-import MainApp from './components/Deck/MainApp';
+import RootPage from './pages/RootPage';
 
 import './css/main.scss';
 
@@ -29,7 +29,7 @@ export default function TranslationApp() {
 		<BrowserRouter>
 			<StyledEngineProvider injectFirst>
 				<ThemeProvider theme={theme}>
-					<MainApp />
+					<RootPage />
 				</ThemeProvider>
 			</StyledEngineProvider>
 		</BrowserRouter>
