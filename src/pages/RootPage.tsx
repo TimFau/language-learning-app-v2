@@ -5,9 +5,8 @@ import AuthContext from 'context/auth-context';
 import connector, { PropsFromRedux } from "../containers/RootPage.connector"
 
 import Nav from '../components/Nav';
+import IndexPage from './IndexPage';
 import DeckPage from './DeckPage';
-import LoggedOut from '../components/LoggedOut'
-import LoggedIn from '../components/LoggedIn';
 import Login from '../components/LoggedOut/Login';
 
 function RootPage (props: PropsFromRedux) {
@@ -18,17 +17,11 @@ function RootPage (props: PropsFromRedux) {
         <Nav logout={() => authCtx.onLogout()} />
         <Routes>
             <Route path="/" element={
-                <>
-                {authCtx.userToken === '' &&
-                    <LoggedOut 
-                        open={props.demoDrawerOpen}
-                        onClose={props.setDemoDrawerClosed}
-                    />
-                }
-                {authCtx.userToken !== '' &&
-                    <LoggedIn />
-                }
-                </>
+                <IndexPage 
+                    authCtx={authCtx}
+                    demoDrawerOpen={props.demoDrawerOpen}
+                    setDemoDrawerClosed={props.setDemoDrawerClosed}
+                />
             } />
             <Route path="/deck" element={
                 <DeckPage
