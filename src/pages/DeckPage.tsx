@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import sheetService from 'services/sheetService';
 
 import ProgressBar from '../components/Deck/ProgressBar';
 import FlashCard from '../components/Deck/Modes/FlashCard';
@@ -60,40 +61,35 @@ function Deck(props: RootState) {
 
     // Original Functions
     function getDeckData(value: string) {
-        const request = `${process.env.REACT_APP_GOOGLE_SHEET_API}/${value}/Sheet1`;
-        fetch(request, {mode: 'cors'})
-            .then( response => {
-                return response.json();
-            })
-            .then( data => {
-                langOneArr = [];
-                langTwoArr = [];
-                if (data.length > 0) {
-                    data.forEach(function(item: { Language1: string; Language2: string; }){
-                        console.log('getDeckData', data)
-                        langOneArr.push(item.Language1);
-                        langTwoArr.push(item.Language2);
-                    })
-                } else if (data.error) {
-                    console.log('Deck Load Error: ' + data.error)
-                } else {
-                    console.log('Data is empty; Deck not loaded')
-                }
-                setLanguage1(langOneArr.shift());
-                setLanguage2(langTwoArr.shift());
-                setInitialCount(langOneArr.length);
-                setRandomNum(Math.floor(Math.random() * langOneArr.length));
-                setSuccess(false);
-                setIncorrect(false);
-                setDeckDataLoaded(true);
-                langOneArrInit = langOneArr.slice();
-                langTwoArrInit = langTwoArr.slice();
-                props.setDeckDialogOpen();
-            })
-            .catch((error) => {
-                console.error('Error', error);
-                props.setDeckDialogClose();
-            })
+        sheetService.getSheet(value).then( data => {
+            langOneArr = [];
+            langTwoArr = [];
+            if (data.length > 0) {
+                data.forEach(function(item: { Language1: string; Language2: string; }){
+                    // console.log('getDeckData', data)
+                    langOneArr.push(item.Language1);
+                    langTwoArr.push(item.Language2);
+                })
+            } else if (data.error) {
+                console.log('Deck Load Error: ' + data.error)
+            } else {
+                console.log('Data is empty; Deck not loaded')
+            }
+            setLanguage1(langOneArr.shift());
+            setLanguage2(langTwoArr.shift());
+            setInitialCount(langOneArr.length);
+            setRandomNum(Math.floor(Math.random() * langOneArr.length));
+            setSuccess(false);
+            setIncorrect(false);
+            setDeckDataLoaded(true);
+            langOneArrInit = langOneArr.slice();
+            langTwoArrInit = langTwoArr.slice();
+            props.setDeckDialogOpen();
+        })
+        .catch((error) => {
+            console.error('Error', error);
+            props.setDeckDialogClose();
+        })
     }
 
     function getCard() {

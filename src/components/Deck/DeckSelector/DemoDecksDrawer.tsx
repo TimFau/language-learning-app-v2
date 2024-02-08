@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import { Drawer, CardActions, CardContent, Button, Typography }  from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import deckService from '../../../services/deckService';
 
 //
 // This drawer contains decks that are available for guest users to try out the app
@@ -24,46 +25,19 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     const [items, setItems] = useState<listItem[]>([]);
 
     useEffect(() => {
-        const apiToken = process.env.REACT_APP_API_TOKEN;
-        const endpoint = process.env.REACT_APP_API_BASE;
 
-        fetch(endpoint + '?access_token=' + apiToken, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+        deckService.getPublicLists().then(
+            (result) => {
+                setItems(result);
             },
-            body: JSON.stringify({
-                query: `
-                    query {
-                        public_lists(
-                            filter: {
-                                include_in_demo: {
-                                    _eq: true
-                                }
-                            }
-                        ) {
-                            id
-                            list_name
-                            list_id
-                        }
-                    }
-                `
-            })
-        })
-        .then(res => res.json())
-        .then(
-        (result) => {
-            setItems(result.data.public_lists);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-            setError(error);
-            console.log(error);
-        }
-        )
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                setError(error);
+                console.log(error);
+            }
+    )
     }, [])
 
     const navigate = useNavigate();

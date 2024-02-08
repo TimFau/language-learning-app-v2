@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import AuthContext from 'context/auth-context';
+import userService from 'services/userService';
 
 import DemoDecksDrawer from '../Deck/DeckSelector/DemoDecksDrawer';
 
@@ -15,7 +16,6 @@ import hpBackground from '../../images/hp-background.jpg';
 //
 
 const apiToken = process.env.REACT_APP_API_TOKEN;
-const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
 
 const useStyles = makeStyles({
     paper: {
@@ -162,40 +162,7 @@ export default function GuestPage(props: LoggedOutProps) {
             createAccountPost(apiToken)
         }
         function createAccountPost(apiToken: string | undefined) {
-            fetch(endpoint + '?access_token=' + apiToken, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                        mutation {
-                            create_users_item(
-                                data: {
-                                    first_name: "${firstName}",
-                                    last_name: "${lastName}",
-                                    email: "${userEmail}",
-                                    password: "${userPassword}",
-                                    status: "active",
-                                    provider: "default",
-                                    role:{
-                                        id: "c8737b56-b42b-4796-adb0-d0fc6c1ede40"
-                                        name: "User"
-                                        app_access: true
-                                        enforce_tfa: false
-                                        admin_access: false
-                                        icon: "supervised_user_circle"
-                                    }
-                                }
-                            ) {
-                                email
-                                status
-                            }
-                        }
-                    `
-                })
-            })
+            userService.createAccount(apiToken, firstName, lastName, userEmail, userPassword)
             .then(async response => {
                 const data = await response.json();
                 if(!response.ok) {

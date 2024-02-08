@@ -1,6 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import React, { useState, useContext } from 'react';
 import AuthContext from 'context/auth-context';
+import deckService from 'services/deckService';
+import sheetService from 'services/sheetService';
 
 interface AddNewListModalProps {
     userId: string,
@@ -28,9 +30,8 @@ export default function AddNewListModal(props: AddNewListModalProps) {
 
     function addNewList () {
         // Check if valid
-        let request = `${process.env.REACT_APP_GOOGLE_SHEET_API}/${deckId}/Sheet1`;
-        fetch(request, {mode: 'cors'})
-        .then( response => {
+        sheetService.checkSheetValidity(deckId)
+        .then(response => {
             if (response.status === 200) {
                 setDeckErrorMsg('')
                 sendPost()
@@ -43,33 +44,9 @@ export default function AddNewListModal(props: AddNewListModalProps) {
         })
         // Add list to user_lists
         function sendPost() {
-            let listsUrl = `${process.env.REACT_APP_API_BASE}?access_token=` + authCtx.userToken;
-            fetch(listsUrl, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                    mutation {
-                        create_public_lists_item (data: {
-                            status: "published",
-                            list_name: "${deckName}" ,
-                            list_id: "${deckId}"
-                        }) {
-                            status
-                            list_name
-                            list_id
-                        }
-                    }
-                    `
-                })
-            })
-            .then(res => res.json())
-            .then(
+            deckService.addPrivateList(deckName, deckId, authCtx.userToken).then(
                 (result) => {
-                    console.log('new list result', result)
+                    console.log('new list result inside', result)
                     props.refreshLists();
                     handleClose()
                 },

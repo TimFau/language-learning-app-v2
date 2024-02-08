@@ -3,6 +3,7 @@ import { Grid, Card, CardActions, CardContent, Button, Typography, CircularProgr
 import AddNewListComponent from './AddNewList';
 import AuthContext from './../../context/auth-context';
 import { useNavigate } from 'react-router-dom';
+import deckService from 'services/deckService';
 
 // Displays all the lists that a logged in user has added to their profile
 
@@ -29,37 +30,7 @@ export default function UserLists(props: UserListsProps) {
     const navigate = useNavigate();
 
     function getUsersLists (userToken: string, userId: string) {
-        let listsUrl = `${process.env.REACT_APP_API_BASE}?access_token=` + userToken;
-        fetch(listsUrl, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `
-                    query {
-                        public_lists(filter: {
-                            user_created: {
-                                id: {
-                                    _eq: "${userId}"
-                                }
-                            }
-                        }) {
-                            id
-                            status
-                            date_created
-                            list_name
-                            list_id
-                            user_created {
-                                id
-                            }
-                        }
-                    }
-                `
-            })
-        })
-        .then(res => res.json())
+        deckService.getPrivateLists(userToken, userId)
         .then(
         (result) => {
             console.log(result.data)

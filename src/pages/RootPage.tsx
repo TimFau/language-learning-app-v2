@@ -1,24 +1,21 @@
-import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import AuthContext from 'context/auth-context';
 import connector, { PropsFromRedux } from "../containers/RootPage.connector"
 
 import Nav from '../components/Nav';
 import IndexPage from './IndexPage';
 import DeckPage from './DeckPage';
+import PublicDecks from './PublicDecksPage';
 import Login from '../components/LoggedOut/Login';
 
 function RootPage (props: PropsFromRedux) {
-    const authCtx = useContext(AuthContext);
   
     return (
     <>
-        <Nav logout={() => authCtx.onLogout()} />
+        <Nav />
         <Routes>
             <Route path="/" element={
                 <IndexPage 
-                    authCtx={authCtx}
                     demoDrawerOpen={props.demoDrawerOpen}
                     setDemoDrawerClosed={props.setDemoDrawerClosed}
                 />
@@ -32,6 +29,10 @@ function RootPage (props: PropsFromRedux) {
                     setDeckStartedTrue={props.setDeckStartedTrue}
                     setDeckStartedFalse={props.setDeckStartedFalse}
                 />
+            }
+            />
+            <Route path="/decks" element={
+                <PublicDecks />
             }
             />
         </Routes>

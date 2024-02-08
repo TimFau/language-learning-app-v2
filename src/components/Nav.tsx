@@ -35,25 +35,29 @@ export default function Nav(props: any) {
         navigate('/')
     }
 
+    const isLoggedIn = () => authCtx.userToken !== ''
+
     return (
         <AppBar position="static" color="primary" className={classes.appBar}>
             <ToolBar>
-                {pathName === '/account' ?
+                {!deckStarted ?
                 <Button>
-                    <Link to="/">Home</Link>
+                    <Link to="/">{isLoggedIn() ? 'My Decks' : 'Home'}</Link>
                 </Button>
-                : '' }
-                {deckStarted ?
+                :
                 <Button onClick={() => goToDeckSelector()}
                 >Exit Deck</Button>
-                : ''}
-                {authCtx.userToken === '' &&
+                }
+                <Button>
+                    <Link to="/decks">All Decks</Link>
+                </Button>
+                {!isLoggedIn() &&
                 <Button
                     onClick={() => authCtx.onLoginOpen(true, false)}
                     className="login"
                 >Login</Button>
                 }
-                {authCtx.userToken !== '' && !pathName.includes("/deck") &&
+                {isLoggedIn() && pathName !== "/deck" &&
                 <Button
                     onClick={authCtx.onLogout}
                     color="secondary"

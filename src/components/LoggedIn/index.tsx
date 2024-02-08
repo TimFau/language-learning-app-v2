@@ -4,6 +4,7 @@ import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import UserLists from './UserLists';
 import AuthContext from 'context/auth-context';
+import userService from 'services/userService';
 
 const useStyles = makeStyles({
     wrapper: {
@@ -19,27 +20,9 @@ export default function Account() {
     const [isReady, setIsReady] = useState(false);
     const dispatch = useAppDispatch();
     const classes = useStyles();
-    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
 
     function getAccountDetails() {
-        fetch(endpoint + "?access_token=" + authCtx.userToken, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `
-                query {
-                    users_me {
-                        first_name
-                        email
-                        id
-                    }
-                }
-                `
-            })
-        })
+        userService.getAccountDetails(authCtx.userToken)
         .then(async response => {
             const data = await response.json();
             if(!response.ok) {

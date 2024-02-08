@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import userService from 'services/userService';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -18,30 +19,8 @@ export default function Login() {
 
     const authCtx = useContext(AuthContext);
 
-    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
-
     function login() {
-        fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query: `
-                mutation {
-                    auth_login(
-                        email: "${email}",
-                        password: "${password}",
-                        mode: cookie
-                    ) {
-                        access_token
-                        refresh_token
-                    }
-                }
-                `
-            })
-        })
+        userService.login(email, password)
         .then(async response => {
             const data = await response.json();
             setEmailError('');
