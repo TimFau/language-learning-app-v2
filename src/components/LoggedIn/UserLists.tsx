@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
-import { Grid, Card, CardActions, CardContent, Button, Typography, CircularProgress } from '@mui/material/';
+import { Grid, Button, CircularProgress } from '@mui/material/';
 import AddNewListComponent from './AddNewList';
 import AuthContext from './../../context/auth-context';
-import { useNavigate } from 'react-router-dom';
 import deckService from 'services/deckService';
+import DeckCard from 'components/Deck/DeckCard';
 
 // Displays all the lists that a logged in user has added to their profile
 
@@ -27,8 +27,6 @@ export default function UserLists(props: UserListsProps) {
     const authCtx = useContext(AuthContext);
     const userId = props.userId
 
-    const navigate = useNavigate();
-
     function getUsersLists (userToken: string, userId: string) {
         deckService.getPrivateLists(userToken, userId)
         .then(
@@ -43,10 +41,6 @@ export default function UserLists(props: UserListsProps) {
             console.log(error);
         }
         )
-    }
-
-    const handleClick = (listName: string, listId: string) => {
-        navigate(`/deck?name=${listName}&id=${listId}`);
     }
   
     useEffect(() => {
@@ -67,16 +61,10 @@ export default function UserLists(props: UserListsProps) {
                 spacing={2}
             >
                 {items.map(item => (
-                    <Card onClick={() => handleClick(item.list_name, item.list_id)} key={item.id.toString()} style={{margin: 10}}>
-                        <CardContent>
-                            <Typography gutterBottom variant="h6" component="h2">
-                            {item.list_name}
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Select Deck</Button>
-                        </CardActions>
-                    </Card>
+                    <DeckCard
+                        item={item}
+                        key={item.id.toString()}
+                    />
                 ))}
             </Grid>
             <Button size="large" onClick={() => setAddListDialogOpen(true)}>Add New</Button>

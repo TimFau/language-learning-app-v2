@@ -5,7 +5,7 @@ import connector, { PropsFromRedux } from "../containers/RootPage.connector"
 import Nav from '../components/Nav';
 import IndexPage from './IndexPage';
 import DeckPage from './DeckPage';
-import PublicDecks from './PublicDecksPage';
+import CommunityDecks from './CommunityDecksPage';
 import Login from '../components/LoggedOut/Login';
 
 function RootPage (props: PropsFromRedux) {
@@ -32,7 +32,7 @@ function RootPage (props: PropsFromRedux) {
             }
             />
             <Route path="/decks" element={
-                <PublicDecks />
+                <CommunityDecks />
             }
             />
         </Routes>

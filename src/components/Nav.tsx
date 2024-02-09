@@ -49,7 +49,7 @@ export default function Nav(props: any) {
                 >Exit Deck</Button>
                 }
                 <Button>
-                    <Link to="/decks">All Decks</Link>
+                    <Link to="/decks">Community Decks</Link>
                 </Button>
                 {!isLoggedIn() &&
                 <Button

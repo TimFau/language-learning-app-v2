@@ -1,7 +1,35 @@
 const apiToken = process.env.REACT_APP_API_TOKEN;
 const endpoint = process.env.REACT_APP_API_BASE;
 
-const getPublicLists = () => {
+const getCommunityDecks = () => {
+
+    return fetch(endpoint + '?access_token=' + apiToken, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `
+                query {
+                    public_lists {
+                        id
+                        list_name
+                        list_id
+                    }
+                }
+            `
+        })
+    })
+    .then(res => res.json())
+    .then(
+        (result) => {
+            return result.data.public_lists;
+        }
+    )
+}
+
+const getDemoDecks = () => {
 
     return fetch(endpoint + '?access_token=' + apiToken, {
         method: 'POST',
@@ -107,7 +135,8 @@ const getPrivateLists = (userToken: string, userId: string) => {
 }
 
 export default {
-    getPublicLists,
+    getCommunityDecks,
+    getDemoDecks,
     addPrivateList,
     getPrivateLists
 };
