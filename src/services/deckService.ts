@@ -1,3 +1,5 @@
+import { PUBLIC_DECKS, DEMO_DECKS, USER_DECKS, CREATE_PUBLIC_DECK } from "queries";
+
 const apiToken = process.env.REACT_APP_API_TOKEN;
 const endpoint = process.env.REACT_APP_API_BASE;
 
@@ -10,15 +12,7 @@ const getCommunityDecks = () => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            query: `
-                query {
-                    public_lists {
-                        id
-                        list_name
-                        list_id
-                    }
-                }
-            `
+            query: PUBLIC_DECKS
         })
     })
     .then(res => res.json())
@@ -38,21 +32,7 @@ const getDemoDecks = () => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            query: `
-                query {
-                    public_lists(
-                        filter: {
-                            include_in_demo: {
-                                _eq: true
-                            }
-                        }
-                    ) {
-                        id
-                        list_name
-                        list_id
-                    }
-                }
-            `
+            query: DEMO_DECKS
         })
     })
     .then(res => res.json())
@@ -72,19 +52,7 @@ const addPrivateList = (deckName: string, deckId: string, userToken: string) => 
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            query: `
-            mutation {
-                create_public_lists_item (data: {
-                    status: "published",
-                    list_name: "${deckName}" ,
-                    list_id: "${deckId}"
-                }) {
-                    status
-                    list_name
-                    list_id
-                }
-            }
-            `
+            query: CREATE_PUBLIC_DECK, variables: { deckName, deckId }
         })
     })
     .then(res => res.json())
@@ -108,26 +76,7 @@ const getPrivateLists = (userToken: string, userId: string) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            query: `
-                query {
-                    public_lists(filter: {
-                        user_created: {
-                            id: {
-                                _eq: "${userId}"
-                            }
-                        }
-                    }) {
-                        id
-                        status
-                        date_created
-                        list_name
-                        list_id
-                        user_created {
-                            id
-                        }
-                    }
-                }
-            `
+            query: USER_DECKS, variables: { userId }
         })
     })
     .then(res => res.json())
