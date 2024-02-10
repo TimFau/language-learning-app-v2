@@ -15,8 +15,6 @@ import hpBackground from '../../images/hp-background.jpg';
 // This Page is served to guests or users that have been logged out
 //
 
-const apiToken = process.env.REACT_APP_API_TOKEN;
-
 const useStyles = makeStyles({
     paper: {
       background: "linear-gradient(0deg, rgba(18, 115, 230, 0.30), rgba(18, 115, 230, 0.15)), url(" + hpBackground + ")",
@@ -159,10 +157,10 @@ export default function GuestPage(props: LoggedOutProps) {
 
     function createAccount() {
         if (validateFields()) {
-            createAccountPost(apiToken)
+            createAccountPost()
         }
-        function createAccountPost(apiToken: string | undefined) {
-            userService.createAccount(apiToken, firstName, lastName, userEmail, userPassword)
+        function createAccountPost() {
+            userService.createAccount(firstName, lastName, userEmail, userPassword)
             .then(async response => {
                 const data = await response.json();
                 if(!response.ok) {

@@ -19,14 +19,12 @@ const getAccountDetails = (userToken: string) => {
 }
 
 const createAccount = (
-        // TODO: Remove undefined
-        apiToken: string | undefined,
         firstName: string,
         lastName: string,
         userEmail: string,
         userPassword: string
     ) => {
-    return fetchGraphQL(CREATE_ACCOUNT, { apiToken, firstName, lastName, userEmail, userPassword })
+    return fetchGraphQL(CREATE_ACCOUNT, { firstName, lastName, userEmail, userPassword })
 }
 
 const login = (email: string, password: string) => {
