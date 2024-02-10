@@ -28,24 +28,27 @@ export default function UserLists(props: UserListsProps) {
     const userId = props.userId
 
     function getUsersLists (userToken: string, userId: string) {
-        deckService.getSavedDecks(userToken, userId)
-        .then(
-        (result) => {
-            console.log(result.data)
-            setIsLoaded(true);
-            setItems(result.data.user_decks);
-        },
-        (error) => {
-            setIsLoaded(true);
-            setError(error);
-            console.log(error);
-        }
-        )
+        Promise.all([
+            deckService.getUserDecks(userToken, userId),
+            deckService.getSavedDecks(userToken, userId)
+        ])
+        .then(([userDecksResult, savedDecksResult]) => {
+            setIsLoaded(true)
+            setItems([
+                ...userDecksResult.data.public_lists,
+                ...savedDecksResult.data.user_decks
+            ])
+        })
+        .catch(error => {
+            setIsLoaded(true)
+            setError(error)
+            console.log(error)
+        })
     }
   
     useEffect(() => {
         getUsersLists(authCtx.userToken, userId)
-    }, [authCtx, userId])
+    }, [authCtx.userToken, userId])
   
     if (error) {
       return <div>Error: {error}</div>;

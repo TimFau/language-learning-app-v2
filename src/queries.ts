@@ -2,7 +2,7 @@ const PUBLIC_DECK_FIELDS = `
     fragment PublicListFields on public_lists {
         id
         list_name
-        list_id  
+        list_id
     }
 `
 
@@ -25,6 +25,21 @@ export const DEMO_DECKS = `
                 }
             }
         ) {
+            ...PublicListFields
+        }
+    }
+`
+
+export const USER_DECKS = `
+    ${PUBLIC_DECK_FIELDS}
+    query GetUserDecks($userId: String!) {
+        public_lists(filter: {
+            user_created: {
+                id: {
+                    _eq: $userId
+                }
+            }
+        }) {
             ...PublicListFields
         }
     }
