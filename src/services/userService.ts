@@ -1,95 +1,42 @@
-const getAccountDetails = (userToken: string) => {
-    return fetch(`${process.env.REACT_APP_API_BASE}/system?access_token=${userToken}`, {
+import { USERS_ME, CREATE_ACCOUNT, LOGIN } from "../queries"
+
+const apiToken = process.env.REACT_APP_API_TOKEN;
+const endpoint = `${process.env.REACT_APP_API_BASE}/system`
+
+const fetchGraphQL = (query: string, variables?: any, userToken?: string) => {
+    return fetch(`${endpoint}?access_token=${userToken || apiToken}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            query: `
-            query {
-                users_me {
-                    first_name
-                    email
-                    id
-                }
-            }
-            `
-        })
-    })
+        body: JSON.stringify({ query, variables })
+    });
+}
+
+const getAccountDetails = (userToken: string) => {
+    return fetchGraphQL(USERS_ME, null, userToken)
 }
 
 const createAccount = (
-    // TODO: Remove undefined
-    apiToken: string | undefined,
-    firstName: string,
-    lastName: string,
-    userEmail: string,
-    userPassword: string) => {
-    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
-    return fetch(endpoint + '?access_token=' + apiToken, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query: `
-                mutation {
-                    create_users_item(
-                        data: {
-                            first_name: "${firstName}",
-                            last_name: "${lastName}",
-                            email: "${userEmail}",
-                            password: "${userPassword}",
-                            status: "active",
-                            provider: "default",
-                            role:{
-                                id: "c8737b56-b42b-4796-adb0-d0fc6c1ede40"
-                                name: "User"
-                                app_access: true
-                                enforce_tfa: false
-                                admin_access: false
-                                icon: "supervised_user_circle"
-                            }
-                        }
-                    ) {
-                        email
-                        status
-                    }
-                }
-            `
-        })
-    })
+        // TODO: Remove undefined
+        apiToken: string | undefined,
+        firstName: string,
+        lastName: string,
+        userEmail: string,
+        userPassword: string
+    ) => {
+    return fetchGraphQL(CREATE_ACCOUNT, { apiToken, firstName, lastName, userEmail, userPassword })
 }
 
 const login = (email: string, password: string) => {
-    const endpoint = `${process.env.REACT_APP_API_BASE}/system`;
-    return fetch(endpoint, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query: `
-            mutation {
-                auth_login(
-                    email: "${email}",
-                    password: "${password}",
-                    mode: cookie
-                ) {
-                    access_token
-                    refresh_token
-                }
-            }
-            `
-        })
-    })
+    return fetchGraphQL(LOGIN, { email, password })
 }
 
-export default {
+const userService = {
     getAccountDetails,
     createAccount,
     login
 }
+
+export default userService
