@@ -28,7 +28,7 @@ export default function UserLists(props: UserListsProps) {
     const userId = props.userId
 
     function getUsersLists (userToken: string, userId: string) {
-        deckService.getUserDecks(userToken, userId)
+        deckService.getSavedDecks(userToken, userId)
         .then(
         (result) => {
             console.log(result.data)

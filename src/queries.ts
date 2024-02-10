@@ -17,7 +17,7 @@ export const PUBLIC_DECKS = `
 
 export const DEMO_DECKS = `
     ${PUBLIC_DECK_FIELDS}
-    query getDemoDecks {
+    query GetDemoDecks {
         public_lists(
             filter: {
                 include_in_demo: {
@@ -30,9 +30,9 @@ export const DEMO_DECKS = `
     }
 `
 
-export const USER_DECKS = `
+export const SAVED_DECKS = `
     ${PUBLIC_DECK_FIELDS}
-    query GetUserDecks($userId: String!){
+    query getSavedDecks($userId: String!){
         user_decks(filter: {
             user_created: {
                 id: {
@@ -41,8 +41,6 @@ export const USER_DECKS = `
             }
         }) {
             id
-            list_name
-            list_id
             status
             date_created
             user_created {

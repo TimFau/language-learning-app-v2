@@ -1,11 +1,11 @@
-import { PUBLIC_DECKS, DEMO_DECKS, USER_DECKS, CREATE_PUBLIC_DECK, FAVORITE_DECK } from "queries";
+import { PUBLIC_DECKS, DEMO_DECKS, SAVED_DECKS, CREATE_PUBLIC_DECK, FAVORITE_DECK } from "queries";
 
-const apiToken = process.env.REACT_APP_API_TOKEN;
 const endpoint = process.env.REACT_APP_API_BASE;
 
 const fetchGraphQL = async (query: string, variables?: any, userToken?: string) => {
     try {
-        const res = await fetch(`${endpoint}?access_token=${userToken || apiToken}`, {
+        const accessToken = userToken ? `?access_token=${userToken}` : ''
+        const res = await fetch(endpoint + accessToken, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -34,8 +34,8 @@ const addPrivateDeck = async (deckName: string, deckId: string, userToken: strin
     return result;
 }
 
-const getUserDecks = async (userToken: string, userId: string) => {
-    const result = await fetchGraphQL(USER_DECKS, { userId }, userToken);
+const getSavedDecks = async (userToken: string, userId: string) => {
+    const result = await fetchGraphQL(SAVED_DECKS, { userId }, userToken);
     return result;
 }
 
@@ -48,7 +48,7 @@ const deckService = {
     getCommunityDecks,
     getDemoDecks,
     addPrivateDeck,
-    getUserDecks,
+    getSavedDecks,
     favoriteDeck
 }
 
