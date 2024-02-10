@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { Grid, Button, CircularProgress } from '@mui/material/';
-import AddNewListComponent from './AddNewList';
+import AddDeckModal from './AddDeckModal';
 import AuthContext from './../../context/auth-context';
 import deckService from 'services/deckService';
 import DeckCard from 'components/Deck/DeckCard';
@@ -66,12 +66,12 @@ export default function UserLists(props: UserListsProps) {
                 {items.map(item => (
                     <DeckCard
                         item={item}
-                        key={item.id.toString()}
+                        key={item.list_name + item.id.toString()}
                     />
                 ))}
             </Grid>
             <Button size="large" onClick={() => setAddListDialogOpen(true)}>Add New</Button>
-            <AddNewListComponent userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersLists(authCtx.userToken, userId)} />
+            <AddDeckModal userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersLists(authCtx.userToken, userId)} />
         </div>
       )
     } else {

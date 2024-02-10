@@ -31,7 +31,7 @@ export const AuthContextProvider = (props: any) => {
 
     useEffect(() => {
 		if (cookieExists('token')) {
-            console.log('Authenticatin Cookie Exists: Setting userToken state')
+            console.log('Authentication Cookie Exists: Setting userToken state')
 			setUserToken(cookies.get('token'));
 		}
 	}, [])

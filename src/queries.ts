@@ -69,9 +69,9 @@ export const SAVED_DECKS = `
 `
 
 export const CREATE_PUBLIC_DECK = `
-    mutation CreatePublicDeck ($deckName: String!, $deckId: String!) {
+    mutation CreatePublicDeck ($deckName: String!, $deckId: String!, $deckStatus: String!) {
         create_public_lists_item (data: {
-            status: "published",
+            status: $deckStatus,
             list_name: $deckName,
             list_id: $deckId
         }) {

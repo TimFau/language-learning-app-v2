@@ -13,9 +13,13 @@ const fetchGraphQL = async (query: string, variables?: any, userToken?: string) 
             },
             body: JSON.stringify({ query, variables })
         });
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
         return await res.json();
     } catch (error) {
-        return console.error(error);
+        console.error(error);
+        throw error;
     }
 }
 
@@ -29,8 +33,9 @@ const getDemoDecks = async () => {
     return result.data.public_lists;
 }
 
-const addPrivateDeck = async (deckName: string, deckId: string, userToken: string) => {
-    const result = await fetchGraphQL(CREATE_PUBLIC_DECK, { deckName, deckId }, userToken);
+const addDeck = async (deckName: string, deckId: string, makePublic: boolean, userToken: string) => {
+    const deckStatus = makePublic ? "published" : "private"
+    const result = await fetchGraphQL(CREATE_PUBLIC_DECK, { deckName, deckId, deckStatus }, userToken);
     return result;
 }
 
@@ -52,7 +57,7 @@ const favoriteDeck = async (userToken: string, communityDeckId: string) => {
 const deckService = {
     getCommunityDecks,
     getDemoDecks,
-    addPrivateDeck,
+    addDeck,
     getUserDecks,
     getSavedDecks,
     favoriteDeck
