@@ -22,7 +22,7 @@ const CommunityDecks = () => {
             <Grid
                 container
                 direction="row"
-                justifyContent="center"
+                justifyContent="flex-start"
                 spacing={2}
             >
             {decks && decks.map((deck: any) => (

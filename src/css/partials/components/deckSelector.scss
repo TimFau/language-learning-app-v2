@@ -28,18 +28,22 @@
 		top: 15px;
 		cursor: pointer;
 	}
-	// .try-it {
-	// 	padding: 20px 0;
-	// }
+}
+.deck-card {
+	margin: 10px;
+	text-align: left;
+	min-width: calc(25% - 20px);
+	@media screen and (max-width: 960px) {
+		min-width: calc(50% - 20px);
+	}
+	@media screen and (max-width: 660px) {
+		width: 100%;
+	}
 }
 .demo-drawer {
-	.MuiCard-root {
-		width: 250px;
-		margin: 10px;
-		text-align: left;
-	}
 	.MuiGrid-container {
 		margin: 50px 0;
+		max-width: 100%;
 	}
 }
 .deck-inputs-wrapper.MuiGrid-container {

@@ -28,12 +28,12 @@ export default function UserLists(props: UserListsProps) {
     const userId = props.userId
 
     function getUsersLists (userToken: string, userId: string) {
-        deckService.getPrivateLists(userToken, userId)
+        deckService.getUserDecks(userToken, userId)
         .then(
         (result) => {
             console.log(result.data)
             setIsLoaded(true);
-            setItems(result.data.public_lists);
+            setItems(result.data.user_decks);
         },
         (error) => {
             setIsLoaded(true);

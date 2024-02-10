@@ -1,4 +1,4 @@
-import { PUBLIC_DECKS, DEMO_DECKS, USER_DECKS, CREATE_PUBLIC_DECK } from "queries";
+import { PUBLIC_DECKS, DEMO_DECKS, USER_DECKS, CREATE_PUBLIC_DECK, FAVORITE_DECK } from "queries";
 
 const apiToken = process.env.REACT_APP_API_TOKEN;
 const endpoint = process.env.REACT_APP_API_BASE;
@@ -29,21 +29,27 @@ const getDemoDecks = async () => {
     return result.data.public_lists;
 }
 
-const addPrivateList = async (deckName: string, deckId: string, userToken: string) => {
+const addPrivateDeck = async (deckName: string, deckId: string, userToken: string) => {
     const result = await fetchGraphQL(CREATE_PUBLIC_DECK, { deckName, deckId }, userToken);
     return result;
 }
 
-const getPrivateLists = async (userToken: string, userId: string) => {
+const getUserDecks = async (userToken: string, userId: string) => {
     const result = await fetchGraphQL(USER_DECKS, { userId }, userToken);
     return result;
 }
 
+const favoriteDeck = async (communityDeckId: string) => {
+    const result = await fetchGraphQL(FAVORITE_DECK, { communityDeckId });
+    return result;
+} 
+
 const deckService = {
     getCommunityDecks,
     getDemoDecks,
-    addPrivateList,
-    getPrivateLists
+    addPrivateDeck,
+    getUserDecks,
+    favoriteDeck
 }
 
 export default deckService

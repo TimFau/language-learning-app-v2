@@ -31,8 +31,9 @@ export const DEMO_DECKS = `
 `
 
 export const USER_DECKS = `
+    ${PUBLIC_DECK_FIELDS}
     query GetUserDecks($userId: String!){
-        public_lists(filter: {
+        user_decks(filter: {
             user_created: {
                 id: {
                     _eq: $userId
@@ -47,6 +48,9 @@ export const USER_DECKS = `
             user_created {
                 id
             }
+            public_deck_id {
+                ...PublicListFields
+            }
         }
     }
 `
@@ -57,6 +61,35 @@ export const CREATE_PUBLIC_DECK = `
             status: "published",
             list_name: $deckName,
             list_id: $deckId
+        }) {
+            status
+            list_name
+            list_id
+        }
+    }
+`
+
+export const CREATE_USER_DECK = `
+    mutation CreateUserDeck ($deckName: String!, $deckId: String!) {
+        create_user_decks_item (data: {
+            status: "published",
+            list_name: $deckName,
+            list_id: $deckId
+        }) {
+            status
+            list_name
+            list_id
+        }
+    }
+`
+
+export const FAVORITE_DECK = `
+    mutation FavoriteDeck ($communityDeckId: create_public_lists_input!) {
+        create_user_decks_item (data: {
+            status: "published",
+            list_name: "Relational Deck",
+            list_id: "",
+            public_deck_id: $communityDeckId
         }) {
             status
             list_name

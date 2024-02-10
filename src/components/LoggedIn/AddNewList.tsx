@@ -44,7 +44,7 @@ export default function AddNewListModal(props: AddNewListModalProps) {
         })
         // Add list to user_lists
         function sendPost() {
-            deckService.addPrivateList(deckName, deckId, authCtx.userToken).then(
+            deckService.addPrivateDeck(deckName, deckId, authCtx.userToken).then(
                 (result) => {
                     console.log('new list result inside', result)
                     props.refreshLists();
