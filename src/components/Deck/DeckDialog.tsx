@@ -10,7 +10,7 @@ interface deckDialogProps {
     language2: string | undefined,
     translateMode: string,
     inputMode: string,
-    currentListName: string,
+    currentDeckName: string,
     deckDataLoaded: boolean,
     deckDialogOpen: boolean,
     children?: React.ReactNode,
@@ -29,7 +29,7 @@ export default function deckDialog(props: deckDialogProps) {
             {props.deckDataLoaded ?
             <React.Fragment>
             <DialogContent dividers>
-                <Typography gutterBottom>Selected List: <strong>{props.currentListName}</strong></Typography>
+                <Typography gutterBottom>Selected List: <strong>{props.currentDeckName}</strong></Typography>
                 <Typography >Choose Mode</Typography>
                 <ButtonGroup
                     color="primary"

@@ -1,54 +1,54 @@
-const PUBLIC_DECK_FIELDS = `
-    fragment PublicListFields on public_lists {
+const DECK_FIELDS = `
+    fragment DeckFields on decks {
         id
-        list_name
-        list_id
+        deck_name
+        deck_id
     }
 `
 
-export const PUBLIC_DECKS = `
-    ${PUBLIC_DECK_FIELDS}
-    query GetPublicDecks {
-        public_lists {
-            ...PublicListFields
+export const COMMUNITY_DECKS = `
+    ${DECK_FIELDS}
+    query GetCommunityDecks {
+        decks {
+            ...DeckFields
         }
     }
 `
 
 export const DEMO_DECKS = `
-    ${PUBLIC_DECK_FIELDS}
+    ${DECK_FIELDS}
     query GetDemoDecks {
-        public_lists(
+        decks(
             filter: {
                 include_in_demo: {
                     _eq: true
                 }
             }
         ) {
-            ...PublicListFields
+            ...DeckFields
         }
     }
 `
 
 export const USER_DECKS = `
-    ${PUBLIC_DECK_FIELDS}
+    ${DECK_FIELDS}
     query GetUserDecks($userId: String!) {
-        public_lists(filter: {
+        decks(filter: {
             user_created: {
                 id: {
                     _eq: $userId
                 }
             }
         }) {
-            ...PublicListFields
+            ...DeckFields
         }
     }
 `
 
 export const SAVED_DECKS = `
-    ${PUBLIC_DECK_FIELDS}
+    ${DECK_FIELDS}
     query getSavedDecks($userId: String!){
-        user_decks(filter: {
+        saved_decks(filter: {
             user_created: {
                 id: {
                     _eq: $userId
@@ -61,51 +61,37 @@ export const SAVED_DECKS = `
             user_created {
                 id
             }
-            public_deck_id {
-                ...PublicListFields
+            deck_relation {
+                ...DeckFields
             }
         }
     }
 `
 
-export const CREATE_PUBLIC_DECK = `
-    mutation CreatePublicDeck ($deckName: String!, $deckId: String!, $deckStatus: String!) {
-        create_public_lists_item (data: {
+export const CREATE_DECK = `
+    mutation CreateDeck ($deckName: String!, $deckId: String!, $deckStatus: String!) {
+        create_decks_item (data: {
             status: $deckStatus,
-            list_name: $deckName,
-            list_id: $deckId
+            deck_name: $deckName,
+            deck_id: $deckId
         }) {
             status
-            list_name
-            list_id
-        }
-    }
-`
-
-export const CREATE_USER_DECK = `
-    mutation CreateUserDeck ($deckName: String!, $deckId: String!) {
-        create_user_decks_item (data: {
-            status: "published",
-            list_name: $deckName,
-            list_id: $deckId
-        }) {
-            status
-            list_name
-            list_id
+            deck_name
+            deck_id
         }
     }
 `
 
 export const SAVE_DECK = `
-    mutation SaveDeck ($communityDeckId: create_public_lists_input!) {
-        create_user_decks_item (data: {
+    mutation SaveDeck ($communityDeckId: create_decks_input!) {
+        create_saved_decks_item (data: {
             status: "published",
-            public_deck_id: $communityDeckId
+            deck_relation: $communityDeckId
         }) {
             status
-            public_deck_id {
-                list_name
-                list_id
+            deck_relation {
+                deck_name
+                deck_id
             }
         }
     }

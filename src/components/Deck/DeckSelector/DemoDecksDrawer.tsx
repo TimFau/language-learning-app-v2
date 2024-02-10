@@ -10,8 +10,8 @@ import DeckCard from '../DeckCard';
 
 interface listItem {
     id: string,
-    list_id: string,
-    list_name: string
+    deck_id: string,
+    deck_name: string
 }
 
 interface DemoDeckDrawerProps {

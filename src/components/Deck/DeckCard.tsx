@@ -10,15 +10,15 @@ type DeckCardProps = {
 }
 
 const DeckCard = (props: DeckCardProps) => {
-    const deck = props.item.public_deck_id ?? props.item
-    const { list_name: listName, list_id: listId } = deck
+    const deck = props.item.deck_relation ? props.item.deck_relation : props.item
+    const { deck_name: deckName, deck_id: deckId } = deck
     const authCtx = useContext(AuthContext);
     const userToken = authCtx.userToken || ''
 
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/deck?name=${listName}&id=${listId}`);
+        navigate(`/deck?name=${deckName}&id=${deckId}`);
     }
 
     return (
@@ -26,7 +26,7 @@ const DeckCard = (props: DeckCardProps) => {
             <CardActionArea onClick={() => handleClick()}>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                    {listName}
+                    {deckName}
                     </Typography>
                     {/* <Typography gutterBottom variant="body1" component="h3">
                     English
@@ -34,7 +34,7 @@ const DeckCard = (props: DeckCardProps) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <IconButton aria-label="add to favorites" onClick={() => deckService.favoriteDeck(userToken, deck)}>
+                <IconButton aria-label="add to favorites" onClick={() => deckService.saveDeck(userToken, deck)}>
                     <FavoriteIcon />
                 </IconButton>
                 <Button size="small" onClick={() => handleClick()}>Start Deck</Button>

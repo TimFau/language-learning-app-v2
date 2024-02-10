@@ -53,7 +53,7 @@ function Deck(props: RootState) {
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
     const [incorrect, setIncorrect] = useState<boolean>(false);
-    const [currentListName, setCurrentListName] = useState<string>('');
+    const [currentDeckName, setCurrentDeckName] = useState<string>('');
     const [deckDataLoaded, setDeckDataLoaded] = useState<boolean>(false);
     const [randomNum, setRandomNum] = useState<number>(0);
     const [initialCount, setInitialCount] = useState<number>(0);
@@ -166,10 +166,10 @@ function Deck(props: RootState) {
         props.setDeckDialogClose();
         navigate('/')
     }
-    function deckOptions(listName: string, listId: string) {
+    function deckOptions(deckName: string, deckId: string) {
         setDeckDataLoaded(false);
-        getDeckData(listId)
-        setCurrentListName(listName);
+        getDeckData(deckId)
+        setCurrentDeckName(deckName);
         // props.setDemoDrawerClosed();
         props.setDeckDialogOpen();
     }
@@ -233,7 +233,7 @@ function Deck(props: RootState) {
                 </form>
                 <DeckDialog
                     inputMode={inputMode}
-                    currentListName={currentListName}
+                    currentDeckName={currentDeckName}
                     setInputMode={setInputMode}
                     setDialogClosed={props.setDeckDialogClose}
                     deckDialogOpen={props.deckDialogOpen}

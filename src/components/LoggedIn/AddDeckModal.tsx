@@ -77,7 +77,7 @@ export default function AddDeckModal(props: AddDeckModalProps) {
                     onChange={handleChange}
                     value={deckName}
                     autoFocus
-                    id="addNewDeckListName"
+                    id="addNewDeckName"
                     name="DeckName"
                     label="Deck Name"
                     type="text"

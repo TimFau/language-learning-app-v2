@@ -10,8 +10,8 @@ import DeckCard from 'components/Deck/DeckCard';
 interface itemsChild {
     date_created: string,
     id: string,
-    list_id: string,
-    list_name: string,
+    deck_id: string,
+    deck_name: string,
     status: string
 }
 
@@ -35,8 +35,8 @@ export default function UserLists(props: UserListsProps) {
         .then(([userDecksResult, savedDecksResult]) => {
             setIsLoaded(true)
             setItems([
-                ...userDecksResult.data.public_lists,
-                ...savedDecksResult.data.user_decks
+                ...userDecksResult.data.decks,
+                ...savedDecksResult.data.saved_decks
             ])
         })
         .catch(error => {
@@ -66,7 +66,7 @@ export default function UserLists(props: UserListsProps) {
                 {items.map(item => (
                     <DeckCard
                         item={item}
-                        key={item.list_name + item.id.toString()}
+                        key={item.deck_name + item.id.toString()}
                     />
                 ))}
             </Grid>
