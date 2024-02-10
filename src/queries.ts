@@ -96,17 +96,17 @@ export const CREATE_USER_DECK = `
     }
 `
 
-export const FAVORITE_DECK = `
-    mutation FavoriteDeck ($communityDeckId: create_public_lists_input!) {
+export const SAVE_DECK = `
+    mutation SaveDeck ($communityDeckId: create_public_lists_input!) {
         create_user_decks_item (data: {
             status: "published",
-            list_name: "Relational Deck",
-            list_id: "",
             public_deck_id: $communityDeckId
         }) {
             status
-            list_name
-            list_id
+            public_deck_id {
+                list_name
+                list_id
+            }
         }
     }
 `
