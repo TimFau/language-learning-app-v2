@@ -1,4 +1,4 @@
-import { COMMUNITY_DECKS, DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, SAVE_DECK } from "queries";
+import { COMMUNITY_DECKS, DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, SAVE_DECK, UNSAVE_DECK } from "queries";
 
 const endpoint = process.env.REACT_APP_API_BASE;
 
@@ -52,6 +52,19 @@ const getSavedDecks = async (userToken: string, userId: string) => {
 const saveDeck = async (userToken: string, communityDeckId: string) => {
     const result = await fetchGraphQL(SAVE_DECK, { communityDeckId }, userToken);
     return result;
+}
+
+const unsaveDeck = async (userToken: string, savedDeckId: string) => {
+    try {
+        const result = await fetchGraphQL(UNSAVE_DECK, { savedDeckId }, userToken);
+        if (result.errors) {
+            throw new Error(result.errors[0].message);
+        }
+        return result;
+    } catch (error) {
+        console.error(`Error unsaving deck ${savedDeckId}:`, error);
+        throw error;
+    }
 } 
 
 const deckService = {
@@ -60,7 +73,8 @@ const deckService = {
     addDeck,
     getUserDecks,
     getSavedDecks,
-    saveDeck
+    saveDeck,
+    unsaveDeck
 }
 
 export default deckService

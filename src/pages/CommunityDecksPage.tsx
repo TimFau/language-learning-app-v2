@@ -1,19 +1,50 @@
 import { Grid } from "@mui/material";
 import DeckCard from "components/Deck/DeckCard";
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import deckService from "services/deckService"
+import AuthContext from 'context/auth-context';
 
 const CommunityDecks = () => {
+    const authCtx = useContext(AuthContext);
     const [decks, setDecks] = useState<any>(null);
+    const [savedDecks, setSavedDecks] = useState<any>(null)
 
-    useEffect(() => {
+    const getDecks = () => {
         deckService.getCommunityDecks().then(
             result => {
-                // console.log(result)
-                setDecks(result)
+                console.log('savedDecks', savedDecks, 'result', result)
+                const modifiedResult = result.map((deck: any) => {
+                    if (savedDecks) {
+                        const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation.id === deck.id)
+                        if (savedDeck) {
+                            console.log('savedDeck', savedDeck)
+                            return {
+                                isSaved: true,
+                                savedDeckId: savedDeck.id,
+                                ...deck
+                            }
+                        }
+                    }
+                    return deck
+                })
+                setDecks(modifiedResult)
             }
         )
-    }, [])
+    }
+
+    useEffect(() => {
+        if (authCtx.userToken && authCtx.userId) {
+            setSavedDecks([])
+            deckService.getSavedDecks(authCtx.userToken, authCtx.userId).then(result => {
+                setSavedDecks(result.data.saved_decks)
+            })
+        }
+    }, [authCtx.userToken, authCtx.userId])
+
+    useEffect(() => {
+        getDecks();
+    }, [savedDecks]);
+
     
     return (
         <div>

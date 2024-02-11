@@ -4,15 +4,17 @@ import {cookieExists} from './../scripts/Helpers';
 
 interface IAuthContext {
     userToken: string,
+    userId: string,
     isNewUser: boolean,
     loginOpen: boolean,
     onLogout: () => void,
-    onLogin: (value: string) => void,
+    onLogin: (accessToken: string, userId: string) => void,
     onLoginOpen: (open: boolean, newUser: boolean) => void
 }
 
 const defaultState = {
     userToken: '',
+    userId: '',
     isNewUser: false,
     loginOpen: false,
     onLogout: () => {},
@@ -26,6 +28,7 @@ const AuthContext = React.createContext<IAuthContext>(defaultState);
 
 export const AuthContextProvider = (props: any) => {
     const [userToken, setUserToken] = useState('');
+    const [userId, setUserId] = useState('');
     const [isNewUser, setIsNewUser] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
 
@@ -33,6 +36,10 @@ export const AuthContextProvider = (props: any) => {
 		if (cookieExists('token')) {
             console.log('Authentication Cookie Exists: Setting userToken state')
 			setUserToken(cookies.get('token'));
+		}
+        if (cookieExists('userId')) {
+            console.log('userId Cookie Exists: Setting userId state')
+			setUserId(cookies.get('userId'));
 		}
 	}, [])
 
@@ -43,12 +50,14 @@ export const AuthContextProvider = (props: any) => {
         setIsNewUser(false);
     }
 
-    const loginHandler = (value: string) => {
+    const loginHandler = (accessToken: string, usersId: string) => {
         console.log('loginHandler')
         let cookieExpires = new Date();
         cookieExpires.setMinutes(cookieExpires.getMinutes() + 20);
-        cookies.set('token', value, { path: '/', expires: cookieExpires });
-        setUserToken(value);
+        cookies.set('token', accessToken, { path: '/', expires: cookieExpires });
+        cookies.set('userId', usersId, { path: '/', expires: cookieExpires });
+        setUserToken(accessToken);
+        setUserId(usersId);
         setLoginOpen(false);
         setIsNewUser(false);
     }
@@ -61,6 +70,7 @@ export const AuthContextProvider = (props: any) => {
     return <AuthContext.Provider
         value={{ 
             userToken: userToken,
+            userId: userId,
             isNewUser: isNewUser,
             loginOpen: loginOpen,
             onLogout: logoutHandler,

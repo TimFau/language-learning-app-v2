@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { Grid, Button, CircularProgress } from '@mui/material/';
 import AddDeckModal from './AddDeckModal';
-import AuthContext from './../../context/auth-context';
+import AuthContext from '../../context/auth-context';
 import deckService from 'services/deckService';
 import DeckCard from 'components/Deck/DeckCard';
 
@@ -19,7 +19,7 @@ interface UserListsProps {
     userId: string
 }
 
-export default function UserLists(props: UserListsProps) {
+export default function UserDecks(props: UserListsProps) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState<itemsChild[]>([]);
@@ -27,16 +27,29 @@ export default function UserLists(props: UserListsProps) {
     const authCtx = useContext(AuthContext);
     const userId = props.userId
 
-    function getUsersLists (userToken: string, userId: string) {
+    function getUsersDecks (userToken: string, userId: string) {
         Promise.all([
             deckService.getUserDecks(userToken, userId),
             deckService.getSavedDecks(userToken, userId)
         ])
         .then(([userDecksResult, savedDecksResult]) => {
             setIsLoaded(true)
+            const userDecks = userDecksResult.data.decks.map((deck: any) => {
+                return {
+                    type: "user",
+                    ...deck
+                }
+            })
+            const savedDecks = savedDecksResult.data.saved_decks.map((deck: any) => {
+                return {
+                    isSaved: true,
+                    savedDeckId: deck.id,
+                    ...deck
+                }
+            })
             setItems([
-                ...userDecksResult.data.decks,
-                ...savedDecksResult.data.saved_decks
+                ...userDecks,
+                ...savedDecks
             ])
         })
         .catch(error => {
@@ -47,7 +60,7 @@ export default function UserLists(props: UserListsProps) {
     }
   
     useEffect(() => {
-        getUsersLists(authCtx.userToken, userId)
+        getUsersDecks(authCtx.userToken, userId)
     }, [authCtx.userToken, userId])
   
     if (error) {
@@ -71,7 +84,7 @@ export default function UserLists(props: UserListsProps) {
                 ))}
             </Grid>
             <Button size="large" onClick={() => setAddListDialogOpen(true)}>Add New</Button>
-            <AddDeckModal userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersLists(authCtx.userToken, userId)} />
+            <AddDeckModal userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersDecks(authCtx.userToken, userId)} />
         </div>
       )
     } else {

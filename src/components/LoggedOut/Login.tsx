@@ -45,7 +45,10 @@ export default function Login() {
                 }
                 return false
             } else {
-                authCtx.onLogin(data.data.auth_login.access_token)
+                const userDetails = await userService.getAccountDetails(data.data.auth_login.access_token).then(response => response.json())
+                const accessToken = data.data.auth_login.access_token
+                const userId = userDetails.data.users_me.id
+                authCtx.onLogin(accessToken, userId)
                 return true
             }
         })

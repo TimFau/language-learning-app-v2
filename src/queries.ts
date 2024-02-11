@@ -97,6 +97,15 @@ export const SAVE_DECK = `
     }
 `
 
+// UNSAVE DECK
+export const UNSAVE_DECK = `
+    mutation UnsaveDeck ($savedDeckId: ID!) {
+        delete_saved_decks_item (id: $savedDeckId) {
+            id
+        }
+    }
+`
+
 export const USERS_ME = `
     query UsersMe {
         users_me {
@@ -147,6 +156,7 @@ export const LOGIN = `
         ) {
             access_token
             refresh_token
+            expires
         }
     }
 `

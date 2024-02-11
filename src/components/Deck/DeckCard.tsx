@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
 import { useContext } from "react";
+import { FavoriteBorder } from '@mui/icons-material';
 
 type DeckCardProps = {
     item: any
@@ -34,10 +35,13 @@ const DeckCard = (props: DeckCardProps) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <IconButton aria-label="add to favorites" onClick={() => deckService.saveDeck(userToken, deck)}>
-                    <FavoriteIcon />
-                </IconButton>
                 <Button size="small" onClick={() => handleClick()}>Start Deck</Button>
+                {props.item.type !== 'user' &&
+                <IconButton aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"} onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId) : deckService.saveDeck(userToken, deck)}>
+                    {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
+                    
+                </IconButton>
+                }
             </CardActions>
         </Card>
     )

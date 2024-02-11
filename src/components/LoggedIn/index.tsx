@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import UserLists from './UserLists';
+import UserDecks from './UserDecks';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
@@ -52,7 +52,7 @@ export default function Account() {
                 {isReady ? 
                 <div>
                     <h1>Welcome, {userName}</h1>
-                    <UserLists userId={userId} />
+                    <UserDecks userId={userId} />
                 </div>
                 :
                 <CircularProgress />
