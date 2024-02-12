@@ -29,6 +29,7 @@ const DeckCard = (props: DeckCardProps) => {
                     <Typography gutterBottom variant="h5" component="h2">
                     {deckName}
                     </Typography>
+                    <Typography>Created by: {props.item.user_created.username}</Typography>
                     {/* <Typography gutterBottom variant="body1" component="h3">
                     English
                     </Typography> */}

@@ -3,6 +3,9 @@ const DECK_FIELDS = `
         id
         deck_name
         deck_id
+        user_created {
+            username
+        }
     }
 `
 
@@ -112,6 +115,7 @@ export const USERS_ME = `
             first_name
             email
             id
+            username
         }
     }
 `

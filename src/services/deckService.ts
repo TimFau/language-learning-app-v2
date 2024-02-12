@@ -58,7 +58,7 @@ const unsaveDeck = async (userToken: string, savedDeckId: string) => {
     try {
         const result = await fetchGraphQL(UNSAVE_DECK, { savedDeckId }, userToken);
         if (result.errors) {
-            throw new Error(result.errors[0].message);
+            console.error(`Error unsaving deck ${savedDeckId}:`, result.errors[0].message);
         }
         return result;
     } catch (error) {
