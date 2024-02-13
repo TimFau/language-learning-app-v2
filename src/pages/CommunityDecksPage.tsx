@@ -12,10 +12,10 @@ const CommunityDecks = () => {
     const getDecks = () => {
         deckService.getCommunityDecks().then(
             result => {
-                console.log('savedDecks', savedDecks, 'result', result)
+                // console.log('savedDecks', savedDecks, 'result', result)
                 const modifiedResult = result.map((deck: any) => {
                     if (savedDecks) {
-                        const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation.id === deck.id)
+                        const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
                         if (savedDeck) {
                             console.log('savedDeck', savedDeck)
                             return {

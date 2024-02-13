@@ -1,10 +1,10 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Card, CardContent, Typography, CardActions, Button, CardActionArea, IconButton } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip } from "@mui/material"
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
 import { useContext } from "react";
-import { FavoriteBorder } from '@mui/icons-material';
+import { FavoriteBorder, Language } from '@mui/icons-material';
 
 type DeckCardProps = {
     item: any
@@ -23,20 +23,29 @@ const DeckCard = (props: DeckCardProps) => {
     }
 
     return (
-        <Card className="deck-card">
+        <Card className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}>
             <CardActionArea onClick={() => handleClick()}>
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                    {deckName}
+                    <div className="cart-content-top">
+                        <div className="deck-info">
+                            <Language />
+                            <Typography variant="h6"><span>{props.item.Language2}</span></Typography>
+                            {/* <Avatar sx={{ width: 18, height: 18 }}>{props.item.user_created.username[0]}</Avatar>
+                            <Typography><span>{props.item.user_created.username}</span></Typography> */}
+                        </div>
+                        <span className="deck-categories">
+                            {props.item.categories.map((category: string) => <Chip label={category} />)}
+                        </span>
+                    </div>
+                    <Typography gutterBottom variant="h4" component="h2" className="deck-name">
+                        {deckName}
                     </Typography>
-                    <Typography>Created by: {props.item.user_created.username}</Typography>
-                    {/* <Typography gutterBottom variant="body1" component="h3">
-                    English
-                    </Typography> */}
+                    {/* <Button size="small">Start Deck</Button> */}
                 </CardContent>
             </CardActionArea>
+            {/* This duplicates code below - it's done thinking forward that we may add more actions and, thus, conditionals */}
+            {props.item.type !== 'user' &&
             <CardActions>
-                <Button size="small" onClick={() => handleClick()}>Start Deck</Button>
                 {props.item.type !== 'user' &&
                 <IconButton aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"} onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId) : deckService.saveDeck(userToken, deck)}>
                     {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
@@ -44,6 +53,7 @@ const DeckCard = (props: DeckCardProps) => {
                 </IconButton>
                 }
             </CardActions>
+            }
         </Card>
     )
 }

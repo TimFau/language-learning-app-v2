@@ -1,0 +1,52 @@
+@mixin anona-regular {
+    font-family: "anona", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+@mixin anona-italic {
+    font-family: "anona", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+@mixin anona-bold {
+    font-family: "anona", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+@mixin anona-bold-italic {
+    font-family: "anona", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.anona-regular {
+    @include anona-regular();
+}
+
+.anona-italic {
+    @include anona-italic();
+}
+
+.anona-bold {
+    @include anona-bold();
+}
+
+.anona-bold-italic {
+    @include anona-bold-italic();
+}
+h1, h2 {
+    &.MuiTypography-root {
+        @include anona-bold-italic();
+    }
+}
+
+h1 {
+    color: $light-shades;
+}
+
+h2 {
+    
+}

@@ -23,7 +23,7 @@
 	&.success {
 		background: #cbffc1;
 		.alert h4 {
-			color: $green;
+			color: $success;
 			display: block;
 			margin: 0;
 			font-size: 24px;
@@ -41,7 +41,7 @@
 			text-align: left;
 		}
 		.alert h4 {
-			color: $red;
+			color: $danger;
 			display: block;
 			margin: 0 0 5px 0;
 			font-size: 24px;

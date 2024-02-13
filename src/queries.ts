@@ -3,6 +3,9 @@ const DECK_FIELDS = `
         id
         deck_name
         deck_id
+        categories
+        Language1
+        Language2
         user_created {
             username
         }

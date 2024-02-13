@@ -3,8 +3,12 @@
 @import 'partials/base/buttonsInputs';
 @import 'partials/base/global';
 
+// Typography
+@import 'partials/typography';
+
 // Components
-@import 'partials/components/deckSelector';
+@import 'partials/components/decks/deckCard';
+@import 'partials/components/decks/deckSelector';
 @import 'partials/components/modes/flashCard';
 @import 'partials/components/modes/keyboard';
 @import 'partials/components/modes/wordBank';
