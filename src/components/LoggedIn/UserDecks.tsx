@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Grid, Button, CircularProgress, Avatar } from '@mui/material/';
+import { Grid, Button, CircularProgress, CardActions } from '@mui/material/';
 import AddDeckModal from './AddDeckModal';
 import AuthContext from '../../context/auth-context';
 import deckService from 'services/deckService';
@@ -75,16 +75,17 @@ export default function UserDecks(props: UserListsProps) {
                 <div className="top-container-inner">
                     <div className="start">
                         <div className="greeting">
-                            <Avatar>AD</Avatar><h1>Welcome back, {props.userName}</h1>
+                            <h1>My Decks</h1>
                         </div>
                         <h2>Here you can view, manage, and add to your personal and saved decks. <span>Explore, learn, and grow your knowledge base!</span></h2>
                     </div>
-                    <div className="end">
+                    <CardActions className="end">
                         <Button size="large" variant="contained" onClick={() => setAddListDialogOpen(true)}>Add Deck</Button>
-                    </div>
+                    </CardActions>
                 </div>
             </div>
             <div id="userListsContainer">
+                {/* <h2>My Decks</h2> */}
                 <Grid
                     container
                     direction="row"

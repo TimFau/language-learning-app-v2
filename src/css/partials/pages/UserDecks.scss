@@ -2,40 +2,58 @@
     margin-top: 0;
 }
 .top-container {
-    background: $light-shades;
+    max-width: 1440px;
+    margin: 40px auto 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     .top-container-inner {
-        max-width: 1440px;
-        margin: 0 auto;
+        width: calc(100% - 20px);
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
         align-items: top;
-        text-align: left;
-        padding: 115px 0 100px 0;
+        text-align: center;
     }
     .start{
-        margin-left: 10px;
         .greeting {
             display: flex;
             align-items: center;
             h1 {
-                color: $dark-shades;
-                margin: 5px 0 0 20px;
-                @include anona-italic;
+                color: $light-shades;
+                margin: 7px 0 0 0;
+                @include anona-regular;
+                font-size: 47px;
             }
         }
         h2 {
-            font-size: 16px;
-            margin-left: 65px;
-            color: $dark-shades;
+            display: none;
+            font-size: 18px;
+            line-height: 1.7em;
+            color: $light-shades;
+            margin: 10px 0 0px 0;
+            text-align: left;
             span {
                 display: block;
             }
         }
     }
     .end {
-        margin-right: 10px;
+        &.MuiCardActions-root {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0;
+        }
     }
 }
 #userListsContainer {
-    padding-top: 50px;
+    padding-top: 65px;
+    > h2 {
+        color: $light-shades;
+        text-align: left;
+        max-width: 1420px;
+        margin: 0 auto 15px auto;
+    }
 }
