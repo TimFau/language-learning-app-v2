@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Grid, Button, CircularProgress } from '@mui/material/';
+import { Grid, Button, CircularProgress, Avatar } from '@mui/material/';
 import AddDeckModal from './AddDeckModal';
 import AuthContext from '../../context/auth-context';
 import deckService from 'services/deckService';
@@ -17,6 +17,7 @@ interface itemsChild {
 
 interface UserListsProps {
     userId: string
+    userName: string
 }
 
 export default function UserDecks(props: UserListsProps) {
@@ -69,23 +70,37 @@ export default function UserDecks(props: UserListsProps) {
       return <CircularProgress />;
     } else if (items) {
       return (
-        <div id="userListsContainer">
-            <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                spacing={2}
-            >
-                {items.map(item => (
-                    <DeckCard
-                        item={item}
-                        key={item.deck_name + item.id.toString()}
-                    />
-                ))}
-            </Grid>
-            <Button size="large" onClick={() => setAddListDialogOpen(true)}>Add New</Button>
+        <>
+            <div className="top-container">
+                <div className="top-container-inner">
+                    <div className="start">
+                        <div className="greeting">
+                            <Avatar>AD</Avatar><h1>Welcome back, {props.userName}</h1>
+                        </div>
+                        <h2>Here you can view, manage, and add to your personal and saved decks. <span>Explore, learn, and grow your knowledge base!</span></h2>
+                    </div>
+                    <div className="end">
+                        <Button size="large" variant="contained" onClick={() => setAddListDialogOpen(true)}>Add Deck</Button>
+                    </div>
+                </div>
+            </div>
+            <div id="userListsContainer">
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="center"
+                    spacing={2}
+                >
+                    {items.map(item => (
+                        <DeckCard
+                            item={item}
+                            key={item.deck_name + item.id.toString()}
+                        />
+                    ))}
+                </Grid>
+            </div>
             <AddDeckModal userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersDecks(authCtx.userToken, userId)} />
-        </div>
+        </>
       )
     } else {
         return <div>Unkown Error</div>

@@ -50,10 +50,7 @@ export default function Account() {
         <div className="container main-container">
             <div className={classes.wrapper + ' wrapper'} id="account">
                 {isReady ? 
-                <div>
-                    <h1>Welcome, {userName}</h1>
-                    <UserDecks userId={userId} />
-                </div>
+                <UserDecks userId={userId} userName={userName} />
                 :
                 <CircularProgress />
                 }

@@ -9,15 +9,15 @@ import './css/main.scss';
 const theme = createTheme(adaptV4Theme({
 	palette: {
 	  primary: {
-		light: '#80c2ff',
-		main: '#1273E6',
-		dark: '#0065bd',
+		light: '#FAF9F8',
+		main: '#4478BB',
+		dark: '#4478BB',
 		contrastText: '#fff',
 	  },
 	  secondary: {
-		light: '#4e5486',
-		main: '#212c59',
-		dark: '#00002f',
+		light: '#F4A583',
+		main: '#9B89D6',
+		dark: '#6F5AB0',
 		contrastText: '#fff',
 	  }
 	},
