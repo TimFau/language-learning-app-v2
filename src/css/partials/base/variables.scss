@@ -7,17 +7,17 @@ $font-family-secondary: 'PT Serif', serif;
 
 // Colors
 $white: #fff;
-$light-shades: #FAF9F8; //Use this color as the background for your dark-on-light designs, or the text color of an inverted design.
-$light-accent: #F4A583; //Accent colors can be used to bring attention to design elements by contrasting with the rest of the palette
-$main: #97B4D9; // This color should be eye-catching but not harsh. It can be liberally applied to yourlayout as its main identity.
-$main-text: #4478BB; // ADA compliant accent text color for dark-on-light designs
-$dark-accent: #9B89D6; // Another accent color to consider. Not all colors have to be used - sometimes a simple color scheme works best.
-$dark-shades: #6F5AB0; // Use as the text color for dark-on-light designs, or as the background for inverted designs.
+$light-shades: #F0F1EB; //Use this color as the background for your dark-on-light designs, or the text color of an inverted design.
+$light-accent: #7F818E; //Accent colors can be used to bring attention to design elements by contrasting with the rest of the palette
+$main: #AD95A4; // This color should be eye-catching but not harsh. It can be liberally applied to yourlayout as its main identity.
+$main-text: $main; // ADA compliant accent text color for dark-on-light designs
+$dark-accent: #677E9D; // Another accent color to consider. Not all colors have to be used - sometimes a simple color scheme works best.
+$dark-shades: #261F3C; // Use as the text color for dark-on-light designs, or as the background for inverted designs.
 
 $primary: $dark-shades;
-$success: #63b179; // Success color
-$warning: #e0a041; // Warning
-$info: #6f5ab0; // Info
+$success: #69a769; // Success color
+$warning: #e69731; // Warning
+$info: #24223f; // Info
 $danger: #f44336; // Danger
 
 // MUI Color Overrides
