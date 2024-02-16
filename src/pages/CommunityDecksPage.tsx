@@ -47,8 +47,8 @@ const CommunityDecks = () => {
 
     
     return (
-        <div>
-            <h1>Community Decks</h1>
+        <div style={{ paddingTop: '65px' }}>
+            <h1 className="sr-only">Community Decks</h1>
             {!decks && "Loading..."}
             <Grid
                 container

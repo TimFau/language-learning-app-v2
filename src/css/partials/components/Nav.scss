@@ -7,14 +7,18 @@
     .start, .end {
         display: flex;
     }
-    .start > a:first-of-type {
+    .start .nav-item:first-of-type {
         padding-left: 0;
     }
-    a, button {
-        @include study-regular;
+    .end .nav-item:last-of-type {
+        padding-right: 0;
     }
-    a {
+    .nav-item {
         padding: 15px;
+    }
+    .nav-item,
+    .nav-item button {
+        @include study-regular;
     }
     button {
         color: $light-shades;

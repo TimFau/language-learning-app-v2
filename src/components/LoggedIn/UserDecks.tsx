@@ -1,9 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
-import { Grid, Button, CircularProgress, CardActions } from '@mui/material/';
-import AddDeckModal from './AddDeckModal';
+import { Grid, CircularProgress } from '@mui/material/';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/Deck/DeckCard';
-import AddIcon from '@mui/icons-material/Add';
 import getUsersDecks from './getUsersDecks';
 
 // Displays all the lists that a logged in user has added to their profile
@@ -25,7 +23,6 @@ export default function UserDecks(props: UserListsProps) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState<itemsChild[]>([]);
-    const [addListDialogOpen, setAddListDialogOpen] = useState(false);
     const authCtx = useContext(AuthContext);
     const userId = props.userId
   
@@ -49,21 +46,8 @@ export default function UserDecks(props: UserListsProps) {
     } else if (items) {
       return (
         <>
-            <div className="top-container">
-                <div className="top-container-inner">
-                    <div className="start">
-                        <div className="greeting">
-                            <h1 className="sr-only">My Decks</h1>
-                        </div>
-                        {/* <h2>Here you can view, manage, and add to your personal and saved decks. <span>Explore, learn, and grow your knowledge base!</span></h2> */}
-                    </div>
-                    <CardActions className="end">
-                        <Button size="large" variant="contained" onClick={() => setAddListDialogOpen(true)}><AddIcon /> Add Deck</Button>
-                    </CardActions>
-                </div>
-            </div>
             <div id="userListsContainer">
-                {/* <h2>My Decks</h2> */}
+                <h1 className="sr-only">My Decks</h1>
                 <Grid
                     container
                     direction="row"
@@ -78,7 +62,6 @@ export default function UserDecks(props: UserListsProps) {
                     ))}
                 </Grid>
             </div>
-            <AddDeckModal userId={userId} addListDialogOpen={addListDialogOpen} closeDialog={() => setAddListDialogOpen(false)} refreshLists={() => getUsersDecks(authCtx.userToken, userId)} />
         </>
       )
     } else {
