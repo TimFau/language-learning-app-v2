@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import UserDecks from './UserDecks';
+import UserDecks from '../../components/Authenticated/UserDecks';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
@@ -47,7 +47,7 @@ export default function Account() {
     })
     
     return (
-        <div className="container main-container">
+        <div className="container page-container">
             <div className={classes.wrapper + ' wrapper'} id="account">
                 {isReady ? 
                 <UserDecks userId={userId} userName={userName} />

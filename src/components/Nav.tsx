@@ -2,8 +2,8 @@ import { useContext, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
-import AddDeckModal from './LoggedIn/AddDeckModal';
-import getUsersDecks from './LoggedIn/getUsersDecks';
+import AddDeckModal from './Authenticated/AddDeckModal';
+import getUsersDecks from './Authenticated/getUsersDecks';
 import { Home as HomeIcon, CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, Login as LoginIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
 
 export default function Nav() {

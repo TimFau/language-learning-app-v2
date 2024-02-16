@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
-import DemoDecksDrawer from '../Deck/DeckSelector/DemoDecksDrawer';
+import DemoDecksDrawer from '../../components/Deck/DemoDecksDrawer';
 
 import { Paper, Card, TextField, Button, Link } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
@@ -195,7 +195,7 @@ export default function GuestPage(props: LoggedOutProps) {
         }
     }
     return (
-        <div className="container main-container">
+        <div className="container page-container">
             <Paper elevation={0} square={true} className={classes.paper}>
                 <div className={classes.copy}>
                     <h1>Easy to Use Flashcards <span className={classes.span}>For Learning New Languages</span></h1>

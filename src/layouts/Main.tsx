@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
 
-import connector, { PropsFromRedux } from "../containers/RootPage.connector"
+import connector, { PropsFromRedux } from "../containers/Main.connector"
 
 import Nav from '../components/Nav';
-import IndexPage from './IndexPage';
-import DeckPage from './DeckPage';
-import CommunityDecks from './CommunityDecksPage';
-import Login from '../components/LoggedOut/Login';
+import IndexPage from '../pages/Index/Index';
+import DeckPage from '../pages/Deck';
+import CommunityDecks from '../pages/CommunityDecks';
+import Login from '../components/Unauthenticated/Login';
 
 function RootPage (props: PropsFromRedux) {
   

@@ -188,7 +188,7 @@ function Deck(props: RootState) {
     }, [name, id])
 
     return (
-        <div className={"container main-container " + inputMode}>
+        <div className={"container page-container " + inputMode}>
             <div className="wrapper">
                 <ProgressBar 
                     langOneArrLength={langOneArr?.length}
