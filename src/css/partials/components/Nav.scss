@@ -1,0 +1,30 @@
+.app-bar {
+    .app-bar-inner {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .start, .end {
+        display: flex;
+    }
+    a {
+        padding: 15px;
+    }
+    button {
+        color: $light-shades;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .active button {
+        &:after {
+            content: '';
+            height: 4px;
+            width: 100%;
+            background: $light-shades;
+            display: block;
+            margin-top: 12px;
+        }
+    }
+}

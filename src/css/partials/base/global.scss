@@ -22,12 +22,6 @@ body {
 			display: none;
 		}
 	}
-	nav {
-		z-index: 1;
-		position: absolute;
-		width: 100%;
-		left: 0;
-	}
 }
 .main-container .wrapper {
 	display: flex;
@@ -63,10 +57,6 @@ header {
 	position: relative;
 	top: 50%;
 	transform: translateY(-50%);
-}
-.max-width-wrapper {
-	max-width: 1400px;
-	margin: 0 auto;
 }
 #success-modal {
 	text-align: center;
