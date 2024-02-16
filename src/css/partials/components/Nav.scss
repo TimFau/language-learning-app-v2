@@ -7,6 +7,12 @@
     .start, .end {
         display: flex;
     }
+    .start > a:first-of-type {
+        padding-left: 0;
+    }
+    a, button {
+        @include study-regular;
+    }
     a {
         padding: 15px;
     }
@@ -16,6 +22,11 @@
         border: none;
         font-size: 24px;
         cursor: pointer;
+        svg {
+            position: relative;
+            top: 4px;
+            padding-right: 5px;
+        }
     }
     .active button {
         &:after {

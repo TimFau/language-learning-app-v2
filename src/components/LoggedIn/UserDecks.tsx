@@ -4,6 +4,7 @@ import AddDeckModal from './AddDeckModal';
 import AuthContext from '../../context/auth-context';
 import deckService from 'services/deckService';
 import DeckCard from 'components/Deck/DeckCard';
+import AddIcon from '@mui/icons-material/Add';
 
 // Displays all the lists that a logged in user has added to their profile
 
@@ -75,12 +76,12 @@ export default function UserDecks(props: UserListsProps) {
                 <div className="top-container-inner">
                     <div className="start">
                         <div className="greeting">
-                            <h1>My Decks</h1>
+                            <h1 className="sr-only">My Decks</h1>
                         </div>
-                        <h2>Here you can view, manage, and add to your personal and saved decks. <span>Explore, learn, and grow your knowledge base!</span></h2>
+                        {/* <h2>Here you can view, manage, and add to your personal and saved decks. <span>Explore, learn, and grow your knowledge base!</span></h2> */}
                     </div>
                     <CardActions className="end">
-                        <Button size="large" variant="contained" onClick={() => setAddListDialogOpen(true)}>Add Deck</Button>
+                        <Button size="large" variant="contained" onClick={() => setAddListDialogOpen(true)}><AddIcon /> Add Deck</Button>
                     </CardActions>
                 </div>
             </div>

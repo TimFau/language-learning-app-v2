@@ -1,0 +1,23 @@
+@mixin study-regular {
+    font-family: "study", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+@mixin study-italic {
+    font-family: "study", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+@mixin study-bold {
+    font-family: "study", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+@mixin study-bold-italic {
+    font-family: "study", serif;
+    font-weight: 700;
+    font-style: italic;
+}
+.study-regular {
+    @include study-regular;
+}

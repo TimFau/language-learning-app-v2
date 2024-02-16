@@ -37,16 +37,3 @@
 .anona-bold-italic {
     @include anona-bold-italic();
 }
-h1, h2 {
-    &.MuiTypography-root {
-        @include anona-bold-italic();
-    }
-}
-
-h1 {
-    color: $light-shades;
-}
-
-h2 {
-    
-}
