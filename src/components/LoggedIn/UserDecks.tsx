@@ -2,9 +2,9 @@ import { useEffect, useState, useContext } from 'react';
 import { Grid, Button, CircularProgress, CardActions } from '@mui/material/';
 import AddDeckModal from './AddDeckModal';
 import AuthContext from '../../context/auth-context';
-import deckService from 'services/deckService';
 import DeckCard from 'components/Deck/DeckCard';
 import AddIcon from '@mui/icons-material/Add';
+import getUsersDecks from './getUsersDecks';
 
 // Displays all the lists that a logged in user has added to their profile
 
@@ -28,41 +28,18 @@ export default function UserDecks(props: UserListsProps) {
     const [addListDialogOpen, setAddListDialogOpen] = useState(false);
     const authCtx = useContext(AuthContext);
     const userId = props.userId
-
-    function getUsersDecks (userToken: string, userId: string) {
-        Promise.all([
-            deckService.getUserDecks(userToken, userId),
-            deckService.getSavedDecks(userToken, userId)
-        ])
-        .then(([userDecksResult, savedDecksResult]) => {
+  
+    useEffect(() => {
+        getUsersDecks(authCtx.userToken, userId)
+        .then((response: any) => {
             setIsLoaded(true)
-            const userDecks = userDecksResult.data.decks.map((deck: any) => {
-                return {
-                    type: "user",
-                    ...deck
-                }
-            })
-            const savedDecks = savedDecksResult.data.saved_decks.map((deck: any) => {
-                return {
-                    isSaved: true,
-                    savedDeckId: deck.id,
-                    ...deck
-                }
-            })
-            setItems([
-                ...userDecks,
-                ...savedDecks
-            ])
+            setItems(response)
         })
         .catch(error => {
             setIsLoaded(true)
             setError(error)
             console.log(error)
         })
-    }
-  
-    useEffect(() => {
-        getUsersDecks(authCtx.userToken, userId)
     }, [authCtx.userToken, userId])
   
     if (error) {

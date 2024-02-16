@@ -34,7 +34,7 @@ const DeckCard = (props: DeckCardProps) => {
                             <Typography><span>{props.item.user_created.username}</span></Typography> */}
                         </div>
                         <span className="deck-categories">
-                            {props.item.categories.map((category: string) => <Chip label={category} />)}
+                            {props.item.categories?.map((category: string) => <Chip label={category} />)}
                         </span>
                     </div>
                     <Typography gutterBottom variant="h4" component="h2" className="deck-name">
