@@ -42,9 +42,14 @@
             margin-top: 12px;
         }
     }
-    .nav-item-wrapper:hover:after,
-    .active .nav-item-wrapper:after {
+    .nav-item-wrapper:hover:after {
         background: $light-shades;
+        opacity: 30%;
+    }
+    .active .nav-item-wrapper:after,
+    .active .nav-item-wrapper:hover:after {
+        background: $light-shades;
+        opacity: 100%;
     }
     @media screen and (max-width: 760px) {
         .nav-item-wrapper .nav-label {
@@ -58,7 +63,6 @@
             padding: 10px;
         }
         .nav-item-wrapper .nav-label {
-            // display: none;
             font-size: 12px;
         }
     }

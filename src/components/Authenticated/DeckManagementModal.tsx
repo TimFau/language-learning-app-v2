@@ -1,3 +1,16 @@
+/**
+ * DeckManagementModal Component
+ * 
+ * This component is a modal used for managing (creating and editing) decks.
+ * It uses the context 'ModalContext' to handle its state and functions.
+ * 
+ * The 'mode' state from the context determines whether the modal is being used to add a new deck or edit an existing one.
+ * 
+ * The 'existingDeck' state from the context represents the current deck being edited.
+ * It is null when 'mode' is 'add', and it contains the deck data when 'mode' is 'edit'.
+ * 
+ */
+
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, TextField } from '@mui/material';
 import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from 'context/auth-context';
@@ -5,14 +18,14 @@ import ModalContext from 'context/modal-context';
 import deckService from 'services/deckService';
 import sheetService from 'services/sheetService';
 
-interface AddDeckModalProps {
+interface DeckManagementModalProps {
     userId: string,
     addListDialogOpen: boolean,
     refreshLists: () => void,
     closeDialog: () => void,
 }
 
-const AddDeckModal = (props: AddDeckModalProps) => {
+const DeckManagementModal = (props: DeckManagementModalProps) => {
 
     const [deckName, setDeckName] = useState('')
     const [deckId, setDeckId] = useState('')
@@ -48,13 +61,13 @@ const AddDeckModal = (props: AddDeckModalProps) => {
         }
     }
 
-    function handleAddDeck () {
+    function handleSubmit () {
         // Check if valid
         sheetService.checkSheetValidity(deckId)
         .then(response => {
             if (response.status === 200) {
                 setDeckErrorMsg('')
-                sendPost()
+                sendRequest()
             } else {
                 setDeckErrorMsg('Unable to validate Sheet ID')
             }
@@ -62,26 +75,26 @@ const AddDeckModal = (props: AddDeckModalProps) => {
         .catch((error) => {
             console.error('Error', error)
         })
-        // Add list to user_lists or update existing item
-        function sendPost() {
+
+        const handleResult = (result: any) => {
+            console.log('new deck result', result)
+            props.refreshLists();
+            handleClose()
+        }
+
+
+        // Add deck to user_decks or update existing item
+        function sendRequest() {
             if(isAdd) {
                 deckService.addDeck(deckName, deckId, makePublic, authCtx.userToken).then(
-                    (result) => {
-                        console.log('new list result inside', result)
-                        props.refreshLists();
-                        handleClose()
-                    },
+                    handleResult,
                     (error) => {
                         console.log(error);
                     }
                 )
             } else if (isEdit) {
                 deckService.updateDeck(deckName, deckId, makePublic, id, authCtx.userToken).then(
-                    (result) => {
-                        console.log('new list result inside', result)
-                        props.refreshLists();
-                        handleClose()
-                    },
+                    handleResult,
                     (error) => {
                         console.log(error);
                     }
@@ -142,10 +155,10 @@ const AddDeckModal = (props: AddDeckModalProps) => {
                 
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleAddDeck}>{isAdd ? "Add Deck" : "Save Deck"}</Button>
+                <Button onClick={handleSubmit}>{isAdd ? "Add Deck" : "Save Deck"}</Button>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default AddDeckModal
+export default DeckManagementModal
