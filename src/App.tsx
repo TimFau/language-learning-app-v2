@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { AuthContextProvider } from 'context/auth-context';
+import { ModalContextProvider } from 'context/modal-context';
 
 import MainLayout from './layouts/Main';
 
@@ -26,6 +27,7 @@ const theme = createTheme(adaptV4Theme({
 export default function TranslationApp() {
 	return (
 		<AuthContextProvider>
+		<ModalContextProvider>
 		<BrowserRouter>
 			<StyledEngineProvider injectFirst>
 				<ThemeProvider theme={theme}>
@@ -33,6 +35,7 @@ export default function TranslationApp() {
 				</ThemeProvider>
 			</StyledEngineProvider>
 		</BrowserRouter>
+		</ModalContextProvider>
 		</AuthContextProvider>
 	);
 }

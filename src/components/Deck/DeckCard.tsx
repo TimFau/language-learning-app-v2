@@ -3,8 +3,9 @@ import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton,
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
+import ModalContext from 'context/modal-context';
 import { useContext } from "react";
-import { FavoriteBorder, Language, Delete as DeleteIcon } from '@mui/icons-material';
+import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 
 type DeckCardProps = {
     item: any
@@ -14,12 +15,23 @@ const DeckCard = (props: DeckCardProps) => {
     const deck = props.item.deck_relation ? props.item.deck_relation : props.item
     const { deck_name: deckName, deck_id: deckId } = deck
     const authCtx = useContext(AuthContext);
+    const modalCtx =useContext(ModalContext);
     const userToken = authCtx.userToken || ''
 
     const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/deck?name=${deckName}&id=${deckId}`);
+    }
+
+    const handleEditDeck = () => {
+        console.log('handleEditDeck', deck)
+        modalCtx.setDeck({
+            isPublic: deck.status === 'published',
+            ...deck
+        })
+        modalCtx.setModeEdit()
+        modalCtx.openModal()
     }
 
     return (
@@ -54,9 +66,12 @@ const DeckCard = (props: DeckCardProps) => {
                     >
                         <DeleteIcon />
                     </IconButton>
-                    {/* <IconButton>
+                    <IconButton
+                        aria-label={`Edit "${deckName}"`}
+                        onClick={() => handleEditDeck()}
+                    >
                         <EditIcon />
-                    </IconButton> */}
+                    </IconButton>
                 </>
                 }
             </CardActions>

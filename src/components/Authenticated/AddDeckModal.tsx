@@ -1,6 +1,7 @@
 import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, TextField } from '@mui/material';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from 'context/auth-context';
+import ModalContext from 'context/modal-context';
 import deckService from 'services/deckService';
 import sheetService from 'services/sheetService';
 
@@ -11,15 +12,31 @@ interface AddDeckModalProps {
     closeDialog: () => void,
 }
 
-export default function AddDeckModal(props: AddDeckModalProps) {
+const AddDeckModal = (props: AddDeckModalProps) => {
 
     const [deckName, setDeckName] = useState('')
     const [deckId, setDeckId] = useState('')
     const [makePublic, setMakePublic] = useState(true)
+    const [id, setId] = useState('')
     const [deckErrorMsg, setDeckErrorMsg] = useState('')
 
     const authCtx = useContext(AuthContext);
+    const modalCtx = useContext(ModalContext);
     const dialogOpen = props.addListDialogOpen;
+
+    const isAdd = modalCtx.mode === 'add'
+    const isEdit = modalCtx.mode === 'edit'
+
+    useEffect(() => {
+        const existingDeck = modalCtx.existingDeck
+        if(existingDeck) {
+            console.log('existingDeck', existingDeck)
+            setDeckName(existingDeck.deck_name || '')
+            setDeckId(existingDeck.deck_id || '')
+            setMakePublic(existingDeck.isPublic || false)
+            setId(existingDeck.id || '')
+        }
+    }, [modalCtx.existingDeck])
 
     function handleChange (event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target.name === 'DeckName') {
@@ -45,18 +62,32 @@ export default function AddDeckModal(props: AddDeckModalProps) {
         .catch((error) => {
             console.error('Error', error)
         })
-        // Add list to user_lists
+        // Add list to user_lists or update existing item
         function sendPost() {
-            deckService.addDeck(deckName, deckId, makePublic, authCtx.userToken).then(
-                (result) => {
-                    console.log('new list result inside', result)
-                    props.refreshLists();
-                    handleClose()
-                },
-                (error) => {
-                    console.log(error);
-                }
-            )
+            if(isAdd) {
+                deckService.addDeck(deckName, deckId, makePublic, authCtx.userToken).then(
+                    (result) => {
+                        console.log('new list result inside', result)
+                        props.refreshLists();
+                        handleClose()
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                )
+            } else if (isEdit) {
+                deckService.updateDeck(deckName, deckId, makePublic, id, authCtx.userToken).then(
+                    (result) => {
+                        console.log('new list result inside', result)
+                        props.refreshLists();
+                        handleClose()
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                )
+            
+            }
         }
     }
 
@@ -67,11 +98,11 @@ export default function AddDeckModal(props: AddDeckModalProps) {
     return (
         <Dialog open={dialogOpen} onClose={handleClose}>
             <DialogTitle>
-                Add New Deck
+                {isAdd ? "Add New Deck" : "Edit Deck"}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Please choose a name for your new deck and enter the Google spreadsheet ID below.
+                    Please choose a name for your deck and enter the Google spreadsheet ID below.
                 </DialogContentText>
                 <TextField
                     onChange={handleChange}
@@ -101,6 +132,7 @@ export default function AddDeckModal(props: AddDeckModalProps) {
                         <Checkbox
                         onChange={handleChange}
                         value={makePublic}
+                        checked={makePublic}
                         name="MakePublic"
                         defaultChecked
                         />
@@ -110,8 +142,10 @@ export default function AddDeckModal(props: AddDeckModalProps) {
                 
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleAddDeck}>Add Deck</Button>
+                <Button onClick={handleAddDeck}>{isAdd ? "Add Deck" : "Save Deck"}</Button>
             </DialogActions>
         </Dialog>
     )
 }
+
+export default AddDeckModal

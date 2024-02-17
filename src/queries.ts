@@ -1,6 +1,7 @@
 const DECK_FIELDS = `
     fragment DeckFields on decks {
         id
+        status
         deck_name
         deck_id
         categories
@@ -77,6 +78,20 @@ export const SAVED_DECKS = `
 export const CREATE_DECK = `
     mutation CreateDeck ($deckName: String!, $deckId: String!, $deckStatus: String!) {
         create_decks_item (data: {
+            status: $deckStatus,
+            deck_name: $deckName,
+            deck_id: $deckId
+        }) {
+            status
+            deck_name
+            deck_id
+        }
+    }
+`
+
+export const UPDATE_DECK = `
+    mutation UpdateDeck ($deckName: String!, $deckId: String!, $deckStatus: String!, $id: ID!) {
+        update_decks_item (id: $id, data: {
             status: $deckStatus,
             deck_name: $deckName,
             deck_id: $deckId
