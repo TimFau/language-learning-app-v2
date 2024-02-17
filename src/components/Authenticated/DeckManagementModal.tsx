@@ -11,7 +11,7 @@
  * 
  */
 
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, TextField } from '@mui/material';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, TextField, MenuItem } from '@mui/material';
 import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
@@ -32,6 +32,8 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
     const [makePublic, setMakePublic] = useState(true)
     const [id, setId] = useState('')
     const [deckErrorMsg, setDeckErrorMsg] = useState('')
+    const [nativeLangauge, setNativeLanguage] = useState('English')
+    const [learningLanguage, setLearningLanguage] = useState('')
 
     const authCtx = useContext(AuthContext);
     const modalCtx = useContext(ModalContext);
@@ -40,23 +42,50 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
     const isAdd = modalCtx.mode === 'add'
     const isEdit = modalCtx.mode === 'edit'
 
+    const languageOptions = [
+        'English',
+        'Spanish',
+        'French',
+        'German'
+    ]
+
     useEffect(() => {
         const existingDeck = modalCtx.existingDeck
-        if(existingDeck) {
+        const resetState = () => {
+            setDeckName('')
+            setDeckId('')
+            setNativeLanguage('English')
+            setLearningLanguage('')
+            setMakePublic(true)
+            setId('')
+        }
+        if(existingDeck && Object.keys(existingDeck).length > 0) {
             console.log('existingDeck', existingDeck)
             setDeckName(existingDeck.deck_name || '')
             setDeckId(existingDeck.deck_id || '')
+            setNativeLanguage(existingDeck.Language1 || '')
+            setLearningLanguage(existingDeck.Language2 || '')
             setMakePublic(existingDeck.isPublic || false)
             setId(existingDeck.id || '')
+        } else {
+            resetState()
         }
     }, [modalCtx.existingDeck])
 
     function handleChange (event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target.name === 'DeckName') {
             setDeckName(event.target.value)
-        } else if (event.target.name === 'DeckID') {
+        }
+        if (event.target.name === 'DeckID') {
             setDeckId(event.target.value)
-        } else if (event.target.name === 'MakePublic') {
+        }
+        if (event.target.name === 'NativeLanguage') {
+            setNativeLanguage(event.target.value);
+        }
+        if (event.target.name === 'LearningLanguage') {
+            setLearningLanguage(event.target.value);
+        }
+        if (event.target.name === 'MakePublic') {
             setMakePublic(event.target.checked)
         }
     }
@@ -86,14 +115,14 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
         // Add deck to user_decks or update existing item
         function sendRequest() {
             if(isAdd) {
-                deckService.addDeck(deckName, deckId, makePublic, authCtx.userToken).then(
+                deckService.addDeck(deckName, deckId, nativeLangauge, learningLanguage, makePublic, authCtx.userToken).then(
                     handleResult,
                     (error) => {
                         console.log(error);
                     }
                 )
             } else if (isEdit) {
-                deckService.updateDeck(deckName, deckId, makePublic, id, authCtx.userToken).then(
+                deckService.updateDeck(deckName, deckId, nativeLangauge, learningLanguage, makePublic, id, authCtx.userToken).then(
                     handleResult,
                     (error) => {
                         console.log(error);
@@ -140,6 +169,35 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     error={deckErrorMsg !== ''}
                     helperText={deckErrorMsg}
                 />
+                <TextField
+                    select
+                    onChange={handleChange}
+                    value={nativeLangauge}
+                    id="nativeLanguage"
+                    name="NativeLanguage"
+                    label="Native Language"
+                    fullWidth
+                    margin="normal"
+                >
+                    {languageOptions.map((lanauge: string) => <MenuItem value={lanauge}>{lanauge}</MenuItem>)}
+                </TextField>
+                <TextField
+                    select
+                    onChange={handleChange}
+                    value={learningLanguage}
+                    id="learningLanguage"
+                    name="LearningLanguage"
+                    label="Learning Language"
+                    fullWidth
+                    margin="normal"
+                >
+                    {languageOptions.map((lanauge: string) => {
+                        if (lanauge !== nativeLangauge) {
+                            return <MenuItem value={lanauge}>{lanauge}</MenuItem>
+                        }
+                        return null
+                    })}
+                </TextField>
                 <FormControlLabel
                     control={
                         <Checkbox

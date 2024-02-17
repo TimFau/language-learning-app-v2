@@ -33,15 +33,15 @@ const getDemoDecks = async () => {
     return result.data.decks;
 }
 
-const addDeck = async (deckName: string, deckId: string, makePublic: boolean, userToken: string) => {
+const addDeck = async (deckName: string, deckId: string, nativeLanguage: string, learningLanguage: string, makePublic: boolean, userToken: string) => {
     const deckStatus = makePublic ? "published" : "private"
-    const result = await fetchGraphQL(CREATE_DECK, { deckName, deckId, deckStatus }, userToken);
+    const result = await fetchGraphQL(CREATE_DECK, { deckName, deckId, nativeLanguage, learningLanguage, deckStatus }, userToken);
     return result;
 }
 
-const updateDeck = async (deckName: string, deckId: string, makePublic: boolean, id: string, userToken: string) => {
+const updateDeck = async (deckName: string, deckId: string, nativeLanguage: string, learningLanguage: string, makePublic: boolean, id: string, userToken: string) => {
     const deckStatus = makePublic ? "published" : "private"
-    const result = await fetchGraphQL(UPDATE_DECK, { deckName, deckId, deckStatus, id }, userToken);
+    const result = await fetchGraphQL(UPDATE_DECK, { deckName, deckId, nativeLanguage, learningLanguage, deckStatus, id }, userToken);
     return result;
 }
 
