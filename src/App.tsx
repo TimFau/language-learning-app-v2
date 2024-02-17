@@ -1,11 +1,18 @@
 import { BrowserRouter } from 'react-router-dom';
-import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Theme, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { AuthContextProvider } from 'context/auth-context';
 import { ModalContextProvider } from 'context/modal-context';
 
 import MainLayout from './layouts/Main';
 
 import './css/main.scss';
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const theme = createTheme(adaptV4Theme({
 	palette: {
