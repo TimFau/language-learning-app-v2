@@ -58,40 +58,9 @@ function Deck(props: RootState) {
     const [randomNum, setRandomNum] = useState<number>(0);
     const [initialCount, setInitialCount] = useState<number>(0);
     const [checkAccents] = useState<boolean>(false);
+    const { setDeckDialogOpen, setDeckDialogClose } = props;
 
     // Original Functions
-    function getDeckData(value: string) {
-        sheetService.getSheet(value).then( data => {
-            langOneArr = [];
-            langTwoArr = [];
-            if (data.length > 0) {
-                data.forEach(function(item: { Language1: string; Language2: string; }){
-                    // console.log('getDeckData', data)
-                    langOneArr.push(item.Language1);
-                    langTwoArr.push(item.Language2);
-                })
-            } else if (data.error) {
-                console.log('Deck Load Error: ' + data.error)
-            } else {
-                console.log('Data is empty; Deck not loaded')
-            }
-            setLanguage1(langOneArr.shift());
-            setLanguage2(langTwoArr.shift());
-            setInitialCount(langOneArr.length);
-            setRandomNum(Math.floor(Math.random() * langOneArr.length));
-            setSuccess(false);
-            setIncorrect(false);
-            setDeckDataLoaded(true);
-            langOneArrInit = langOneArr.slice();
-            langTwoArrInit = langTwoArr.slice();
-            props.setDeckDialogOpen();
-        })
-        .catch((error) => {
-            console.error('Error', error);
-            props.setDeckDialogClose();
-        })
-    }
-
     function getCard() {
         if (success) {
             langOneArr.splice(randomNum, 1);
@@ -166,13 +135,6 @@ function Deck(props: RootState) {
         props.setDeckDialogClose();
         navigate('/')
     }
-    function deckOptions(deckName: string, deckId: string) {
-        setDeckDataLoaded(false);
-        getDeckData(deckId)
-        setCurrentDeckName(deckName);
-        // props.setDemoDrawerClosed();
-        props.setDeckDialogOpen();
-    }
     function startDeck() {
         getCard();
         switchInput(inputMode)
@@ -184,8 +146,46 @@ function Deck(props: RootState) {
     }
 
     useEffect(() => {
+        function getDeckData(value: string) {
+            sheetService.getSheet(value).then( data => {
+                langOneArr = [];
+                langTwoArr = [];
+                if (data.length > 0) {
+                    data.forEach(function(item: { Language1: string; Language2: string; }){
+                        // console.log('getDeckData', data)
+                        langOneArr.push(item.Language1);
+                        langTwoArr.push(item.Language2);
+                    })
+                } else if (data.error) {
+                    console.log('Deck Load Error: ' + data.error)
+                } else {
+                    console.log('Data is empty; Deck not loaded')
+                }
+                setLanguage1(langOneArr.shift());
+                setLanguage2(langTwoArr.shift());
+                setInitialCount(langOneArr.length);
+                setRandomNum(Math.floor(Math.random() * langOneArr.length));
+                setSuccess(false);
+                setIncorrect(false);
+                setDeckDataLoaded(true);
+                langOneArrInit = langOneArr.slice();
+                langTwoArrInit = langTwoArr.slice();
+                setDeckDialogOpen();
+            })
+            .catch((error) => {
+                console.error('Error', error);
+                setDeckDialogClose();
+            })
+        }
+        function deckOptions(deckName: string, deckId: string) {
+            setDeckDataLoaded(false);
+            getDeckData(deckId)
+            setCurrentDeckName(deckName);
+            // props.setDemoDrawerClosed();
+            setDeckDialogOpen();
+        }
         deckOptions(name, id)
-    }, [name, id])
+    }, [name, id, setDeckDialogClose, setDeckDialogOpen])
 
     return (
         <div className={"container page-container " + inputMode}>

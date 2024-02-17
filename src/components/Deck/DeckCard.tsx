@@ -44,7 +44,7 @@ const DeckCard = (props: DeckCardProps) => {
                             <Typography variant="h6"><span>{props.item.Language2}</span></Typography>
                         </div>
                         <span className="deck-categories">
-                            {props.item.categories?.map((category: string) => <Chip label={category} />)}
+                            {props.item.categories?.map((category: string) => <Chip label={category} key={category} />)}
                         </span>
                     </div>
                     <Typography gutterBottom variant="h4" component="h2" className="deck-name">

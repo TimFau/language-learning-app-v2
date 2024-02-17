@@ -9,29 +9,6 @@ const CommunityDecks = () => {
     const [decks, setDecks] = useState<any>(null);
     const [savedDecks, setSavedDecks] = useState<any>(null)
 
-    const getDecks = () => {
-        deckService.getCommunityDecks().then(
-            result => {
-                // console.log('savedDecks', savedDecks, 'result', result)
-                const modifiedResult = result.map((deck: any) => {
-                    if (savedDecks) {
-                        const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
-                        if (savedDeck) {
-                            console.log('savedDeck', savedDeck)
-                            return {
-                                isSaved: true,
-                                savedDeckId: savedDeck.id,
-                                ...deck
-                            }
-                        }
-                    }
-                    return deck
-                })
-                setDecks(modifiedResult)
-            }
-        )
-    }
-
     useEffect(() => {
         if (authCtx.userToken && authCtx.userId) {
             setSavedDecks([])
@@ -42,6 +19,28 @@ const CommunityDecks = () => {
     }, [authCtx.userToken, authCtx.userId])
 
     useEffect(() => {
+        const getDecks = () => {
+            deckService.getCommunityDecks().then(
+                result => {
+                    // console.log('savedDecks', savedDecks, 'result', result)
+                    const modifiedResult = result.map((deck: any) => {
+                        if (savedDecks) {
+                            const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
+                            if (savedDeck) {
+                                console.log('savedDeck', savedDeck)
+                                return {
+                                    isSaved: true,
+                                    savedDeckId: savedDeck.id,
+                                    ...deck
+                                }
+                            }
+                        }
+                        return deck
+                    })
+                    setDecks(modifiedResult)
+                }
+            )
+        }
         getDecks();
     }, [savedDecks]);
 

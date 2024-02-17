@@ -14,7 +14,9 @@ const checkSheetValidity = (sheetId: string) => {
         })
 }
 
-export default {
+const exports = {
     getSheet,
     checkSheetValidity
 }
+
+export default exports

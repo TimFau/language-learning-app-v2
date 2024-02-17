@@ -179,7 +179,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     fullWidth
                     margin="normal"
                 >
-                    {languageOptions.map((lanauge: string) => <MenuItem value={lanauge}>{lanauge}</MenuItem>)}
+                    {languageOptions.map((language: string) => <MenuItem value={language} key={language}>{language}</MenuItem>)}
                 </TextField>
                 <TextField
                     select
@@ -191,9 +191,9 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     fullWidth
                     margin="normal"
                 >
-                    {languageOptions.map((lanauge: string) => {
-                        if (lanauge !== nativeLangauge) {
-                            return <MenuItem value={lanauge}>{lanauge}</MenuItem>
+                    {languageOptions.map((language: string) => {
+                        if (language !== nativeLangauge) {
+                            return <MenuItem value={language} key={language}>{language}</MenuItem>
                         }
                         return null
                     })}
