@@ -30,8 +30,6 @@ const DeckCard = (props: DeckCardProps) => {
                         <div className="deck-info">
                             <Language />
                             <Typography variant="h6"><span>{props.item.Language2}</span></Typography>
-                            {/* <Avatar sx={{ width: 18, height: 18 }}>{props.item.user_created.username[0]}</Avatar>
-                            <Typography><span>{props.item.user_created.username}</span></Typography> */}
                         </div>
                         <span className="deck-categories">
                             {props.item.categories?.map((category: string) => <Chip label={category} />)}
@@ -40,7 +38,6 @@ const DeckCard = (props: DeckCardProps) => {
                     <Typography gutterBottom variant="h4" component="h2" className="deck-name">
                         {deckName}
                     </Typography>
-                    {/* <Button size="small">Start Deck</Button> */}
                 </CardContent>
             </CardActionArea>
             {/* This duplicates code below - it's done thinking forward that we may add more actions and, thus, conditionals */}

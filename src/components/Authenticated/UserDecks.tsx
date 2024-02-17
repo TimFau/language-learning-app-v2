@@ -51,8 +51,9 @@ export default function UserDecks(props: UserListsProps) {
                 <Grid
                     container
                     direction="row"
-                    justifyContent="center"
+                    justifyContent="flex-start"
                     spacing={2}
+                    className="decks-container"
                 >
                     {items.map(item => (
                         <DeckCard

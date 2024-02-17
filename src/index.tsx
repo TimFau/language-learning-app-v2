@@ -6,8 +6,6 @@ import * as serviceWorker from './serviceWorker';
 import TranslationApp from './App';
 import { reducer } from './store/reducer';
 
-import './index.css';
-
 declare global {
     interface Window {
         __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
