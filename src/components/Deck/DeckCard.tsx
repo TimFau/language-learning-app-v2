@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
 import { useContext } from "react";
-import { FavoriteBorder, Language } from '@mui/icons-material';
+import { FavoriteBorder, Language, Delete as DeleteIcon } from '@mui/icons-material';
 
 type DeckCardProps = {
     item: any
@@ -40,17 +40,26 @@ const DeckCard = (props: DeckCardProps) => {
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            {/* This duplicates code below - it's done thinking forward that we may add more actions and, thus, conditionals */}
-            {props.item.type !== 'user' &&
             <CardActions>
-                {props.item.type !== 'user' &&
+                {props.item.type !== 'user' ?
                 <IconButton aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"} onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId) : deckService.saveDeck(userToken, deck)}>
                     {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
                     
                 </IconButton>
+                :
+                <>
+                    <IconButton
+                        aria-label={`Delete "${deckName}"`}
+                        onClick={() => deckService.deleteDeck(userToken, deck.id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                    {/* <IconButton>
+                        <EditIcon />
+                    </IconButton> */}
+                </>
                 }
             </CardActions>
-            }
         </Card>
     )
 }

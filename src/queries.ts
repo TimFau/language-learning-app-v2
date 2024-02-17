@@ -88,6 +88,14 @@ export const CREATE_DECK = `
     }
 `
 
+export const DELETE_DECK = `
+    mutation DeleteDeck ($deckId: ID!) {
+        delete_decks_item (id: $deckId) {
+            id
+        }
+    }
+`
+
 export const SAVE_DECK = `
     mutation SaveDeck ($communityDeckId: create_decks_input!) {
         create_saved_decks_item (data: {

@@ -1,4 +1,4 @@
-import { COMMUNITY_DECKS, DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, SAVE_DECK, UNSAVE_DECK } from "queries";
+import { COMMUNITY_DECKS, DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, DELETE_DECK, SAVE_DECK, UNSAVE_DECK } from "queries";
 
 const endpoint = process.env.REACT_APP_API_BASE;
 
@@ -39,6 +39,11 @@ const addDeck = async (deckName: string, deckId: string, makePublic: boolean, us
     return result;
 }
 
+const deleteDeck = async (userToken: string, deckId: string) => {
+    const result = await fetchGraphQL(DELETE_DECK, { deckId }, userToken)
+    return result;
+}
+
 const getUserDecks = async (userToken: string, userId: string) => {
     const result = await fetchGraphQL(USER_DECKS, { userId }, userToken);
     return result;
@@ -71,6 +76,7 @@ const deckService = {
     getCommunityDecks,
     getDemoDecks,
     addDeck,
+    deleteDeck,
     getUserDecks,
     getSavedDecks,
     saveDeck,
