@@ -1,6 +1,7 @@
 body {
   height: 100vh;
   background: $dark-shades;
+  margin: 0;
 }
 #root {
 	width: 100%;
@@ -11,22 +12,22 @@ body {
 	display: flex;
 	flex-flow: column;
 	flex-grow: 1;
-	.page-container {
-		padding: 65px 0 0 0;
-		display: flex;
-		flex-flow: column;
-		flex-grow: 1;
-	}
 	&.success, &.incorrect {
 		.button-container > button {
 			display: none;
 		}
 	}
 }
-.page-container .wrapper {
+.page-container {
+	padding: 65px 0 0 0;
 	display: flex;
-	flex-direction: column;
+	flex-flow: column;
 	flex-grow: 1;
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+	}
 }
 header {
 	a {

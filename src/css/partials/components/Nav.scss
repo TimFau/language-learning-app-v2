@@ -10,17 +10,17 @@
     .start .nav-item:first-of-type {
         padding-left: 0;
     }
-    .end .nav-item:last-of-type {
-        padding-right: 0;
+    .end {
+        .nav-item:last-of-type {
+            padding-right: 0;
+        }
     }
     .nav-item {
         padding: 15px;
     }
-    .nav-item,
-    .nav-item button {
+    button,
+    .nav-item-wrapper {
         @include study-regular;
-    }
-    button {
         color: $light-shades;
         background: none;
         border: none;
@@ -32,14 +32,34 @@
             padding-right: 5px;
         }
     }
-    .active button {
+    .nav-item-wrapper {
         &:after {
             content: '';
             height: 4px;
             width: 100%;
-            background: $light-shades;
+            background: transparent;
             display: block;
             margin-top: 12px;
+        }
+    }
+    .nav-item-wrapper:hover:after,
+    .active .nav-item-wrapper:after {
+        background: $light-shades;
+    }
+    @media screen and (max-width: 760px) {
+        .nav-item-wrapper .nav-label {
+            display: block;
+        }
+    }
+    @media screen and (max-width: 600px) {
+        .nav-item,
+        .start .nav-item:first-of-type,
+        .end .nav-item:last-of-type {
+            padding: 10px;
+        }
+        .nav-item-wrapper .nav-label {
+            // display: none;
+            font-size: 12px;
         }
     }
 }

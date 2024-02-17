@@ -9,22 +9,12 @@ import { Paper, Card, TextField, Button, Link } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert } from '@mui/material';
 import { CheckIsEmail } from '../../scripts/Helpers';
-import hpBackground from '../../images/hp-background.jpg';
 
 //
 // This Page is served to guests or users that have been logged out
 //
 
 const useStyles = makeStyles({
-    paper: {
-      background: "linear-gradient(0deg, rgba(18, 115, 230, 0.30), rgba(18, 115, 230, 0.15)), url(" + hpBackground + ")",
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
-      height: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    },
     copy: {
         color: "#fff",
         maxWidth: "40%",
@@ -64,8 +54,10 @@ const useStyles = makeStyles({
             textAlign: "left",
             fontWeight: "200",
             fontSize: "29px",
-            color: "#1273E6",
-            margin: "10px 0 25px 0"
+            margin: "10px 0 25px 0",
+            "& span": {
+                display: "block"
+            }
         },
         "& .input": {
             marginBottom: "25px",
@@ -195,17 +187,18 @@ export default function GuestPage(props: LoggedOutProps) {
         }
     }
     return (
-        <div className="container page-container">
-            <Paper elevation={0} square={true} className={classes.paper}>
+        <div className="container page-container landing-page-container">
+            <Paper elevation={0} square={true} className="landing-page-wrapper">
                 <div className={classes.copy}>
-                    <h1>Easy to Use Flashcards <span className={classes.span}>For Learning New Languages</span></h1>
-                    <p>Create your own flashcards, work banks, and quizzes; all with one deck.</p>
+                    <h1>Enhance Your Language Practice <span className={classes.span}>with LangPulse Flashcards</span></h1>
+                    <p>Complement your language learning journey with LangPulse. Our platform allows you to create personalized flashcards, word banks, and quizzes, making it the perfect supplement to your existing language learning tools.</p>
                     <div className={classes.howItWorks}>
-                        <span>See how it works:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
+                        <span>Give it a try:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
                     </div>
                 </div>
                 <Card className={classes.form}>
-                    <h3>Create an account</h3>
+                    <h3>Join LangPulse Today</h3>
+                    <p>Create decks, save favorites, and manage it all from your dashboard.</p>
                     <form>
                         <TextField
                             autoComplete="fname"
@@ -265,7 +258,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     {alertMsg !== '' &&
                         <Alert severity="warning" className={classes.alert}>{alertMsg}</Alert>
                     }
-                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Submit</Button>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Create Account</Button>
                     <div>
                         <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
                     </div>

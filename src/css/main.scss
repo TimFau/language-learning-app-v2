@@ -13,6 +13,7 @@
 @import 'partials/components/Nav';
 @import 'partials/components/decks/deckCard';
 @import 'partials/components/decks/deckSelector';
+@import 'partials/components/decks/DemoDecksDrawer';
 @import 'partials/components/modes/flashCard';
 @import 'partials/components/modes/keyboard';
 @import 'partials/components/modes/wordBank';
@@ -22,4 +23,5 @@
 @import 'partials/components/modals/login';
 
 // Pages
-@import 'partials/pages/UserDecks';
+@import 'pages/UserDecks';
+@import 'pages/LandingPage'

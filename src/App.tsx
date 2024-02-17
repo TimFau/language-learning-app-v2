@@ -10,9 +10,9 @@ import './css/main.scss';
 const theme = createTheme(adaptV4Theme({
 	palette: {
 	  primary: {
-		light: '#AD95A4',
-		main: '#AD95A4',
-		dark: '#AD95A4',
+		light: '#677E9D',
+		main: '#677E9D',
+		dark: '#677E9D',
 		contrastText: '#fff',
 	  },
 	  secondary: {

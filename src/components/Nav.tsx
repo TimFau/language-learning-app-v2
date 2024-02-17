@@ -30,30 +30,40 @@ export default function Nav() {
             <div className="app-bar-inner">
                 <div className="start">
                     {!deckStarted ?
-                    <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}><button>{isLoggedIn() ? 
-                        <><CollectionsBookmarkIcon/> My Decks</> :
-                        <><HomeIcon /> Home</>}</button></Link>
+                    <>
+                    <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
+                        <button className="nav-item-wrapper">{isLoggedIn() ? 
+                            <><CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span></> :
+                            <><HomeIcon /> <span className="nav-label">Home</span></>}
+                        </button>
+                    </Link>
+                    <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
+                        <button className="nav-item-wrapper">
+                            <LocalLibraryIcon /> <span className="nav-label">Community Decks</span>
+                        </button>
+                    </Link>
+                    </>
                     :
-                    <button className="nav-item" onClick={() => goToDeckSelector()}
-                    ><ExitToAppIcon /> Exit Deck</button>
+                    <button className="nav-item" onClick={() => goToDeckSelector()}>
+                        <ExitToAppIcon /> <span className="nav-label">Exit Deck</span>
+                    </button>
                     }
-                    <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}><button><LocalLibraryIcon /> Community Decks</button></Link>
                 </div>
                 <div className="end">
-                    {!isLoggedIn() &&
+                    {!isLoggedIn() && !deckStarted &&
                         <button
                             onClick={() => authCtx.onLoginOpen(true, false)}
                             className="nav-item login"
-                        ><LoginIcon /> Login</button>
+                        ><span className="nav-item-wrapper"><LoginIcon /> <span className="nav-label">Login</span></span></button>
                     }
-                    {isLoggedIn() && pathName !== "/deck" &&
+                    {isLoggedIn() && !deckStarted && pathName !== "/deck" &&
                     <>
-                        <button onClick={() => modalCtx.openModal()} className="nav-item"><AddIcon /> Add Deck</button>
+                        <button onClick={() => modalCtx.openModal()} className="nav-item"><span className="nav-item-wrapper"><AddIcon /> <span className="nav-label">Add Deck</span></span></button>
                         <button
                             onClick={authCtx.onLogout}
                             color="secondary"
                             className="nav-item logout"
-                        ><LogoutIcon /> Logout</button>
+                        ><span className="nav-item-wrapper"><LogoutIcon /> <span className="nav-label">Logout</span></span></button>
                     </>
                     }
                 </div>

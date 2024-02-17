@@ -1,5 +1,12 @@
 /// Flashcard
+.page-container.Flashcard {
+	padding-top: 0;
+}
 .flash-card-container {
+	width: 100%;
+	h1 {
+		color: $dark-shades;
+	}
 	.btn-container {
 		&.flipped button {
 			&:first-of-type {
