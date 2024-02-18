@@ -50,7 +50,7 @@ const CommunityDecks = () => {
             {!decks && "Loading..."}
             <div className="decks-container">
             {decks && decks
-                .filter((deck:any) => deck.user_created.username !== authCtx.userName)
+                .filter((deck:any) => deck.user_created?.username !== authCtx.userName)
                 .map((deck: any) => (
                     <DeckCard
                         item={deck}
