@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Grid from '@mui/material/Grid';
 import { Drawer }  from '@mui/material';
 import deckService from '../../services/deckService';
 import DeckCard from './DeckCard';
@@ -48,18 +47,14 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     } else {
       return (
         <Drawer anchor="bottom" open={props.open} onClose={props.onClose} className="demo-drawer">
-            <Grid
-                container
-                direction="row"
-                justifyContent="center"
-            >
+            <div className="decks-container">
                 {items.map(item => (
                     <DeckCard
                         item={item}
                         key={item.id.toString()}
                     />
                 ))}
-            </Grid>
+            </div>
         </Drawer>
       )
     }

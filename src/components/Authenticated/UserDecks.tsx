@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { Grid, CircularProgress } from '@mui/material/';
+import { CircularProgress } from '@mui/material/';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/Deck/DeckCard';
 import getUsersDecks from './getUsersDecks';
@@ -48,20 +48,14 @@ export default function UserDecks(props: UserListsProps) {
         <>
             <div id="userListsContainer">
                 <h1 className="sr-only">My Decks</h1>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-start"
-                    spacing={2}
-                    className="decks-container"
-                >
+                <div className="decks-container">
                     {items.map(item => (
                         <DeckCard
                             item={item}
                             key={item.deck_name + item.id.toString()}
                         />
                     ))}
-                </Grid>
+                </div>
             </div>
         </>
       )

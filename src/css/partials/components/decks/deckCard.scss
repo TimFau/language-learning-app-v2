@@ -1,12 +1,10 @@
 .deck-card {
-	margin: 10px;
 	text-align: left;
-	min-width: calc(50% - 20px);
-    // background: lighten($spruce, 50%);
+	flex-basis: calc(50% - 10px);
 	@media screen and (max-width: 960px) {
-		width: 100%;
+		flex-basis: 100%;
 	}
-    .cart-content-top {
+    .card-content-top {
         display: flex;
         vertical-align: middle;
         justify-content: space-between;

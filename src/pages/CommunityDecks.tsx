@@ -1,4 +1,3 @@
-import { Grid } from "@mui/material";
 import DeckCard from "components/Deck/DeckCard";
 import { useContext, useEffect, useState } from "react"
 import deckService from "services/deckService"
@@ -49,20 +48,14 @@ const CommunityDecks = () => {
         <div className="page-container">
             <h1 className="sr-only">Community Decks</h1>
             {!decks && "Loading..."}
-            <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                spacing={2}
-                className="decks-container"
-            >
+            <div className="decks-container">
             {decks && decks.map((deck: any) => (
                 <DeckCard
                     item={deck}
                     key={deck.id.toString()}
                 />
             ))}
-            </Grid>
+            </div>
         </div>
     )
 }

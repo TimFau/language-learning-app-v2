@@ -38,7 +38,7 @@ const DeckCard = (props: DeckCardProps) => {
         <Card className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}>
             <CardActionArea onClick={() => handleClick()}>
                 <CardContent>
-                    <div className="cart-content-top">
+                    <div className="card-content-top">
                         <div className="deck-info">
                             <Language />
                             <Typography variant="h6"><span>{props.item.Language2}</span></Typography>

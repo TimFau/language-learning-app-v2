@@ -1,9 +1,9 @@
 .demo-drawer {
-	.MuiGrid-container {
-		margin: 50px 0;
+	.decks-container {
+		margin: 50px;
 		max-width: 100%;
 	}
-    .MuiPaper-root {
-        background: $light-shades;
+    > .MuiPaper-root {
+        background: $dark-shades;
     }
 }
