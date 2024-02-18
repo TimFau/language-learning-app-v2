@@ -15,70 +15,6 @@ import { CheckIsEmail } from '../../scripts/Helpers';
 //
 
 const useStyles = makeStyles({
-    copy: {
-        color: "#fff",
-        maxWidth: "40%",
-        marginTop: "-20px",
-        textAlign: "left",
-        '& h1': {
-            margin: "0",
-            fontWeight: "800",
-            fontSize: "2.6vw",
-            lineHeight: "48px"
-        },
-        "& p": {
-            marginTop: "8px"
-        },
-        '& button': {
-            margin: "0 5px",
-            padding: "8px 25px"
-        }
-    },
-    howItWorks: {
-        marginTop: "40px",
-        display: "flex",
-        alignItems: "center",
-        "& > span": {
-            fontSize: "26px",
-            fontWeight: "200",
-            marginRight: "20px"
-        }
-    },
-    span: {
-        display: "inline-block"
-    },
-    form: {
-        marginLeft: "75px",
-        padding: "15px 40px 35px 40px",
-        "& h3": {
-            textAlign: "left",
-            fontWeight: "200",
-            fontSize: "29px",
-            margin: "10px 0 25px 0",
-            "& span": {
-                display: "block"
-            }
-        },
-        "& .input": {
-            marginBottom: "25px",
-            display: "block"
-        },
-        "& a": {
-            textAlign: "right",
-            width: "100%",
-            fontWeight: "600",
-            display: "block",
-            marginTop: "20px",
-            fontSize: "14px",
-            "& .acctTxt": {
-                float: "left",
-                color: "black"
-            },
-            "& .signIn": {
-                cursor: "pointer"
-            }
-        }
-    },
     alert: {
         marginBottom: "25px"
     }
@@ -187,16 +123,16 @@ export default function GuestPage(props: LoggedOutProps) {
         }
     }
     return (
-        <div className="container page-container landing-page-container">
+        <div className="container landing-page-container">
             <Paper elevation={0} square={true} className="landing-page-wrapper">
-                <div className={classes.copy}>
-                    <h1>Enhance Your Language Practice <span className={classes.span}>with LangPulse Flashcards</span></h1>
-                    <p>Complement your language learning journey with LangPulse. Our platform allows you to create personalized flashcards, word banks, and quizzes, making it the perfect supplement to your existing language learning tools.</p>
-                    <div className={classes.howItWorks}>
+                <div className="start">
+                    <h1>Boost Your Language Learning <span>with LangPulse Flashcards</span></h1>
+                    <p>Our platform enables you to craft custom flashcards, word banks, and quizzes, serving as the ideal addition to your current language learning resources.</p>
+                    <div className="cta">
                         <span>Give it a try:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
                     </div>
                 </div>
-                <Card className={classes.form}>
+                <Card className="end">
                     <h3>Join LangPulse Today</h3>
                     <p>Create decks, save favorites, and manage it all from your dashboard.</p>
                     <form>

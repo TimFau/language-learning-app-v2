@@ -1,35 +1,97 @@
 .landing-page-container {
-    padding-top: 0;
-    > div {
-        background: $dark-shades;
-    }
     .landing-page-wrapper {
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        .makeStyles-form-4 {
+        min-height: 100vh;
+        .start {
+            background: $dark-shades;
+            color: $light-shades;
+            text-align: left;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             box-sizing: border-box;
-            p {
-                text-align: left;
+            padding: 70px;
+            h1 {
+                @media screen and (min-width: 960px) {
+                    font-size: 2.6vw;
+                }
+            }
+            .cta {
+                margin-top: 40px;
+                display: flex;
+                align-items: center;
+                & > span {
+                    font-size: 26px;
+                    margin-right: 20px;
+                }
+            }
+        }
+        .end {
+            height: 100%;
+            width: 50%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 70px;
+            max-height: 100vh;
+            overflow-y: auto;
+            text-align: left;
+            h3 {
+                font-size: 29px;
+                & span {
+                    display: block;
+                }
+            }
+            .input {
+                margin-bottom: 25px;
+            }
+            a {
+                text-align: right;
+                display: block;
+                margin-top: 20px;
+                .acctTxt {
+                    float: left;
+                    color: black;
+                }
+                .signIn {
+                    cursor: pointer;
+                }
             }
         }
         @media screen and (max-width: 960px) {
-            flex-direction: column;
-            justify-content: space-between;
-            padding-top: 65px;
-            > div {
+            flex-direction: column-reverse;
+            max-height: 100vh;
+            .start, .end {
                 width: 100%;
-                max-width: 100%;
             }
-            .makeStyles-copy-1 {
+            .start {
+                height: auto;
+                padding: 7%;
+                flex-grow: 0;
                 h1 {
-                    font-size: 28px;
+                    display: none;
                 }
-                padding-bottom: 30px;
+                p {
+                    display: none;
+                }
+                .cta {
+                    margin-top: 0;
+                }
             }
-            .makeStyles-form-4 {
-                margin: 0;
+            .end {
+                padding: 7%;
+                justify-content: flex-start;
+                flex-grow: 0;
+                h3, p {
+                    margin-top: 0;
+                    margin-bottom: 12px;
+                }
             }
         }
     }

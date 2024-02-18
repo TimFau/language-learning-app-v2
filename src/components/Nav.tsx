@@ -5,7 +5,7 @@ import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import DeckManagementModal from './Authenticated/DeckManagementModal';
 import getUsersDecks from './Authenticated/getUsersDecks';
-import { Home as HomeIcon, CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, Login as LoginIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
+import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
 
 export default function Nav() {
     const dispatch = useAppDispatch();
@@ -26,15 +26,15 @@ export default function Nav() {
 
     return (
         <>
+        {isLoggedIn() &&
         <header className="app-bar max-width-wrapper">
             <div className="app-bar-inner">
                 <div className="start">
                     {!deckStarted ?
                     <>
                     <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
-                        <button className="nav-item-wrapper">{isLoggedIn() ? 
-                            <><CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span></> :
-                            <><HomeIcon /> <span className="nav-label">Home</span></>}
+                        <button className="nav-item-wrapper">
+                            <CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span>
                         </button>
                     </Link>
                     <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
@@ -50,13 +50,7 @@ export default function Nav() {
                     }
                 </div>
                 <div className="end">
-                    {!isLoggedIn() && !deckStarted &&
-                        <button
-                            onClick={() => authCtx.onLoginOpen(true, false)}
-                            className="nav-item login"
-                        ><span className="nav-item-wrapper"><LoginIcon /> <span className="nav-label">Login</span></span></button>
-                    }
-                    {isLoggedIn() && !deckStarted && pathName !== "/deck" &&
+                    {!deckStarted && pathName !== "/deck" &&
                     <>
                         <button onClick={() => modalCtx.openModal()} className="nav-item"><span className="nav-item-wrapper"><AddIcon /> <span className="nav-label">Add Deck</span></span></button>
                         <button
@@ -69,6 +63,7 @@ export default function Nav() {
                 </div>
             </div>
         </header>
+        }
         <DeckManagementModal userId={authCtx.userId} addListDialogOpen={modalCtx.isModalOpen} closeDialog={() => modalCtx.closeModal()} refreshLists={() => getUsersDecks(authCtx.userToken, authCtx.userId)} />
         </>
     )
