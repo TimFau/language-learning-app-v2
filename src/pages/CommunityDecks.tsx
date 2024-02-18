@@ -49,12 +49,15 @@ const CommunityDecks = () => {
             <h1 className="sr-only">Community Decks</h1>
             {!decks && "Loading..."}
             <div className="decks-container">
-            {decks && decks.map((deck: any) => (
-                <DeckCard
-                    item={deck}
-                    key={deck.id.toString()}
-                />
-            ))}
+            {decks && decks
+                .filter((deck:any) => deck.user_created.username !== authCtx.userName)
+                .map((deck: any) => (
+                    <DeckCard
+                        item={deck}
+                        key={deck.id.toString()}
+                    />
+                )
+            )}
             </div>
         </div>
     )

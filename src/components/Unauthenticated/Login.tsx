@@ -48,7 +48,8 @@ export default function Login() {
                 const userDetails = await userService.getAccountDetails(data.data.auth_login.access_token).then(response => response.json())
                 const accessToken = data.data.auth_login.access_token
                 const userId = userDetails.data.users_me.id
-                authCtx.onLogin(accessToken, userId)
+                const userName = userDetails.data.users_me.username
+                authCtx.onLogin(accessToken, userId, userName)
                 return true
             }
         })
