@@ -6,13 +6,13 @@ export default function getUsersDecks (userToken: string, userId: string) {
         deckService.getSavedDecks(userToken, userId)
     ])
     .then(([userDecksResult, savedDecksResult]) => {
-        const userDecks = userDecksResult.data.decks.map((deck: any) => {
+        const userDecks = userDecksResult.map((deck: any) => {
             return {
                 type: "user",
                 ...deck
             }
         })
-        const savedDecks = savedDecksResult.data.saved_decks.map((deck: any) => {
+        const savedDecks = savedDecksResult.map((deck: any) => {
             return {
                 isSaved: true,
                 savedDeckId: deck.id,

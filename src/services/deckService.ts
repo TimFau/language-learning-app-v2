@@ -1,95 +1,67 @@
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { COMMUNITY_DECKS, DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, UPDATE_DECK, DELETE_DECK, SAVE_DECK, UNSAVE_DECK } from "queries";
 
 const endpoint = process.env.REACT_APP_API_BASE;
 
-const fetchGraphQL = async (query: string, variables?: any, userToken?: string) => {
-    try {
-        const accessToken = userToken ? `?access_token=${userToken}` : ''
-        const res = await fetch(endpoint + accessToken, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ query, variables })
-        });
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return await res.json();
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
+const client = new ApolloClient({
+    uri: endpoint,
+    cache: new InMemoryCache()
+});
 
 const getCommunityDecks = async () => {
-    const result = await fetchGraphQL(COMMUNITY_DECKS);
-    return result.data.decks;
+    const { data } = await client.query({ query: gql(COMMUNITY_DECKS) });
+    return data.decks;
 }
 
 const getDemoDecks = async () => {
-    const result = await fetchGraphQL(DEMO_DECKS);
-    return result.data.decks;
+    const { data } = await client.query({ query: gql(DEMO_DECKS) });
+    return data.decks;
 }
 
 const addDeck = async (deckName: string, deckId: string, nativeLanguage: string, learningLanguage: string, makePublic: boolean, userToken: string) => {
     const deckStatus = makePublic ? "published" : "private"
-    const result = await fetchGraphQL(CREATE_DECK, { deckName, deckId, nativeLanguage, learningLanguage, deckStatus }, userToken);
-    return result;
+    const { data } = await client.mutate({ mutation: gql(CREATE_DECK), variables: { deckName, deckId, nativeLanguage, learningLanguage, deckStatus }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data;
 }
 
 const updateDeck = async (deckName: string, deckId: string, nativeLanguage: string, learningLanguage: string, makePublic: boolean, id: string, userToken: string) => {
     const deckStatus = makePublic ? "published" : "private"
-    const result = await fetchGraphQL(UPDATE_DECK, { deckName, deckId, nativeLanguage, learningLanguage, deckStatus, id }, userToken);
-    return result;
+    const { data } = await client.mutate({ mutation: gql(UPDATE_DECK), variables: { deckName, deckId, nativeLanguage, learningLanguage, deckStatus, id }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data;
 }
 
 const deleteDeck = async (userToken: string, deckId: string) => {
-    const result = await fetchGraphQL(DELETE_DECK, { deckId }, userToken)
-    return result;
+    const { data } = await client.mutate({ mutation: gql(DELETE_DECK), variables: { deckId }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data;
 }
 
 const getUserDecks = async (userToken: string, userId: string) => {
-    const result = await fetchGraphQL(USER_DECKS, { userId }, userToken);
-    return result;
+    const { data } = await client.query({ query: gql(USER_DECKS), variables: { userId }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    // console.log('getUserDecks', data)
+    return data.decks;
 }
 
 const getSavedDecks = async (userToken: string, userId: string) => {
-    const result = await fetchGraphQL(SAVED_DECKS, { userId }, userToken);
-    return result;
+    const { data } = await client.query({ query: gql(SAVED_DECKS), variables: { userId }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data.saved_decks;
 }
 
 const saveDeck = async (userToken: string, communityDeckId: object) => {
-    if ('user_created' in communityDeckId) {
-        // This fixes a bug where directus returns the following error for "Users":
-        // "Variable "$communityDeckId" got invalid value { username: null } at "communityDeckId.user_created"; String cannot represent a non string value: { username: null }"
-        delete communityDeckId['user_created'];
+    const deckIdCopy = { ...communityDeckId }
+    if ('user_created' in deckIdCopy) {
+        delete deckIdCopy['user_created'];
     }
-    try {
-        const result = await fetchGraphQL(SAVE_DECK, { communityDeckId }, userToken);
-        if (result.errors) {
-            console.error(`Error saving deck ${communityDeckId}:`, result.errors[0].message);
-        }
-        return result;
-    } catch (error) {
-        console.error(`Error saving deck ${communityDeckId}:`, error);
-        throw error;
+    if ('__typename' in deckIdCopy) {
+        delete deckIdCopy['__typename'];
     }
+    const { data } = await client.mutate({ mutation: gql(SAVE_DECK), variables: { communityDeckId: deckIdCopy }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data;
 }
 
 const unsaveDeck = async (userToken: string, savedDeckId: string) => {
-    try {
-        const result = await fetchGraphQL(UNSAVE_DECK, { savedDeckId: savedDeckId }, userToken);
-        if (result.errors) {
-            console.error(`Error unsaving deck ${savedDeckId}:`, result.errors[0].message);
-        }
-        return result;
-    } catch (error) {
-        console.error(`Error unsaving deck ${savedDeckId}:`, error);
-        throw error;
-    }
-} 
+    const { data } = await client.mutate({ mutation: gql(UNSAVE_DECK), variables: { savedDeckId }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    return data;
+}
 
 const deckService = {
     getCommunityDecks,

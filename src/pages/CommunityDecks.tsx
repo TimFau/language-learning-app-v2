@@ -12,7 +12,8 @@ const CommunityDecks = () => {
         if (authCtx.userToken && authCtx.userId) {
             setSavedDecks([])
             deckService.getSavedDecks(authCtx.userToken, authCtx.userId).then(result => {
-                setSavedDecks(result.data.saved_decks)
+                // console.log('getSavedDecks', result);
+                setSavedDecks(result)
             })
         }
     }, [authCtx.userToken, authCtx.userId])
@@ -21,7 +22,7 @@ const CommunityDecks = () => {
         const getDecks = () => {
             deckService.getCommunityDecks().then(
                 result => {
-                    // console.log('savedDecks', savedDecks, 'result', result)
+                    // console.log('getCommunityDecks', result);
                     const modifiedResult = result.map((deck: any) => {
                         if (savedDecks) {
                             const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
