@@ -1,7 +1,5 @@
 .max-width-wrapper {
-    width: 100%;
-	max-width: 1440px;
-	margin: 0 auto;
+    @include max-width-wrapper;
 }
 .sr-only {
 	position: absolute;

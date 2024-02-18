@@ -1,16 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { CircularProgress } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import UserDecks from '../../components/Authenticated/UserDecks';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
-
-const useStyles = makeStyles({
-    wrapper: {
-      marginTop: '25px'
-    }
-});
 
 export default function Account() {
 
@@ -19,7 +12,6 @@ export default function Account() {
     const [userId, setUserId] = useState('');
     const [isReady, setIsReady] = useState(false);
     const dispatch = useAppDispatch();
-    const classes = useStyles();
 
     function getAccountDetails() {
         userService.getAccountDetails(authCtx.userToken)
@@ -48,7 +40,7 @@ export default function Account() {
     
     return (
         <div className="container page-container">
-            <div className={classes.wrapper + ' wrapper'} id="account">
+            <div className="wrapper" id="account">
                 {isReady ? 
                 <UserDecks userId={userId} userName={userName} />
                 :

@@ -23,6 +23,7 @@ body {
 	display: flex;
 	flex-flow: column;
 	flex-grow: 1;
+	@include max-width-wrapper;
 	.wrapper {
 		display: flex;
 		flex-direction: column;
@@ -76,8 +77,5 @@ header {
 	}
 }
 .MuiGrid-root {
-	width: 100%;
-	margin-left: 0;
-	max-width: 1440px;
-	margin: 0 auto;
+	@include max-width-wrapper;
 }
