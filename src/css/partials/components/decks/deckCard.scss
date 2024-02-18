@@ -1,6 +1,6 @@
 .deck-card {
 	text-align: left;
-	flex-basis: calc(50% - 10px);
+	flex-basis: calc(50% - 5px);
 	@media screen and (max-width: 960px) {
 		flex-basis: 100%;
 	}
