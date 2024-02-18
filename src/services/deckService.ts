@@ -60,14 +60,27 @@ const getSavedDecks = async (userToken: string, userId: string) => {
     return result;
 }
 
-const saveDeck = async (userToken: string, communityDeckId: string) => {
-    const result = await fetchGraphQL(SAVE_DECK, { communityDeckId }, userToken);
-    return result;
+const saveDeck = async (userToken: string, communityDeckId: object) => {
+    if ('user_created' in communityDeckId) {
+        // This fixes a bug where directus returns the following error for "Users":
+        // "Variable "$communityDeckId" got invalid value { username: null } at "communityDeckId.user_created"; String cannot represent a non string value: { username: null }"
+        delete communityDeckId['user_created'];
+    }
+    try {
+        const result = await fetchGraphQL(SAVE_DECK, { communityDeckId }, userToken);
+        if (result.errors) {
+            console.error(`Error saving deck ${communityDeckId}:`, result.errors[0].message);
+        }
+        return result;
+    } catch (error) {
+        console.error(`Error saving deck ${communityDeckId}:`, error);
+        throw error;
+    }
 }
 
 const unsaveDeck = async (userToken: string, savedDeckId: string) => {
     try {
-        const result = await fetchGraphQL(UNSAVE_DECK, { savedDeckId }, userToken);
+        const result = await fetchGraphQL(UNSAVE_DECK, { savedDeckId: savedDeckId }, userToken);
         if (result.errors) {
             console.error(`Error unsaving deck ${savedDeckId}:`, result.errors[0].message);
         }
