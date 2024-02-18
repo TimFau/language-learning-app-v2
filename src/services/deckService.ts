@@ -36,7 +36,12 @@ const deleteDeck = async (userToken: string, deckId: string) => {
 }
 
 const getUserDecks = async (userToken: string, userId: string) => {
-    const { data } = await client.query({ query: gql(USER_DECKS), variables: { userId }, context: { headers: { authorization: `Bearer ${userToken}` } } });
+    const { data } = await client.query({
+        query: gql(USER_DECKS),
+        variables: { userId },
+        context: { headers: { authorization: `Bearer ${userToken}` } },
+        fetchPolicy: 'network-only'
+    });
     // console.log('getUserDecks', data)
     return data.decks;
 }

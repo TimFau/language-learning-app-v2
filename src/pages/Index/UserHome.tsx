@@ -16,18 +16,18 @@ export default function Account() {
     function getAccountDetails() {
         userService.getAccountDetails(authCtx.userToken)
         .then(async response => {
-            const data = await response.json();
-            if(!response.ok) {
+            const data = await response;
+            if(data.errors) {
                 console.log('bad response', response)
-                const resError = (data && data.message) || response.status;
+                const errorMessages = data.errors.map((error: any) => error.message);
                 authCtx.onLogout()
                 authCtx.onLoginOpen(true, false);
-                return Promise.reject(resError);
+                throw new Error(errorMessages);
             }
-                dispatch({type: 'user/setUserName', value: data.data.users_me.first_name})
-                setUserId(data.data.users_me.id)
-                setIsReady(true)
-                return true
+            dispatch({type: 'user/setUserName', value: data.users_me.first_name})
+            setUserId(data.users_me.id)
+            setIsReady(true)
+            return true
         })
         .catch(error => {
             console.error('catch', error);

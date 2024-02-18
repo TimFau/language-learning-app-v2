@@ -22,13 +22,10 @@ export default function Login() {
     function login() {
         userService.login(email, password)
         .then(async response => {
-            const data = await response.json();
+            const data = await response;
             setEmailError('');
             setPassError('');
-            if(!response.ok) {
-                const resError = (data && data.message) || response.status;
-                return Promise.reject(resError);
-            } else if (data.errors) {
+            if (data.errors) {
                 const errorMsgs = data.errors;
                 for (let i = 0; i < errorMsgs.length; i++) {
                     let errorMsg = errorMsgs[i].message;
@@ -45,16 +42,19 @@ export default function Login() {
                 }
                 return false
             } else {
-                const userDetails = await userService.getAccountDetails(data.data.auth_login.access_token).then(response => response.json())
-                const accessToken = data.data.auth_login.access_token
-                const userId = userDetails.data.users_me.id
-                const userName = userDetails.data.users_me.username
+                const userDetails = await userService.getAccountDetails(data.auth_login.access_token).then(response => response)
+                const accessToken = data.auth_login.access_token
+                const userId = userDetails.users_me.id
+                const userName = userDetails.users_me.username
                 authCtx.onLogin(accessToken, userId, userName)
                 return true
             }
         })
         .catch(error => {
-            console.error('catch', error);
+            console.error('login catch', error, error.message);
+            if (error.message.includes('Invalid user credentials.')) {
+                alert('Invalid user credentials.');
+            }
         })
     }
 

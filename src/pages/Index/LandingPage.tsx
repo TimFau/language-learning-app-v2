@@ -90,11 +90,8 @@ export default function GuestPage(props: LoggedOutProps) {
         function createAccountPost() {
             userService.createAccount(firstName, lastName, userEmail, userPassword)
             .then(async response => {
-                const data = await response.json();
-                if(!response.ok) {
-                    const resError = (data && data.message) || response.status;
-                    return Promise.reject(resError);
-                } else if (data.errors) {
+                const data = await response
+                if (data.errors) {
                     console.log('error present', data.errors)
                     const errorMsgs = data.errors;
                     for (let i = 0; i < errorMsgs.length; i++) {
