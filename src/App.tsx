@@ -1,3 +1,4 @@
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import { AuthContextProvider } from 'context/auth-context';
@@ -28,15 +29,23 @@ const theme = createTheme({
   },
 });
 
+// Create an instance of ApolloClient
+export const client = new ApolloClient({
+  uri: process.env.REACT_APP_API_BASE,
+  cache: new InMemoryCache(),
+});
+
 export default function TranslationApp() {
   return (
     <AuthContextProvider>
       <ModalContextProvider>
-        <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <MainLayout />
-          </ThemeProvider>
-        </BrowserRouter>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            <ThemeProvider theme={theme}>
+              <MainLayout />
+            </ThemeProvider>
+          </BrowserRouter>
+        </ApolloProvider>
       </ModalContextProvider>
     </AuthContextProvider>
   );

@@ -1,58 +1,53 @@
 import DeckCard from "components/Deck/DeckCard";
-import { useContext, useEffect, useState } from "react"
-import deckService from "services/deckService"
+import { useContext } from "react"
 import AuthContext from 'context/auth-context';
+import { gql, useQuery } from "@apollo/client";
+import { COMMUNITY_DECKS, SAVED_DECKS } from "queries";
 
 const CommunityDecks = () => {
     const authCtx = useContext(AuthContext);
-    const [decks, setDecks] = useState<any>(null);
-    const [savedDecks, setSavedDecks] = useState<any>(null)
 
-    useEffect(() => {
-        if (authCtx.userToken && authCtx.userId) {
-            setSavedDecks([])
-            deckService.getSavedDecks(authCtx.userToken, authCtx.userId).then(result => {
-                // console.log('getSavedDecks', result);
-                setSavedDecks(result)
-            })
-        }
-    }, [authCtx.userToken, authCtx.userId])
+    const { loading: savedDecksLoading, error: savedDecksError, data: savedDecks } = useQuery(gql`${SAVED_DECKS}`, {
+        variables: { userToken: authCtx.userToken, userId: authCtx.userId },
+        context: { headers: { authorization: `Bearer ${authCtx.userToken}` } }
+    });
 
-    useEffect(() => {
-        const getDecks = () => {
-            deckService.getCommunityDecks().then(
-                result => {
-                    // console.log('getCommunityDecks', result);
-                    const modifiedResult = result.map((deck: any) => {
-                        if (savedDecks) {
-                            const savedDeck = savedDecks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
-                            if (savedDeck) {
-                                console.log('savedDeck', savedDeck)
-                                return {
-                                    isSaved: true,
-                                    savedDeckId: savedDeck.id,
-                                    ...deck
-                                }
-                            }
-                        }
-                        return deck
-                    })
-                    setDecks(modifiedResult)
+    const { loading, error, data: communityDecks } = useQuery(gql`${COMMUNITY_DECKS}`, {
+        variables: { userToken: authCtx.userToken, userId: authCtx.userId },
+    })
+
+    if (loading || savedDecksLoading) {
+        return (
+            <h1>Loading...</h1>
+        )
+    }
+    if (error || savedDecksError) {
+        return (
+            <h1>Error: ${error?.message || savedDecksError?.message}</h1>
+        )
+    }
+
+    const decks = communityDecks.decks.map((deck: any) => {
+        if (savedDecks) {
+            const savedDeck = savedDecks.saved_decks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
+            if (savedDeck) {
+                return {
+                    isSaved: true,
+                    savedDeckId: savedDeck.id,
+                    ...deck
                 }
-            )
+            }
+            return deck
         }
-        getDecks();
-    }, [savedDecks]);
+        return deck
+    }).filter((deck:any) => deck.user_created?.username !== authCtx.userName)
 
-    
     return (
         <div className="page-container">
             <h1 className="sr-only">Community Decks</h1>
             {!decks && "Loading..."}
             <div className="decks-container">
-            {decks && decks
-                .filter((deck:any) => deck.user_created?.username !== authCtx.userName)
-                .map((deck: any) => (
+            {decks.map((deck: any) => (
                     <DeckCard
                         item={deck}
                         key={deck.id.toString()}

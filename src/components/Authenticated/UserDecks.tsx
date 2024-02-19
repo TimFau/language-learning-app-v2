@@ -1,18 +1,9 @@
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import { CircularProgress } from '@mui/material/';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/Deck/DeckCard';
-import getUsersDecks from './getUsersDecks';
-
-// Displays all the lists that a logged in user has added to their profile
-
-interface itemsChild {
-    date_created: string,
-    id: string,
-    deck_id: string,
-    deck_name: string,
-    status: string
-}
+import { gql, useQuery } from '@apollo/client';
+import { SAVED_DECKS, USER_DECKS } from 'queries';
 
 interface UserListsProps {
     userId: string
@@ -20,46 +11,50 @@ interface UserListsProps {
 }
 
 export default function UserDecks(props: UserListsProps) {
-    const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState<itemsChild[]>([]);
     const authCtx = useContext(AuthContext);
     const userId = props.userId
+
+    const { loading, error, data } = useQuery(USER_DECKS, {
+        variables: { userId },
+        context: { headers: { authorization: `Bearer ${authCtx.userToken}` } }
+    });
+    const {
+        loading: communityLoading,
+        error: communityError,
+        data: communityData 
+    } = useQuery(gql`${SAVED_DECKS}`, {
+        variables: { userId },
+        context: { headers: { authorization: `Bearer ${authCtx.userToken}` } }
+    });
   
-    useEffect(() => {
-        getUsersDecks(authCtx.userToken, userId)
-        .then((response: any) => {
-            setIsLoaded(true)
-            setItems(response)
-        })
-        .catch(error => {
-            setIsLoaded(true)
-            setError(error)
-            console.log(error)
-        })
-    }, [authCtx.userToken, userId])
-  
-    if (error) {
-      return <div>Error: {error}</div>;
-    } else if (!isLoaded) {
+
+    if (error || communityError) {
+      return <div>Error: {error?.message || communityError?.message}</div>;
+    } else if (loading || communityLoading) {
       return <CircularProgress />;
-    } else if (items) {
-      return (
+    } else {
+        const userDecks = data.decks.map((deck: any) => {
+            return { type: "user", ...deck }
+        })
+        const savedDecks = communityData.saved_decks.map((deck: any) => {
+            return { isSaved: true, savedDeckId: deck.id, ...deck }
+        })
+        const decks = [...userDecks, ...savedDecks];
+        console.log('data', data);
+        return (
         <>
             <div id="userListsContainer">
                 <h1 className="sr-only">My Decks</h1>
                 <div className="decks-container">
-                    {items.map(item => (
+                    {decks.map((deck: any) => (
                         <DeckCard
-                            item={item}
-                            key={item.deck_name + item.id.toString()}
+                            item={deck}
+                            key={deck.deck_name + deck.id.toString()}
                         />
                     ))}
                 </div>
             </div>
         </>
-      )
-    } else {
-        return <div>Unkown Error</div>
+        )
     }
   }

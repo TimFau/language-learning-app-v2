@@ -21,7 +21,6 @@ import sheetService from 'services/sheetService';
 interface DeckManagementModalProps {
     userId: string,
     addListDialogOpen: boolean,
-    refreshLists: () => void,
     closeDialog: () => void,
 }
 
@@ -107,7 +106,6 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
 
         const handleResult = (result: any) => {
             console.log('new deck result', result)
-            props.refreshLists();
             handleClose()
         }
 
@@ -115,7 +113,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
         // Add deck to user_decks or update existing item
         function sendRequest() {
             if(isAdd) {
-                deckService.addDeck(deckName, deckId, nativeLangauge, learningLanguage, makePublic, authCtx.userToken).then(
+                deckService.addDeck(deckName, deckId, nativeLangauge, learningLanguage, makePublic, authCtx.userToken, authCtx.userId).then(
                     handleResult,
                     (error) => {
                         console.log(error);

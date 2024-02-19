@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import DeckManagementModal from './Authenticated/DeckManagementModal';
-import getUsersDecks from './Authenticated/getUsersDecks';
 import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
 
 export default function Nav() {
@@ -64,7 +63,7 @@ export default function Nav() {
             </div>
         </header>
         }
-        <DeckManagementModal userId={authCtx.userId} addListDialogOpen={modalCtx.isModalOpen} closeDialog={() => modalCtx.closeModal()} refreshLists={() => getUsersDecks(authCtx.userToken, authCtx.userId)} />
+        <DeckManagementModal userId={authCtx.userId} addListDialogOpen={modalCtx.isModalOpen} closeDialog={() => modalCtx.closeModal()} />
         </>
     )
 }

@@ -1,3 +1,5 @@
+import { gql } from "@apollo/client"
+
 const DECK_FIELDS = `
     fragment DeckFields on decks {
         id
@@ -37,7 +39,7 @@ export const DEMO_DECKS = `
     }
 `
 
-export const USER_DECKS = `
+export const USER_DECKS = gql`
     ${DECK_FIELDS}
     query GetUserDecks($userId: String!) {
         decks(filter: {
@@ -52,30 +54,8 @@ export const USER_DECKS = `
     }
 `
 
-export const SAVED_DECKS = `
-    ${DECK_FIELDS}
-    query getSavedDecks($userId: String!){
-        saved_decks(filter: {
-            user_created: {
-                id: {
-                    _eq: $userId
-                }
-            }
-        }) {
-            id
-            status
-            date_created
-            user_created {
-                id
-            }
-            deck_relation {
-                ...DeckFields
-            }
-        }
-    }
-`
-
 export const CREATE_DECK = `
+    ${DECK_FIELDS}
     mutation CreateDeck ($deckName: String!, $deckId: String!, $nativeLanguage: String!, $learningLanguage: String!, $deckStatus: String!) {
         create_decks_item (data: {
             status: $deckStatus,
@@ -84,16 +64,13 @@ export const CREATE_DECK = `
             Language1: $nativeLanguage,
             Language2: $learningLanguage
         }) {
-            status
-            deck_name
-            deck_id
-            Language1
-            Language2
+            ...DeckFields
         }
     }
 `
 
 export const UPDATE_DECK = `
+    ${DECK_FIELDS}
     mutation UpdateDeck ($deckName: String!, $deckId: String!, $nativeLanguage: String!, $learningLanguage: String!, $deckStatus: String!, $id: ID!) {
         update_decks_item (id: $id, data: {
             status: $deckStatus,
@@ -102,11 +79,7 @@ export const UPDATE_DECK = `
             Language1: $nativeLanguage,
             Language2: $learningLanguage
         }) {
-            status
-            deck_name
-            deck_id
-            Language1
-            Language2
+            ...DeckFields
         }
     }
 `
@@ -119,17 +92,44 @@ export const DELETE_DECK = `
     }
 `
 
+const SAVED_DECK_FIELDS = `
+    ${DECK_FIELDS}
+    fragment SavedDeckFields on saved_decks {
+        id
+        status
+        date_created
+        user_created {
+            id
+        }
+        deck_relation {
+            ...DeckFields
+        }
+    }
+`
+
+export const SAVED_DECKS = `
+    ${SAVED_DECK_FIELDS}
+    query getSavedDecks($userId: String!){
+        saved_decks(filter: {
+            user_created: {
+                id: {
+                    _eq: $userId
+                }
+            }
+        }) {
+            ...SavedDeckFields
+        }
+    }
+`
+
 export const SAVE_DECK = `
+    ${SAVED_DECK_FIELDS}
     mutation SaveDeck ($communityDeckId: create_decks_input!) {
         create_saved_decks_item (data: {
             status: "published",
             deck_relation: $communityDeckId
         }) {
-            status
-            deck_relation {
-                deck_name
-                deck_id
-            }
+            ...SavedDeckFields
         }
     }
 `

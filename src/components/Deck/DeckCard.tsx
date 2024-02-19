@@ -56,7 +56,7 @@ const DeckCard = (props: DeckCardProps) => {
                 {props.item.type !== 'user' ?
                 <IconButton
                     aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
-                    onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId) : deckService.saveDeck(userToken, deck)}
+                    onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)}
                     size="large">
                     {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
                     
@@ -65,7 +65,7 @@ const DeckCard = (props: DeckCardProps) => {
                 <>
                     <IconButton
                         aria-label={`Delete "${deckName}"`}
-                        onClick={() => deckService.deleteDeck(userToken, deck.id)}
+                        onClick={() => deckService.deleteDeck(userToken, deck.id, authCtx.userId)}
                         size="large">
                         <DeleteIcon />
                     </IconButton>
