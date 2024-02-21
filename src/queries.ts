@@ -98,6 +98,7 @@ const SAVED_DECK_FIELDS = `
         id
         status
         date_created
+        last_access
         user_created {
             id
         }
@@ -139,6 +140,20 @@ export const UNSAVE_DECK = `
     mutation UnsaveDeck ($savedDeckId: ID!) {
         delete_saved_decks_item (id: $savedDeckId) {
             id
+        }
+    }
+`
+
+export const UPDATE_SAVED_DECK = `
+    mutation UpdateSavedDeck($id: ID!, $lastAccess: Date, $lastComplete: Date) {
+        update_saved_decks_item(id: $id, data: {
+            id: $id,
+            last_access: $lastAccess,
+            last_complete: $lastComplete
+        }) {
+            id
+            last_access
+            last_complete
         }
     }
 `
