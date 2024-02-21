@@ -6,8 +6,6 @@ import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import { useContext } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
-import { gql, useMutation } from '@apollo/client';
-import { UPDATE_SAVED_DECK } from 'queries';
 
 type DeckCardProps = {
     item: any
@@ -23,15 +21,10 @@ const DeckCard = (props: DeckCardProps) => {
 
     const navigate = useNavigate();
 
-    const [updateSavedDeck] = useMutation(gql`${UPDATE_SAVED_DECK}`);
-
     const handleClick = () => {
         if (savedDeckId) {
             const now = new Date().toISOString();
-            updateSavedDeck({
-                variables: { id: savedDeckId, lastAccess: now },
-                context: { headers: { authorization: `Bearer ${userToken}` } }
-            })
+            deckService.updateSavedDeck(userToken, savedDeckId, now)
         }
         navigate(`/deck?name=${deckName}&id=${deckId}`);
     }
