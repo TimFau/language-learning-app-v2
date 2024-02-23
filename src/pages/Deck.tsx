@@ -33,8 +33,8 @@ type langArray = string[];
 
 function Deck(props: RootState) {
     const queryParams = new URLSearchParams(window.location.search)
-    const name: any = queryParams.get("name")
-    const id: any = queryParams.get("id")
+    const name: string = queryParams.get("name") || ''
+    const id: string = queryParams.get("id") || ''
     const navigate = useNavigate()
 
     // State Functions
@@ -62,7 +62,12 @@ function Deck(props: RootState) {
     const [checkAccents] = useState<boolean>(false);
     const { setDeckDialogOpen, setDeckDialogClose } = props;
 
-    // Original Functions
+    /**
+     * Selects a new flashcard from the deck. 
+     * If the previous card was answered correctly
+     * (`success` is true), it removes that card from the deck. 
+     * It then selects a new random card from the remaining deck.
+     */
     function getCard(currentLangOneArr?: langArray, currentLangTwoArr?: langArray) {
         let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr]
         let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr]
@@ -85,6 +90,11 @@ function Deck(props: RootState) {
         handleWordBank(newLangOneArr, newLangTwoArr, newRandomNum);
     }
 
+    /**
+     * Removes the current flashcard from the deck. 
+     * It updates the state with the new arrays (minus the removed card) 
+     * and then selects a new random card from the remaining deck.
+     */
     function archiveCard() {
         let newLangOneArr = [...langArr.langOneArr];
         let newLangTwoArr = [...langArr.langTwoArr];
@@ -97,6 +107,11 @@ function Deck(props: RootState) {
         getCard(newLangOneArr, newLangTwoArr);
     }
 
+    /**
+     * Generates a new word bank for the current flashcard.
+     * It uses the `wordBankHelper` function to generate a list of potential translations,
+     * which includes the correct translation and some incorrect ones.
+     */
     function handleWordBank(currentLangOneArr?: langArray, currentLangTwoArr?: langArray, currentRandomNum?: number) {
         if(translateMode === '1to2'){
             setWordBank(wordBankHelper(currentRandomNum || randomNum, currentLangTwoArr || langArr.langTwoArr, langTwoArrInit));
