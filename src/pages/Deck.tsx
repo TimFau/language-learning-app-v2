@@ -29,6 +29,8 @@ type RootState = {
     deckStarted: boolean
 }
 
+type langArray = string[];
+
 function Deck(props: RootState) {
     const queryParams = new URLSearchParams(window.location.search)
     const name: any = queryParams.get("name")
@@ -36,18 +38,18 @@ function Deck(props: RootState) {
     const navigate = useNavigate()
 
     // State Functions
-    const [langArr, setLangArr] = useState<{ langOneArr: string[], langTwoArr: string[] }>({
+    const [langArr, setLangArr] = useState<{ langOneArr: langArray, langTwoArr: langArray }>({
         langOneArr: [],
         langTwoArr: []
     });
-    const [langOneArrInit, setLangOneArrInit] = useState<Array<string>>([]);
-    const [langTwoArrInit, setLangTwoArrInit] = useState<Array<string>>([]);
+    const [langOneArrInit, setLangOneArrInit] = useState<langArray>([]);
+    const [langTwoArrInit, setLangTwoArrInit] = useState<langArray>([]);
     const [language1, setLanguage1] = useState<string | undefined>('');
     const [language2, setLanguage2] = useState<string | undefined>('');
-    const [langFrom, setLangFrom] = useState<Array<string>>([]);
-    const [langTo, setLangTo] = useState<Array<string>>([]);
+    const [langFrom, setLangFrom] = useState<langArray>([]);
+    const [langTo, setLangTo] = useState<langArray>([]);
     const [translationInputValue, setTranslationInputValue] = useState<string>('');
-    const [wordBank, setWordBank] = useState<Array<string>>([]);
+    const [wordBank, setWordBank] = useState<langArray>([]);
     const [translateMode, setTranslateMode] = useState<string>('1to2');
     const [inputMode, setInputMode] = useState<string>('Flashcard');
     const [showAnswer, setShowAnswer] = useState<boolean>(false);
@@ -61,7 +63,7 @@ function Deck(props: RootState) {
     const { setDeckDialogOpen, setDeckDialogClose } = props;
 
     // Original Functions
-    function getCard(currentLangOneArr?: string[], currentLangTwoArr?: string[]) {
+    function getCard(currentLangOneArr?: langArray, currentLangTwoArr?: langArray) {
         let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr]
         let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr]
         if (success) {
@@ -80,7 +82,7 @@ function Deck(props: RootState) {
             langOneArr: newLangOneArr,
             langTwoArr: newLangTwoArr
         })
-        handleWordBank();
+        handleWordBank(newLangOneArr, newLangTwoArr, newRandomNum);
     }
 
     function archiveCard() {
@@ -95,11 +97,11 @@ function Deck(props: RootState) {
         getCard(newLangOneArr, newLangTwoArr);
     }
 
-    function handleWordBank() {
+    function handleWordBank(currentLangOneArr?: langArray, currentLangTwoArr?: langArray, currentRandomNum?: number) {
         if(translateMode === '1to2'){
-            setWordBank(wordBankHelper(randomNum, langArr.langTwoArr, langTwoArrInit));
+            setWordBank(wordBankHelper(currentRandomNum || randomNum, currentLangTwoArr || langArr.langTwoArr, langTwoArrInit));
         } else {
-            setWordBank(wordBankHelper(randomNum, langArr.langOneArr, langOneArrInit));
+            setWordBank(wordBankHelper(currentRandomNum || randomNum, currentLangOneArr || langArr.langOneArr, langOneArrInit));
         }
     }
 
@@ -161,8 +163,8 @@ function Deck(props: RootState) {
     useEffect(() => {
         function getDeckData(value: string) {
             sheetService.getSheet(value).then( data => {
-                let newLangOneArr: string[] = [];
-                let newLangTwoArr: string[] = [];
+                let newLangOneArr: langArray = [];
+                let newLangTwoArr: langArray = [];
                 if (data.length > 0) {
                     data.forEach(function(item: { Language1: string; Language2: string; }){
                         newLangOneArr.push(item.Language1);

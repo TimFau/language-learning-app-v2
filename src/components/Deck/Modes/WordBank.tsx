@@ -1,3 +1,5 @@
+// TODO: Bug - Sometimes 1 out of 4 options will appear as blank
+
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
