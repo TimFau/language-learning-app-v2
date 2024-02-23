@@ -29,10 +29,6 @@ type RootState = {
     deckStarted: boolean
 }
 
-// global vars
-var langOneArrInit: string[];
-var langTwoArrInit: string[];
-
 function Deck(props: RootState) {
     const queryParams = new URLSearchParams(window.location.search)
     const name: any = queryParams.get("name")
@@ -44,6 +40,8 @@ function Deck(props: RootState) {
         langOneArr: [],
         langTwoArr: []
     });
+    const [langOneArrInit, setLangOneArrInit] = useState<Array<string>>([]);
+    const [langTwoArrInit, setLangTwoArrInit] = useState<Array<string>>([]);
     const [language1, setLanguage1] = useState<string | undefined>('');
     const [language2, setLanguage2] = useState<string | undefined>('');
     const [langFrom, setLangFrom] = useState<Array<string>>([]);
@@ -167,7 +165,6 @@ function Deck(props: RootState) {
                 let newLangTwoArr: string[] = [];
                 if (data.length > 0) {
                     data.forEach(function(item: { Language1: string; Language2: string; }){
-                        // console.log('getDeckData', data)
                         newLangOneArr.push(item.Language1);
                         newLangTwoArr.push(item.Language2);
                     })
@@ -183,8 +180,8 @@ function Deck(props: RootState) {
                 setSuccess(false);
                 setIncorrect(false);
                 setDeckDataLoaded(true);
-                langOneArrInit = newLangOneArr.slice();
-                langTwoArrInit = newLangTwoArr.slice();
+                setLangOneArrInit(newLangOneArr);
+                setLangTwoArrInit(newLangTwoArr);
                 setLangArr({
                     langOneArr: newLangOneArr,
                     langTwoArr: newLangTwoArr
