@@ -8,7 +8,7 @@ interface FlashCardProps {
     langFrom: Array<string>,
     langTo: Array<string>,
     randomNum: number,
-    getCard: (event: React.UIEvent<HTMLElement>) => void,
+    getCard: () => void,
     archiveCard: (event: React.UIEvent<HTMLElement>) => void,
     showAnswerFc: (event: React.UIEvent<HTMLElement>) => void,
     children: React.ReactNode    

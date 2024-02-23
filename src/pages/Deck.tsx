@@ -30,8 +30,6 @@ type RootState = {
 }
 
 // global vars
-var langOneArr: string[];
-var langTwoArr: string[];
 var langOneArrInit: string[];
 var langTwoArrInit: string[];
 
@@ -42,6 +40,10 @@ function Deck(props: RootState) {
     const navigate = useNavigate()
 
     // State Functions
+    const [langArr, setLangArr] = useState<{ langOneArr: string[], langTwoArr: string[] }>({
+        langOneArr: [],
+        langTwoArr: []
+    });
     const [language1, setLanguage1] = useState<string | undefined>('');
     const [language2, setLanguage2] = useState<string | undefined>('');
     const [langFrom, setLangFrom] = useState<Array<string>>([]);
@@ -61,32 +63,45 @@ function Deck(props: RootState) {
     const { setDeckDialogOpen, setDeckDialogClose } = props;
 
     // Original Functions
-    function getCard() {
+    function getCard(currentLangOneArr?: string[], currentLangTwoArr?: string[]) {
+        let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr]
+        let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr]
         if (success) {
-            langOneArr.splice(randomNum, 1);
-            langTwoArr.splice(randomNum, 1);
+            newLangOneArr.splice(randomNum, 1);
+            newLangTwoArr.splice(randomNum, 1);
         }
-        setRandomNum(Math.floor(Math.random() * langOneArr.length));
+        const newRandomNum = Math.floor(Math.random() * newLangOneArr.length)
+        setRandomNum(newRandomNum);
         setSuccess(false);
         setIncorrect(false);
         setTranslationInputValue('');
-        setLangFrom(translateMode === '1to2' ? langOneArr : langTwoArr);
-        setLangTo(translateMode === '1to2' ? langTwoArr : langOneArr);
+        setLangFrom(translateMode === '1to2' ? newLangOneArr : newLangTwoArr);
+        setLangTo(translateMode === '1to2' ? newLangTwoArr : newLangOneArr);
         setShowAnswer(false);
+        setLangArr({
+            langOneArr: newLangOneArr,
+            langTwoArr: newLangTwoArr
+        })
         handleWordBank();
     }
 
     function archiveCard() {
-        langOneArr.splice(randomNum, 1);
-        langTwoArr.splice(randomNum, 1);
-        getCard();
+        let newLangOneArr = [...langArr.langOneArr];
+        let newLangTwoArr = [...langArr.langTwoArr];
+        newLangOneArr.splice(randomNum, 1);
+        newLangTwoArr.splice(randomNum, 1);
+        setLangArr({
+            langOneArr: newLangOneArr,
+            langTwoArr: newLangTwoArr
+        });
+        getCard(newLangOneArr, newLangTwoArr);
     }
 
     function handleWordBank() {
         if(translateMode === '1to2'){
-            setWordBank(wordBankHelper(randomNum, langTwoArr, langTwoArrInit));
+            setWordBank(wordBankHelper(randomNum, langArr.langTwoArr, langTwoArrInit));
         } else {
-            setWordBank(wordBankHelper(randomNum, langOneArr, langOneArrInit));
+            setWordBank(wordBankHelper(randomNum, langArr.langOneArr, langOneArrInit));
         }
     }
 
@@ -122,13 +137,13 @@ function Deck(props: RootState) {
     }
     function setTranslationMode1() {
         setTranslateMode('1to2');
-        setLangFrom(langOneArr);
-        setLangTo( langTwoArr);
+        setLangFrom(langArr.langOneArr);
+        setLangTo(langArr.langTwoArr);
     }
     function setTranslationMode2() {
         setTranslateMode('2to1');
-        setLangFrom(langTwoArr);
-        setLangTo(langOneArr);
+        setLangFrom(langArr.langTwoArr);
+        setLangTo(langArr.langOneArr);
     }
     function goToDeckSelector() {
         props.setDeckStartedFalse();
@@ -148,28 +163,32 @@ function Deck(props: RootState) {
     useEffect(() => {
         function getDeckData(value: string) {
             sheetService.getSheet(value).then( data => {
-                langOneArr = [];
-                langTwoArr = [];
+                let newLangOneArr: string[] = [];
+                let newLangTwoArr: string[] = [];
                 if (data.length > 0) {
                     data.forEach(function(item: { Language1: string; Language2: string; }){
                         // console.log('getDeckData', data)
-                        langOneArr.push(item.Language1);
-                        langTwoArr.push(item.Language2);
+                        newLangOneArr.push(item.Language1);
+                        newLangTwoArr.push(item.Language2);
                     })
                 } else if (data.error) {
                     console.log('Deck Load Error: ' + data.error)
                 } else {
                     console.log('Data is empty; Deck not loaded')
                 }
-                setLanguage1(langOneArr.shift());
-                setLanguage2(langTwoArr.shift());
-                setInitialCount(langOneArr.length);
-                setRandomNum(Math.floor(Math.random() * langOneArr.length));
+                setLanguage1(newLangOneArr.shift());
+                setLanguage2(newLangTwoArr.shift());
+                setInitialCount(newLangOneArr.length);
+                setRandomNum(Math.floor(Math.random() * newLangOneArr.length));
                 setSuccess(false);
                 setIncorrect(false);
                 setDeckDataLoaded(true);
-                langOneArrInit = langOneArr.slice();
-                langTwoArrInit = langTwoArr.slice();
+                langOneArrInit = newLangOneArr.slice();
+                langTwoArrInit = newLangTwoArr.slice();
+                setLangArr({
+                    langOneArr: newLangOneArr,
+                    langTwoArr: newLangTwoArr
+                })
                 setDeckDialogOpen();
             })
             .catch((error) => {
@@ -191,11 +210,11 @@ function Deck(props: RootState) {
         <div className={"container page-container " + inputMode}>
             <div className="wrapper">
                 <ProgressBar 
-                    langOneArrLength={langOneArr?.length}
+                    langOneArrLength={langArr.langOneArr.length}
                     initialCount={initialCount}
                 />
                 <form onSubmit={handleSubmit}  id="mainApp">
-                    {inputMode === 'Flashcard' ?
+                    {inputMode === 'Flashcard' &&
                         <FlashCard 
                         showAnswerFc={showAnswerFc}
                         showAnswer={showAnswer}
@@ -207,8 +226,8 @@ function Deck(props: RootState) {
                         >
                             Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
                         </FlashCard>
-                    : null }
-                    {inputMode === 'Keyboard' ?
+                    }
+                    {inputMode === 'Keyboard' &&
                         <Keyboard 
                             langTo={langTo}
                             langFrom={langFrom}
@@ -218,8 +237,8 @@ function Deck(props: RootState) {
                         >
                             Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
                         </Keyboard>
-                    : null }
-                    {inputMode === 'Wordbank' ?
+                    }
+                    {inputMode === 'Wordbank' &&
                         <WordBank 
                             langTo={langTo}
                             langFrom={langFrom}
@@ -229,7 +248,7 @@ function Deck(props: RootState) {
                         >
                             Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
                         </WordBank>
-                    : null }
+                    }
                 </form>
                 <DeckDialog
                     inputMode={inputMode}
@@ -245,7 +264,7 @@ function Deck(props: RootState) {
                     startDeck={startDeck}
                     deckDataLoaded={deckDataLoaded}
                 />
-                <Dialog id="success-modal" open={langOneArr?.length === 0}>
+                <Dialog id="success-modal" open={langArr.langOneArr?.length === 0}>
                     <Icon color="primary" className="congrats-icon">emoji_events</Icon>
                     <DialogTitle>
                         Congratulations!
@@ -272,10 +291,10 @@ function Deck(props: RootState) {
                     <BottomButtonsContainer 
                         handleSubmit={handleSubmit}
                         translateMode={translateMode}
-                        getCard={getCard}
+                        getCard={() => getCard()}
                         randomNum={randomNum}
-                        langOneArr={langOneArr}
-                        langTwoArr={langTwoArr}
+                        langOneArr={langArr.langOneArr}
+                        langTwoArr={langArr.langTwoArr}
                         success={success}
                         incorrect={incorrect}
                         showAnswer={showAnswer}
