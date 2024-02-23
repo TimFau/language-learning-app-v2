@@ -4,7 +4,7 @@ import connector, { PropsFromRedux } from "../containers/Main.connector"
 
 import Nav from '../components/Nav';
 import IndexPage from '../pages/Index/Index';
-import DeckPage from '../pages/Deck';
+import DeckPage from '../pages/Deck/Index';
 import CommunityDecks from '../pages/CommunityDecks';
 import Login from '../components/Unauthenticated/Login';
 

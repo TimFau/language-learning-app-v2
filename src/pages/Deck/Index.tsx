@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sheetService from 'services/sheetService';
 
-import ProgressBar from '../components/Deck/ProgressBar';
-import FlashCard from '../components/Deck/Modes/FlashCard';
-import WordBank from '../components/Deck/Modes/WordBank';
-import Keyboard from '../components/Deck/Modes/Keyboard';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from '../types';
-import DeckDialog from '../components/Deck/DeckDialog';
-import BottomButtonsContainer from '../components/Deck/BottomButtonsContainer';
-
-import { wordBankHelper } from '../scripts/Helpers';
+import ProgressBar from '../../components/Deck/ProgressBar';
+import FlashCard from '../../components/Deck/Modes/FlashCard';
+import WordBank from '../../components/Deck/Modes/WordBank';
+import Keyboard from '../../components/Deck/Modes/Keyboard';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from '../../types';
+import DeckDialog from '../../components/Deck/DeckDialog';
+import BottomButtonsContainer from '../../components/Deck/BottomButtonsContainer';
+import { wordBankHelper, generateRandomNum } from './helpers';
 
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -29,7 +28,7 @@ type RootState = {
     deckStarted: boolean
 }
 
-type langArray = string[];
+export type langArray = string[];
 
 function Deck(props: RootState) {
     const queryParams = new URLSearchParams(window.location.search)
@@ -68,6 +67,12 @@ function Deck(props: RootState) {
      * (`success` is true), it removes that card from the deck. 
      * It then selects a new random card from the remaining deck.
      */
+    const resetCard = () => {
+        setSuccess(false);
+        setIncorrect(false);
+        setTranslationInputValue('');
+        setShowAnswer(false);
+    }
     function getCard(currentLangOneArr?: langArray, currentLangTwoArr?: langArray) {
         let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr]
         let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr]
@@ -75,18 +80,15 @@ function Deck(props: RootState) {
             newLangOneArr.splice(randomNum, 1);
             newLangTwoArr.splice(randomNum, 1);
         }
-        const newRandomNum = Math.floor(Math.random() * newLangOneArr.length)
+        const newRandomNum = generateRandomNum(newLangOneArr)
         setRandomNum(newRandomNum);
-        setSuccess(false);
-        setIncorrect(false);
-        setTranslationInputValue('');
         setLangFrom(translateMode === '1to2' ? newLangOneArr : newLangTwoArr);
         setLangTo(translateMode === '1to2' ? newLangTwoArr : newLangOneArr);
-        setShowAnswer(false);
         setLangArr({
             langOneArr: newLangOneArr,
             langTwoArr: newLangTwoArr
         })
+        resetCard();
         handleWordBank(newLangOneArr, newLangTwoArr, newRandomNum);
     }
 
@@ -120,6 +122,13 @@ function Deck(props: RootState) {
         }
     }
 
+    /**
+     * Checks if the user's input matches the correct translation.
+     * It normalizes both the user's input and the correct answer to lowercase, trims any whitespace, 
+     * and removes any periods. If the `checkAccents` state is false, it also removes any accents.
+     * If the user's input matches the correct answer, it sets `success` to true; otherwise, it sets `incorrect` to true.
+     * It also sets `showAnswer` to true to reveal the correct answer.
+     */
     function handleSubmit(event: handleSubmitType) {
         event.preventDefault();
         var inputValueRegex = translationInputValue.toLowerCase().trim().replace(/\./g,'');
@@ -193,12 +202,11 @@ function Deck(props: RootState) {
                 setLanguage1(newLangOneArr.shift());
                 setLanguage2(newLangTwoArr.shift());
                 setInitialCount(newLangOneArr.length);
-                setRandomNum(Math.floor(Math.random() * newLangOneArr.length));
-                setSuccess(false);
-                setIncorrect(false);
+                setRandomNum(generateRandomNum(newLangOneArr));
                 setDeckDataLoaded(true);
                 setLangOneArrInit(newLangOneArr);
                 setLangTwoArrInit(newLangTwoArr);
+                resetCard();
                 setLangArr({
                     langOneArr: newLangOneArr,
                     langTwoArr: newLangTwoArr
