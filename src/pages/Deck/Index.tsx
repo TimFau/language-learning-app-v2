@@ -6,17 +6,12 @@ import ProgressBar from './components/ProgressBar';
 import FlashCard from './components/Modes/FlashCard';
 import WordBank from './components/Modes/WordBank';
 import Keyboard from './components/Modes/Keyboard';
-import { keyboardModeHandleChangeEvent, handleSubmitType } from '../../types';
-import DeckDialog from './components/DeckDialog';
+import DeckDialog from './components/DeckOptionsModal';
 import BottomButtonsContainer from './components/BottomButtonsContainer';
-import { wordBankHelper, generateRandomNum } from './helpers';
+import DeckFinishedModal from './components/DeckFinishedModal';
 
-import Button from '@mui/material/Button';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Dialog from '@mui/material/Dialog';
-import Icon from '@mui/material/Icon';
+import { keyboardModeHandleChangeEvent, handleSubmitType } from './types';
+import { wordBankHelper, generateRandomNum } from './helpers';
 
 
 type RootState = {
@@ -272,6 +267,19 @@ function Deck(props: RootState) {
                         </WordBank>
                     }
                 </form>
+                {inputMode !== 'Flashcard' &&
+                    <BottomButtonsContainer 
+                        handleSubmit={handleSubmit}
+                        translateMode={translateMode}
+                        getCard={() => getCard()}
+                        randomNum={randomNum}
+                        langOneArr={langArr.langOneArr}
+                        langTwoArr={langArr.langTwoArr}
+                        success={success}
+                        incorrect={incorrect}
+                        showAnswer={showAnswer}
+                    />
+                }
                 <DeckDialog
                     inputMode={inputMode}
                     currentDeckName={currentDeckName}
@@ -286,42 +294,10 @@ function Deck(props: RootState) {
                     startDeck={startDeck}
                     deckDataLoaded={deckDataLoaded}
                 />
-                <Dialog id="success-modal" open={langArr.langOneArr?.length === 0}>
-                    <Icon color="primary" className="congrats-icon">emoji_events</Icon>
-                    <DialogTitle>
-                        Congratulations!
-                    </DialogTitle>
-                    <DialogContent>
-                        <h3>You've finished the list!</h3>
-                    </DialogContent>
-                    <ButtonGroup
-                        color="primary"
-                        variant="outlined"
-                        fullWidth
-                    >
-                        <Button variant="contained" onClick={goToDeckSelector}>Return to Deck Loader</Button>
-                    </ButtonGroup>
-                </Dialog>
-                {/* TODO: Re-build functionality for DialogLogoutWarning. Temporarily, the logout option is hidden from the deck page. */}
-                {/* <DialogLogoutWarning 
-                    setDeckStartedTrue={props.setDeckStartedTrue}
-                    logOutDialogOpen={logOutDialogOpen}
-                    setLogOutDialogOpen={setLogOutDialogOpen}
-                    logout={logout}
-                /> */}
-                {inputMode !== 'Flashcard' &&
-                    <BottomButtonsContainer 
-                        handleSubmit={handleSubmit}
-                        translateMode={translateMode}
-                        getCard={() => getCard()}
-                        randomNum={randomNum}
-                        langOneArr={langArr.langOneArr}
-                        langTwoArr={langArr.langTwoArr}
-                        success={success}
-                        incorrect={incorrect}
-                        showAnswer={showAnswer}
-                    />
-                }
+                <DeckFinishedModal
+                    langOneArr={langArr.langOneArr}
+                    goToDeckSelector={() => goToDeckSelector()}
+                />
             </div>
         </div>
     )
