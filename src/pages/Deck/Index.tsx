@@ -73,14 +73,8 @@ function Deck(props: RootState) {
         setTranslationInputValue('');
         setShowAnswer(false);
     }
-    function getCard(currentLangOneArr?: langArray, currentLangTwoArr?: langArray) {
-        let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr]
-        let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr]
-        if (success) {
-            newLangOneArr.splice(randomNum, 1);
-            newLangTwoArr.splice(randomNum, 1);
-        }
-        const newRandomNum = generateRandomNum(newLangOneArr)
+    const handleSetNextCard = (newLangOneArr: langArray, newLangTwoArr: langArray, newRandomNum: number) => {
+        resetCard();
         setRandomNum(newRandomNum);
         setLangFrom(translateMode === '1to2' ? newLangOneArr : newLangTwoArr);
         setLangTo(translateMode === '1to2' ? newLangTwoArr : newLangOneArr);
@@ -88,8 +82,17 @@ function Deck(props: RootState) {
             langOneArr: newLangOneArr,
             langTwoArr: newLangTwoArr
         })
-        resetCard();
         handleWordBank(newLangOneArr, newLangTwoArr, newRandomNum);
+    }
+    const getCard = (currentLangOneArr?: langArray, currentLangTwoArr?: langArray) => {
+        let newLangOneArr = Array.isArray(currentLangOneArr) ? [...currentLangOneArr] : [...langArr.langOneArr];
+        let newLangTwoArr = Array.isArray(currentLangTwoArr) ? [...currentLangTwoArr] : [...langArr.langTwoArr];
+        if (success) {
+            newLangOneArr.splice(randomNum, 1);
+            newLangTwoArr.splice(randomNum, 1);
+        };
+        const newRandomNum = generateRandomNum(newLangOneArr);
+        handleSetNextCard(newLangOneArr, newLangTwoArr, newRandomNum);
     }
 
     /**
@@ -114,12 +117,10 @@ function Deck(props: RootState) {
      * It uses the `wordBankHelper` function to generate a list of potential translations,
      * which includes the correct translation and some incorrect ones.
      */
-    function handleWordBank(currentLangOneArr?: langArray, currentLangTwoArr?: langArray, currentRandomNum?: number) {
-        if(translateMode === '1to2'){
-            setWordBank(wordBankHelper(currentRandomNum || randomNum, currentLangTwoArr || langArr.langTwoArr, langTwoArrInit));
-        } else {
-            setWordBank(wordBankHelper(currentRandomNum || randomNum, currentLangOneArr || langArr.langOneArr, langOneArrInit));
-        }
+    function handleWordBank(currentLangOneArr: langArray, currentLangTwoArr: langArray, currentRandomNum: number) {
+        const translationsArr = translateMode === '1to2' ? currentLangTwoArr : currentLangOneArr;
+        const translationsArrInit =  translateMode === '1to2' ? langTwoArrInit : langOneArrInit;
+        setWordBank(wordBankHelper(translationsArr, translationsArrInit, currentRandomNum));
     }
 
     /**
@@ -152,7 +153,6 @@ function Deck(props: RootState) {
     function switchInput(value: string) {
         if(value === 'Wordbank'){
             setInputMode('Wordbank');
-            handleWordBank();
         } else if(value === 'Keyboard' && inputMode !== 'Keyboard'){
             setInputMode('Keyboard');
         } else if(value === 'Flashcard' && inputMode !== 'Flashcard'){

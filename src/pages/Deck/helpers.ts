@@ -8,18 +8,22 @@ function shuffle(array: Array<string>) {
     } return array;
 }
 
-export function wordBankHelper(ranNum1: number, curArr: Array<string>, initArr: Array<string>) {
-    var returnValue = [curArr[ranNum1]];
+export function wordBankHelper(translationsArr: Array<string>, initLangArr: Array<string>, currentRandomNum: number) {
+    const answer = translationsArr[currentRandomNum];
+    var returnValue = [answer];
     var i = 0;
     while (returnValue.length < 4 && i < 10) {
         i++;
-        returnValue = returnValue.concat(initArr[Math.floor(Math.random() * initArr.length)]);
-        let removeDuplicates = new Set(returnValue); // removes duplicates
-        returnValue = [...removeDuplicates]; // converts back to array
+        const initArrIndex = Math.floor(Math.random() * initLangArr.length);
+        const randomCard = initLangArr[initArrIndex]
+        if (randomCard) {
+            returnValue = returnValue.concat(randomCard);
+            let removeDuplicates = new Set(returnValue); // removes duplicates
+            returnValue = [...removeDuplicates]; // converts back to array
+        }
     }
-    return (
-        shuffle(returnValue)
-    )
+    const wordBankArr = shuffle(returnValue);
+    return wordBankArr;
 }
 
 export const generateRandomNum = (arr: langArray) => {
