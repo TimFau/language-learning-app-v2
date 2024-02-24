@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { keyboardModeHandleChangeEvent } from './../../../types';
+import { keyboardModeHandleChangeEvent } from '../../../../types';
 
 interface KeyboardProps {
     langFrom: Array<string>,

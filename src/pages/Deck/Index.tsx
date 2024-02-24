@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sheetService from 'services/sheetService';
 
-import ProgressBar from '../../components/Deck/ProgressBar';
-import FlashCard from '../../components/Deck/Modes/FlashCard';
-import WordBank from '../../components/Deck/Modes/WordBank';
-import Keyboard from '../../components/Deck/Modes/Keyboard';
+import ProgressBar from './components/ProgressBar';
+import FlashCard from './components/Modes/FlashCard';
+import WordBank from './components/Modes/WordBank';
+import Keyboard from './components/Modes/Keyboard';
 import { keyboardModeHandleChangeEvent, handleSubmitType } from '../../types';
-import DeckDialog from '../../components/Deck/DeckDialog';
-import BottomButtonsContainer from '../../components/Deck/BottomButtonsContainer';
+import DeckDialog from './components/DeckDialog';
+import BottomButtonsContainer from './components/BottomButtonsContainer';
 import { wordBankHelper, generateRandomNum } from './helpers';
 
 import Button from '@mui/material/Button';

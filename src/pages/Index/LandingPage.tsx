@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
-import DemoDecksDrawer from '../../components/Deck/DemoDecksDrawer';
+import DemoDecksDrawer from '../Deck/components/DemoDecksDrawer';
 
 import { Paper, Card, TextField, Button, Link } from '@mui/material/';
 import makeStyles from '@mui/styles/makeStyles';

@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-import { keyboardModeHandleChangeEvent } from './../../../types';
+import { keyboardModeHandleChangeEvent } from '../../../../types';
 
 interface WordBankProps {
     langFrom: Array<string>,

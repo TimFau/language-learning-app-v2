@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { CircularProgress } from '@mui/material/';
 import AuthContext from '../../context/auth-context';
-import DeckCard from 'components/Deck/DeckCard';
+import DeckCard from 'components/DeckCard';
 import { gql, useQuery } from '@apollo/client';
 import { SAVED_DECKS, USER_DECKS } from 'queries';
 

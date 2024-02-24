@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import React from 'react';
-import { handleSubmitType } from './../../types';
+import { handleSubmitType } from '../../../types';
 
 interface BottomButtonsContainerProps {
     getCard: (event: React.UIEvent<HTMLElement>) => void,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Drawer }  from '@mui/material';
-import deckService from '../../services/deckService';
-import DeckCard from './DeckCard';
+import deckService from '../../../services/deckService';
+import DeckCard from '../../../components/DeckCard';
 
 //
 // This drawer contains decks that are available for guest users to try out the app

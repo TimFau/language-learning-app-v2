@@ -1,4 +1,4 @@
-import DeckCard from "components/Deck/DeckCard";
+import DeckCard from "components/DeckCard";
 import { useContext } from "react"
 import AuthContext from 'context/auth-context';
 import { gql, useQuery } from "@apollo/client";
