@@ -12,9 +12,7 @@
     "@mui/material": "^5.15.10",
     "@mui/styles": "^5.15.10",
     "@reduxjs/toolkit": "^1.9.7",
-    "gity": "^1.0.5",
     "graphql": "^16.8.1",
-    "node-sass": "^4.14.1",
     "popper.js": "^1.16.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -23,6 +21,7 @@
     "react-router-dom": "^6.22.1",
     "react-scripts": "^4.0.3",
     "redux": "^4.2.1",
+    "sass": "^1.77.8",
     "universal-cookie": "^4.0.4"
   },
   "scripts": {

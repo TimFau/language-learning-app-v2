@@ -16,6 +16,6 @@ The main goals of this version (V2) are as follows:
 
 ## Running Project Locally
 
-Before running the project, please ensure that you have Node.js version 14 installed.
+Before running the project, please ensure that you have Node.js version 15 installed.
 
 To start the application, use the command 'npm run start'.
