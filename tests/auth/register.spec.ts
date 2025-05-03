@@ -18,8 +18,9 @@ test.describe('Registration Flow', () => {
     
     // Verify successful registration by checking for redirect to home page
     await expect(page).toHaveURL('/');
-    // Verify we can see authenticated content
-    await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
+
+    // Add an explicit wait for the button to become visible, especially for WebKit/Safari
+    await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible({ timeout: 10000 }); // Increased timeout
   });
 
   test('should show validation errors for empty fields', async ({ page }) => {

@@ -32,24 +32,36 @@ export default function GuestPage(props: LoggedOutProps) {
     const [lastName, setLastName] = React.useState('');
     const [userEmail, setUserEmail] = React.useState('');
     const [userPassword, setUserPassword] = React.useState('');
-    const [alertMsg, setAlertMsg] = React.useState('');
-    const [fieldWithError, setFieldWithError] = React.useState('');
+    
+    // State for API/general errors (top alert)
+    const [alertMsgs, setAlertMsgs] = React.useState<string[]>([]);
+    
+    // State for inline field validation errors
+    const [firstNameError, setFirstNameError] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState('');
+    const [emailError, setEmailError] = React.useState('');
+    const [passwordError, setPasswordError] = React.useState('');
 
     const authCtx = useContext(AuthContext);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        switch (event.target.name) {
+        const { name, value } = event.target;
+        switch (name) {
             case 'firstName':
-                setFirstName(event.target.value);
+                setFirstName(value);
+                if (firstNameError) setFirstNameError(''); // Clear error on change
                 break;
             case 'lastName':
-                setLastName(event.target.value);
+                setLastName(value);
+                if (lastNameError) setLastNameError(''); // Clear error on change
                 break;
             case 'email':
-                setUserEmail(event.target.value);
+                setUserEmail(value);
+                if (emailError) setEmailError(''); // Clear error on change
                 break;
             case 'password':
-                setUserPassword(event.target.value);
+                setUserPassword(value);
+                if (passwordError) setPasswordError(''); // Clear error on change
                 break;
             default:
                 console.log('No match for event name')
@@ -57,77 +69,102 @@ export default function GuestPage(props: LoggedOutProps) {
     }
 
     function validateFields () {
+        // Clear previous field errors
+        setFirstNameError('');
+        setLastNameError('');
+        setEmailError('');
+        setPasswordError('');
+        let isValid = true;
+
         if (firstName === '') {
-            setFieldWithError('firstName')
-            setAlertMsg('Please enter your first name.')
-            return false
-        } else if (lastName === '') {
-            setFieldWithError('lastName')
-            setAlertMsg('Please enter your last name.')
-            return false
-        } else if (userEmail === '') {
-            setFieldWithError('email')
-            setAlertMsg('Please enter your email address.')
-            return false
-        } else if (userPassword === '') {
-            setFieldWithError('password')
-            setAlertMsg('Please enter a password.')
-            return false
-        } else if (!CheckIsEmail(userEmail)) {
-            setFieldWithError('email')
-            setAlertMsg('Please enter a valid email address.')
-            return false
+            setFirstNameError('Please enter your first name.');
+            isValid = false;
         }
-        setFieldWithError('')
-        setAlertMsg('')
-        return true
+        if (lastName === '') {
+            setLastNameError('Please enter your last name.');
+            isValid = false;
+        }
+        if (userEmail === '') {
+            setEmailError('Please enter your email address.');
+            isValid = false;
+        } else if (!CheckIsEmail(userEmail)) {
+            setEmailError('Please enter a valid email address.');
+            isValid = false;
+        }
+        if (userPassword === '') {
+            setPasswordError('Please enter a password.');
+            isValid = false;
+        }
+        
+        // Clear top alert if all fields are now valid
+        if (isValid) {
+            setAlertMsgs([]);
+        }
+        
+        return isValid;
     }
 
     function createAccount() {
+        // Clear previous API errors before attempting
+        setAlertMsgs([]);
+
         if (validateFields()) {
             createAccountPost()
         }
         function createAccountPost() {
-            userService.createAccount(firstName, lastName, userEmail, userPassword)
+            return userService.createAccount(firstName, lastName, userEmail, userPassword)
             .then(async response => {
-                const data = await response
+                const data = await response;
                 if (data.errors) {
-                    console.log('error present', data.errors)
                     const errorMsgs = data.errors;
+                    let apiErrors: string[] = []; 
                     for (let i = 0; i < errorMsgs.length; i++) {
-                        let errorMsg = errorMsgs[i].message
-                        console.log(errorMsg)
-                        if (errorMsg.includes('Field "email" has to be unique.')) {
-                            setAlertMsg('You are already registered with this email address.')
+                        let errorMsg = errorMsgs[i].message;
+                        if (errorMsg.includes('Field \"email\" has to be unique.')) {
+                            setEmailError('You are already registered with this email address.'); 
+                            apiErrors.push('You are already registered with this email address.');
                         } else if (errorMsg.includes('This value is not a valid email address.')) {
-                            setAlertMsg('Please enter a valid email address.')
-                            setFieldWithError('email')
+                            setEmailError('Please enter a valid email address.'); 
+                            apiErrors.push('Please enter a valid email address.');
                         } else {
-                            setAlertMsg(errorMsg)
-                            setFieldWithError('')
+                            apiErrors.push(errorMsg); 
                         }
                     }
-                    return false
+                    setAlertMsgs(apiErrors);
+                    return; 
                 } else {
-                    const loginResponse = await userService.login(userEmail, userPassword);
-                    if (loginResponse.auth_login?.access_token) {
-                        const userDetails = await userService.getAccountDetails(loginResponse.auth_login.access_token).then(response => response);
-                        const accessToken = loginResponse.auth_login.access_token;
-                        const userId = userDetails.users_me.id;
-                        const userName = userDetails.users_me.username;
-                        
-                        authCtx.onLogin(accessToken, userId, userName);
-                        setAlertMsg('');
-                        return true;
-                    } else {
-                        setAlertMsg('Account created but login failed. Please try logging in manually.');
-                        return false;
+                    try {
+                        const loginResponse = await userService.login(userEmail, userPassword);
+                        if (loginResponse.auth_login?.access_token) {
+                            const userDetails = await userService.getAccountDetails(loginResponse.auth_login.access_token);
+                            const accessToken = loginResponse.auth_login.access_token;
+                            const userId = userDetails.users_me.id;
+                            const userName = userDetails.users_me.username;
+                            authCtx.onLogin(accessToken, userId, userName);
+                            setAlertMsgs([]); 
+                            return;
+                        } else {
+                            const errMsg = 'Account created but login failed (no token). Please try logging in manually.';
+                            setAlertMsgs([errMsg]);
+                            return;
+                        }
+                    } catch (loginError) {
+                        const errMsg = 'Account created but failed during login process. Please try logging in manually.';
+                        setAlertMsgs([errMsg]);
+                        return;
                     }
                 }
             })
             .catch(error => {
-                console.error('catch', error);
-                setAlertMsg('An error occurred during account creation.');
+                console.error('Account creation/login network/unexpected catch:', error);
+                if (error.message.includes('Value for field \"email\" in collection \"directus_users\" has to be unique.')) {
+                    const errMsg = 'You are already registered with this email address.';
+                    setEmailError(errMsg); 
+                    setAlertMsgs([errMsg]);
+                } else {
+                    const errMsg = 'An unexpected error occurred.'; 
+                    setAlertMsgs([errMsg]);
+                }
             })
         }
     }
@@ -157,7 +194,8 @@ export default function GuestPage(props: LoggedOutProps) {
                             autoFocus
                             value={firstName}
                             onChange={handleChange}
-                            error={fieldWithError === 'firstName'}
+                            error={firstNameError !== ''} // Use specific error state
+                            helperText={firstNameError} // Show specific error message
                             data-testid="register-first-name-input"
                         />
                         <TextField
@@ -171,7 +209,8 @@ export default function GuestPage(props: LoggedOutProps) {
                             autoComplete="lname"
                             value={lastName}
                             onChange={handleChange}
-                            error={fieldWithError === 'lastName'}
+                            error={lastNameError !== ''} // Use specific error state
+                            helperText={lastNameError} // Show specific error message
                             data-testid="register-last-name-input"
                         />
                         <TextField
@@ -185,7 +224,8 @@ export default function GuestPage(props: LoggedOutProps) {
                             autoComplete="email"
                             value={userEmail}
                             onChange={handleChange}
-                            error={fieldWithError === 'email'}
+                            error={emailError !== ''} // Use specific error state
+                            helperText={emailError} // Show specific error message
                             data-testid="register-email-input"
                         />
                         <TextField
@@ -200,13 +240,23 @@ export default function GuestPage(props: LoggedOutProps) {
                             autoComplete="current-password"
                             value={userPassword}
                             onChange={handleChange}
-                            error={fieldWithError === 'password'}
+                            error={passwordError !== ''} // Use specific error state
+                            helperText={passwordError} // Show specific error message
                             data-testid="register-password-input"
                         />
                     </form>
-                    {alertMsg !== '' &&
-                        <Alert severity="warning" className={classes.alert} data-testid="register-alert">{alertMsg}</Alert>
-                    }
+                    {/* Only show top alert for API/general errors */}
+                    {(alertMsgs.length > 0 &&
+                        <Alert severity="warning" className={classes.alert} data-testid="register-alert">
+                            {alertMsgs.length > 1 ? (
+                                <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                    {alertMsgs.map((msg, idx) => <li key={idx}>{msg}</li>)}
+                                </ul>
+                            ) : (
+                                alertMsgs[0]
+                            )}
+                        </Alert>
+                    )}
                     <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button">Create Account</Button>
                     <div>
                         <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
