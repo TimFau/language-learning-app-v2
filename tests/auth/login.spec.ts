@@ -28,11 +28,14 @@ test.describe('Login Flow', () => {
     await page.fill('[data-testid="login-email-input"]', 'wrong@example.com');
     await page.fill('[data-testid="login-password-input"]', 'wrongpassword');
     
-    // Click the login button
+    // Click the login button and wait for the alert
+    const alertPromise = page.waitForEvent('dialog');
     await page.click('[data-testid="login-submit-button"]');
+    const alert = await alertPromise;
     
-    // Verify error message is displayed
-    await expect(page.locator('text=Invalid username or password')).toBeVisible();
+    // Verify alert message
+    expect(alert.message()).toBe('Invalid user credentials.');
+    await alert.accept();
   });
 
   test('should validate required fields', async ({ page }) => {
