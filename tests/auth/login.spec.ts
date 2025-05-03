@@ -47,4 +47,22 @@ test.describe('Login Flow', () => {
     await expect(page.locator('text=Please enter a valid email address')).toBeVisible();
     await expect(page.locator('text=Please enter your password')).toBeVisible();
   });
+
+  test('should persist login state after page reload', async ({ page }) => {
+    // First login
+    await page.click('[data-testid="login-link"]');
+    await page.fill('[data-testid="login-email-input"]', 'playwrighttester@timfau.com');
+    await page.fill('[data-testid="login-password-input"]', 'test123');
+    await page.click('[data-testid="login-submit-button"]');
+    
+    // Verify initial login
+    await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
+    
+    // Reload the page
+    await page.reload();
+    
+    // Verify we're still logged in after reload
+    await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
+    await expect(page).toHaveURL('/');
+  });
 }); 
