@@ -193,7 +193,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     }
                     <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Create Account</Button>
                     <div>
-                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)}><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
                     </div>
                 </Card>
             </Paper>

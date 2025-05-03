@@ -85,6 +85,7 @@ export default function Login() {
                     label="Email Address"
                     fullWidth
                     variant="standard"
+                    inputProps={{ "data-testid": "login-email-input" } as any}
                 />
                 <TextField 
                     margin="dense"
@@ -96,6 +97,7 @@ export default function Login() {
                     type="password"
                     fullWidth
                     variant="standard"
+                    inputProps={{ "data-testid": "login-password-input" } as any}
                 />
             </DialogContent>
             <DialogActions>
@@ -103,6 +105,7 @@ export default function Login() {
                     onClick={() => login()}
                     variant="contained"
                     color="primary"
+                    data-testid="login-submit-button"
                 >Login</Button>
             </DialogActions>
         </Dialog>

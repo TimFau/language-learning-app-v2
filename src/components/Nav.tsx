@@ -51,12 +51,25 @@ export default function Nav() {
                 <div className="end">
                     {!deckStarted && pathName !== "/deck" &&
                     <>
-                        <button onClick={() => modalCtx.openModal()} className="nav-item"><span className="nav-item-wrapper"><AddIcon /> <span className="nav-label">Add Deck</span></span></button>
+                        <button 
+                            onClick={() => modalCtx.openModal()} 
+                            className="nav-item"
+                            data-testid="create-deck-button"
+                        >
+                            <span className="nav-item-wrapper">
+                                <AddIcon /> <span className="nav-label">Add Deck</span>
+                            </span>
+                        </button>
                         <button
                             onClick={authCtx.onLogout}
                             color="secondary"
                             className="nav-item logout"
-                        ><span className="nav-item-wrapper"><LogoutIcon /> <span className="nav-label">Logout</span></span></button>
+                            data-testid="logout-button"
+                        >
+                            <span className="nav-item-wrapper">
+                                <LogoutIcon /> <span className="nav-label">Logout</span>
+                            </span>
+                        </button>
                     </>
                     }
                 </div>
