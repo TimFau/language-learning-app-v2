@@ -109,13 +109,25 @@ export default function GuestPage(props: LoggedOutProps) {
                     }
                     return false
                 } else {
-                    authCtx.onLoginOpen(true, true);
-                    setAlertMsg('');
-                    return true
+                    const loginResponse = await userService.login(userEmail, userPassword);
+                    if (loginResponse.auth_login?.access_token) {
+                        const userDetails = await userService.getAccountDetails(loginResponse.auth_login.access_token).then(response => response);
+                        const accessToken = loginResponse.auth_login.access_token;
+                        const userId = userDetails.users_me.id;
+                        const userName = userDetails.users_me.username;
+                        
+                        authCtx.onLogin(accessToken, userId, userName);
+                        setAlertMsg('');
+                        return true;
+                    } else {
+                        setAlertMsg('Account created but login failed. Please try logging in manually.');
+                        return false;
+                    }
                 }
             })
             .catch(error => {
                 console.error('catch', error);
+                setAlertMsg('An error occurred during account creation.');
             })
         }
     }
@@ -146,6 +158,7 @@ export default function GuestPage(props: LoggedOutProps) {
                             value={firstName}
                             onChange={handleChange}
                             error={fieldWithError === 'firstName'}
+                            data-testid="register-first-name-input"
                         />
                         <TextField
                             variant="outlined"
@@ -159,6 +172,7 @@ export default function GuestPage(props: LoggedOutProps) {
                             value={lastName}
                             onChange={handleChange}
                             error={fieldWithError === 'lastName'}
+                            data-testid="register-last-name-input"
                         />
                         <TextField
                             variant="outlined"
@@ -172,6 +186,7 @@ export default function GuestPage(props: LoggedOutProps) {
                             value={userEmail}
                             onChange={handleChange}
                             error={fieldWithError === 'email'}
+                            data-testid="register-email-input"
                         />
                         <TextField
                             variant="outlined"
@@ -186,12 +201,13 @@ export default function GuestPage(props: LoggedOutProps) {
                             value={userPassword}
                             onChange={handleChange}
                             error={fieldWithError === 'password'}
+                            data-testid="register-password-input"
                         />
                     </form>
                     {alertMsg !== '' &&
-                        <Alert severity="warning" className={classes.alert}>{alertMsg}</Alert>
+                        <Alert severity="warning" className={classes.alert} data-testid="register-alert">{alertMsg}</Alert>
                     }
-                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()}>Create Account</Button>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button">Create Account</Button>
                     <div>
                         <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
                     </div>
