@@ -175,7 +175,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     <h1>Boost Your Language Learning <span>with LangPulse Flashcards</span></h1>
                     <p>Our platform enables you to craft custom flashcards, word banks, and quizzes, serving as the ideal addition to your current language learning resources.</p>
                     <div className="cta">
-                        <span>Give it a try:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
+                        <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Try a Demo Deck</Button>
                     </div>
                 </div>
                 <Card className="end">
@@ -259,7 +259,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     )}
                     <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button">Create Account</Button>
                     <div>
-                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">Login</span></Link>
                     </div>
                 </Card>
             </Paper>
