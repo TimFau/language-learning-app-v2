@@ -25,3 +25,9 @@
         }
     }
 }
+
+.not-authenticated {
+    p, a {
+        color: $light-shades;
+    }
+}
