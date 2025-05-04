@@ -95,9 +95,23 @@ test.describe('Deck Management', () => {
     // Deck is created in beforeEach
     await expect(page.locator(deckCardSelectorPrefix)).toBeVisible();
 
-    // Deletion is handled by the afterEach hook for this test
-    // We just need to verify it exists before afterEach runs
-    // No direct deletion call here, rely on afterEach
+    // 1. Find the specific deck card
+    const deckCard = page.locator(deckCardSelectorPrefix);
+
+    // 2. Find and click the delete button within the card
+    const deleteButton = deckCard.locator('button[aria-label^="Delete"]');
+    await expect(deleteButton).toBeVisible();
+    await deleteButton.click();
+
+    // 3. Handle the confirmation dialog
+    await expect(page.locator('[data-testid="delete-confirm-dialog"]')).toBeVisible();
+    await page.click('[data-testid="confirm-delete-button"]');
+
+    // 4. Verify the deck card is removed from the list
+    await expect(deckCard).not.toBeVisible({ timeout: 10000 });
+
+    // Set deckCardSelectorPrefix to null so afterEach doesn't try to delete it again
+    deckCardSelectorPrefix = '';
   });
 
   // Optional: Test for adding cards if it's part of deck management UI

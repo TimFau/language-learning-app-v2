@@ -90,8 +90,10 @@ export async function deleteDeckViaUI(page: Page, deckCardSelectorPrefix: string
   await expect(deleteButton).toBeVisible();
   await deleteButton.click();
 
-  // Add confirmation dialog handling if necessary
-  // page.on('dialog', dialog => dialog.accept()); // Example: Accept any confirmation
+  // --- Handle Confirmation Dialog ---
+  await expect(page.locator('[data-testid="delete-confirm-dialog"]')).toBeVisible();
+  await page.click('[data-testid="confirm-delete-button"]');
+  // --- End Confirmation Handling ---
 
   // Verify the deck card is removed
   await expect(deckCard).not.toBeVisible({ timeout: 10000 });

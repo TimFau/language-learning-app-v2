@@ -1,10 +1,10 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material"
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 
 type DeckCardProps = {
@@ -20,6 +20,7 @@ const DeckCard = (props: DeckCardProps) => {
     const savedDeckId = props.item.deck_relation ? props.item.id : null
 
     const navigate = useNavigate();
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const handleClick = () => {
         if (savedDeckId) {
@@ -39,54 +40,93 @@ const DeckCard = (props: DeckCardProps) => {
         modalCtx.openModal()
     }
 
+    const handleDeleteClick = () => {
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        deckService.deleteDeck(userToken, deck.id, authCtx.userId);
+        setConfirmOpen(false);
+    };
+
+    const handleCloseConfirm = () => {
+        setConfirmOpen(false);
+    };
+
     return (
-        <Card 
-            className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}
-            data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
-        >
-            <CardActionArea onClick={() => handleClick()}>
-                <CardContent>
-                    <div className="card-content-top">
-                        <div className="deck-info">
-                            <Language />
-                            <Typography variant="h6"><span>{deck.Language2}</span></Typography>
+        <>
+            <Card 
+                className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}
+                data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
+            >
+                <CardActionArea onClick={() => handleClick()}>
+                    <CardContent>
+                        <div className="card-content-top">
+                            <div className="deck-info">
+                                <Language />
+                                <Typography variant="h6"><span>{deck.Language2}</span></Typography>
+                            </div>
+                            <span className="deck-categories">
+                                {props.item.categories?.map((category: string) => <Chip label={category} key={category} />)}
+                            </span>
                         </div>
-                        <span className="deck-categories">
-                            {props.item.categories?.map((category: string) => <Chip label={category} key={category} />)}
-                        </span>
-                    </div>
-                    <Typography gutterBottom variant="h4" component="h2" className="deck-name">
-                        {deckName}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                {props.item.type !== 'user' ?
-                <IconButton
-                    aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
-                    onClick={() => props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)}
-                    size="large">
-                    {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
-                    
-                </IconButton>
-                :
-                <>
+                        <Typography gutterBottom variant="h4" component="h2" className="deck-name">
+                            {deckName}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    {props.item.type !== 'user' ?
                     <IconButton
-                        aria-label={`Delete "${deckName}"`}
-                        onClick={() => deckService.deleteDeck(userToken, deck.id, authCtx.userId)}
+                        aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
+                        onClick={(e) => { e.stopPropagation(); props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId) }}
                         size="large">
-                        <DeleteIcon />
+                        {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
+                        
                     </IconButton>
-                    <IconButton
-                        aria-label={`Edit "${deckName}"`}
-                        onClick={() => handleEditDeck()}
-                        size="large">
-                        <EditIcon />
-                    </IconButton>
-                </>
-                }
-            </CardActions>
-        </Card>
+                    :
+                    <>
+                        <IconButton
+                            aria-label={`Delete "${deckName}"`}
+                            onClick={handleDeleteClick}
+                            size="large">
+                            <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                            aria-label={`Edit "${deckName}"`}
+                            onClick={(e) => { e.stopPropagation(); handleEditDeck() }}
+                            size="large">
+                            <EditIcon />
+                        </IconButton>
+                    </>
+                    }
+                </CardActions>
+            </Card>
+            <Dialog
+                open={confirmOpen}
+                onClose={handleCloseConfirm}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                data-testid="delete-confirm-dialog"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {`Delete Deck "${deckName}"?`}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to delete this deck? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirm} data-testid="cancel-delete-button">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmDelete} color="error" autoFocus data-testid="confirm-delete-button">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
 
