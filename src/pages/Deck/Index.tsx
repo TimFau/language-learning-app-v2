@@ -217,7 +217,6 @@ function Deck(props: RootState) {
             setDeckDataLoaded(false);
             getDeckData(deckId)
             setCurrentDeckName(deckName);
-            // props.setDemoDrawerClosed();
             setDeckDialogOpen();
         }
         deckOptions(name, id)

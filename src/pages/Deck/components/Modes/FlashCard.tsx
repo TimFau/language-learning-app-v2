@@ -18,7 +18,7 @@ const flashCard = (props: FlashCardProps) => {
     return(
         <Card className="flash-card-container" data-testid="flashcard">
             {props.showAnswer ? (
-                <CardContent>
+                <CardContent data-testid="card-back">
                     <Typography color="textSecondary">Answer</Typography>
                     <h1 className="lang-to" data-testid="card-answer">"{props.langTo[props.randomNum]}"</h1>
                     <div className="btn-container flipped">
@@ -37,7 +37,7 @@ const flashCard = (props: FlashCardProps) => {
                     </div>
                 </CardContent>
             ) : (
-                <CardContent onClick={props.showAnswerFc}>
+                <CardContent onClick={props.showAnswerFc} data-testid="card-front">
                     <Typography color="textSecondary">{props.children}</Typography>
                     <h1 className="lang-from" data-testid="card-question">"{props.langFrom[props.randomNum]}"</h1>
                     <div className="btn-container">

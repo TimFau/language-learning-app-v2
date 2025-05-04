@@ -70,6 +70,7 @@ export default function deckDialog(props: deckDialogProps) {
                 // On Click
                     // Send value to getDeckData in App.js
                 onClick={() => props.startDeck()}
+                data-testid="start-deck-button"
             >Start Deck</Button>
             </React.Fragment>
             :

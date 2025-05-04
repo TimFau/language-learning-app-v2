@@ -29,7 +29,6 @@ This document outlines the end-to-end test scenarios for the Language Learning A
   - View deck details
   - Navigate through cards
   - Mark cards as learned
-  - Reset deck progress
 
 ### 3. Community Features
 - **Community Decks**

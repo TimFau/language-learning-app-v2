@@ -36,6 +36,7 @@ test.describe('Deck Management', () => {
     if (deckCardSelectorPrefix) {
       await deleteDeckViaUI(page, deckCardSelectorPrefix);
     }
+    deckCardSelectorPrefix = '';
   });
 
   test('should allow a user to create a new deck', async ({ page }) => {
@@ -113,6 +114,88 @@ test.describe('Deck Management', () => {
     // Set deckCardSelectorPrefix to null so afterEach doesn't try to delete it again
     deckCardSelectorPrefix = '';
   });
+
+  // --- Start: Deck Interaction Tests ---
+
+  test('should allow navigation through cards in a deck', async ({ page }) => {
+    // Deck is created in beforeEach, view it
+    await page.locator(deckCardSelectorPrefix).locator('.MuiCardActionArea-root').click();
+    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName);
+
+    // 1. Click the 'Start Deck' button
+    await page.click('[data-testid="start-deck-button"]');
+
+    // Wait for the first card front to be visible 
+    await expect(page.locator('[data-testid="card-front"]')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="card-question"]')).toBeVisible();
+
+    // 1. Check initial card state (showing front)
+    const initialCardFront = page.locator('[data-testid="card-front"]');
+    const initialQuestionElement = initialCardFront.locator('[data-testid="card-question"]');
+    const initialQuestionText = await initialQuestionElement.textContent();
+    expect(initialQuestionText).not.toBeNull();
+    await expect(page.locator('[data-testid="card-back"]')).not.toBeVisible(); // Ensure back is hidden
+
+    // 2. Click 'Show Answer' button (using existing data-testid)
+    await page.click('[data-testid="show-answer-button"]'); 
+    await expect(page.locator('[data-testid="card-back"]')).toBeVisible();
+    await expect(page.locator('[data-testid="card-answer"]')).toBeVisible();
+    const initialCardBack = page.locator('[data-testid="card-back"]');
+    const initialAnswerElement = initialCardBack.locator('[data-testid="card-answer"]');
+    const initialAnswerText = await initialAnswerElement.textContent();
+    expect(initialAnswerText).not.toBeNull();
+    await expect(page.locator('[data-testid="card-front"]')).not.toBeVisible(); // Ensure front is hidden
+
+    // 3. Click 'I got it wrong' button to simulate going to the next card
+    await page.click('[data-testid="wrong-answer-button"]'); 
+
+    // 4. Verify the next card is displayed (front side shown)
+    await expect(page.locator('[data-testid="card-front"]')).toBeVisible(); // Back to front view
+    await expect(page.locator('[data-testid="card-question"]')).toBeVisible();
+    const nextQuestionElement = page.locator('[data-testid="card-question"]');
+    const nextQuestionText = await nextQuestionElement.textContent();
+    expect(nextQuestionText).not.toBeNull();
+    expect(nextQuestionText).not.toEqual(initialQuestionText); // Ensure it's a different card question
+    await expect(page.locator('[data-testid="card-back"]')).not.toBeVisible(); // Back is hidden again
+    
+    // Previous button does not exist in this component, removed that check.
+  });
+
+  test('should allow marking a card as learned (archive)', async ({ page }) => {
+    // View the deck
+    await page.locator(deckCardSelectorPrefix).locator('.MuiCardActionArea-root').click();
+    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName);
+    await expect(page.locator('[data-testid="card-front"]')).toBeVisible({ timeout: 10000 });
+    const initialQuestionElement = page.locator('[data-testid="card-question"]');
+    const initialQuestionText = await initialQuestionElement.textContent();
+    expect(initialQuestionText).not.toBeNull();
+
+    // 1. Click the 'Start Deck' button
+    await page.click('[data-testid="start-deck-button"]');
+
+    // 1. Click 'Show Answer'
+    await page.click('[data-testid="show-answer-button"]'); 
+    await expect(page.locator('[data-testid="card-back"]')).toBeVisible();
+
+    // 2. Find the 'I got it right' button (used for marking learned/archiving)
+    const markLearnedButton = page.locator('[data-testid="correct-answer-button"]'); 
+    await expect(markLearnedButton).toBeVisible();
+
+    // 3. Click the button
+    await markLearnedButton.click();
+
+    // 4. Verify the card changes (moves to the next card)
+    //    Wait for the front of the *next* card to appear
+    await expect(page.locator('[data-testid="card-front"]')).toBeVisible({ timeout: 5000 }); 
+    const nextQuestionElement = page.locator('[data-testid="card-question"]');
+    await expect(nextQuestionElement).toBeVisible();
+    const nextQuestionText = await nextQuestionElement.textContent();
+    expect(nextQuestionText).not.toBeNull();
+    // Ensure the question text is different, indicating the card advanced
+    expect(nextQuestionText).not.toEqual(initialQuestionText); 
+  });
+
+  // --- End: Deck Interaction Tests ---
 
   // Optional: Test for adding cards if it's part of deck management UI
   // test('should allow a user to add cards to a deck', async ({ page }) => {
