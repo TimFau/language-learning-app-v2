@@ -6,7 +6,7 @@
         justify-content: center;
         min-height: 100vh;
         .start {
-            background: $dark-shades;
+            background: linear-gradient(135deg, $dark-shades 0%, darken($dark-shades, 5%) 100%);
             color: $light-shades;
             text-align: left;
             width: 50%;
@@ -15,10 +15,15 @@
             flex-direction: column;
             justify-content: center;
             box-sizing: border-box;
-            padding: 70px;
+            padding: 90px;
             h1 {
                 @media screen and (min-width: 960px) {
                     font-size: 2.6vw;
+                }
+                button:hover {
+                    filter: brightness(1.1);
+                    transform: scale(1.02);
+                    transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out;
                 }
             }
             .cta {
@@ -38,10 +43,11 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 70px;
+            padding: 90px;
             max-height: 100vh;
             overflow-y: auto;
             text-align: left;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
             h3 {
                 font-size: 29px;
                 & span {
@@ -64,6 +70,11 @@
                     margin-left: 4px;
                 }
             }
+            button[data-testid="register-submit-button"]:hover {
+                filter: brightness(1.1);
+                transform: scale(1.02);
+                transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out;
+            }
         }
         @media screen and (max-width: 960px) {
             flex-direction: column;
@@ -72,9 +83,9 @@
             .start, .end {
                 width: 100%;
                 height: auto;
+                padding: 40px 25px;
             }
             .start {
-                padding: 7%;
                 flex-grow: 0;
                 h1 {
                     display: block;
@@ -91,7 +102,7 @@
                 }
             }
             .end {
-                padding: 7%;
+                box-shadow: none;
                 justify-content: flex-start;
                 flex-grow: 0;
                 h3, p {
@@ -101,6 +112,9 @@
             }
             .input {
                 margin-bottom: 20px;
+                .MuiOutlinedInput-root {
+                    border-radius: 8px;
+                }
                 input:-webkit-autofill,
                 input:-webkit-autofill:hover,
                 input:-webkit-autofill:focus,
