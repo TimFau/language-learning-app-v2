@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { CircularProgress } from '@mui/material/';
+import { CircularProgress, Typography } from '@mui/material/';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/DeckCard';
 import { gql, useQuery } from '@apollo/client';
@@ -46,12 +46,23 @@ export default function UserDecks(props: UserListsProps) {
             <div id="userListsContainer">
                 <h1 className="sr-only">My Decks</h1>
                 <div className="decks-container">
-                    {decks.map((deck: any) => (
-                        <DeckCard
-                            item={deck}
-                            key={deck.deck_name + deck.id.toString()}
-                        />
-                    ))}
+                    {decks.length === 0 ? (
+                        <div className="empty-decks-message">
+                            <Typography variant="h6" component="p" gutterBottom>
+                                Your deck collection is empty.
+                            </Typography>
+                            <Typography variant="body1">
+                                Click the "Add Deck" button above to create your own, or explore the "Community Decks" section to find and save decks shared by others!
+                            </Typography>
+                        </div>
+                    ) : (
+                        decks.map((deck: any) => (
+                            <DeckCard
+                                item={deck}
+                                key={deck.deck_name + deck.id.toString()}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </>

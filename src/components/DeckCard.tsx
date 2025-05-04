@@ -40,7 +40,10 @@ const DeckCard = (props: DeckCardProps) => {
     }
 
     return (
-        <Card className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}>
+        <Card 
+            className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}
+            data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
+        >
             <CardActionArea onClick={() => handleClick()}>
                 <CardContent>
                     <div className="card-content-top">

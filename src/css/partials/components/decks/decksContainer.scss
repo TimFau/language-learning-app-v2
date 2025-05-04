@@ -1,6 +1,27 @@
+@import '../../base/variables'; // Import variables for color usage
+
 .decks-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
+
+    // Styles for the empty state message
+    .empty-decks-message {
+        text-align: center;
+        padding: 3rem 1rem; 
+        width: 100%; // Take full width of the container
+        max-width: 500px; 
+        margin: 2rem auto; // Center the message block
+
+        .MuiTypography-h6 { 
+            margin-bottom: 1rem; 
+            color: $light-shades; // Use high-contrast light color
+        }
+
+        .MuiTypography-body1 { 
+            color: $light-shades; // Use high-contrast light color
+            line-height: 1.6;
+        }
+    }
 }
