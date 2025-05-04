@@ -33,9 +33,8 @@ This document outlines the end-to-end test scenarios for the Language Learning A
 ### 3. Community Features
 - **Community Decks**
   - Browse community decks
-  - Search and filter decks
-  - Import community decks
-  - Rate/Review decks
+  - Use community deck
+  - Create community decks
 
 ### 4. Navigation
 - **Main Navigation**
