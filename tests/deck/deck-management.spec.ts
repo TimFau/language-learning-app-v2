@@ -1,11 +1,24 @@
 import { test, expect } from '@playwright/test';
 import { login, createDeckViaUI, deleteDeckViaUI } from '../utils/test-utils';
 
-const TEST_USER_EMAIL = process.env.TEST_USER_EMAIL || 'playwrighttester@timfau.com';
-const TEST_USER_PASSWORD = process.env.TEST_USER_PASSWORD || 'test123';
+const TEST_USER_EMAIL = process.env.REACT_APP_TEST_USER_EMAIL;
+const TEST_USER_PASSWORD = process.env.REACT_APP_TEST_USER_PASSWORD;
+
+// // Ensure the test user credentials are set - Moved inside describe block
+// if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+//   throw new Error('REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables must be set');
+// }
+
 const TEST_SHEET_ID = '123uJsttzL6EmedjHzR2n8LSVFljlu1ZRVW84K5h74wI'; // Known valid public sheet
 
 test.describe('Deck Management', () => {
+  // Check for environment variables before running tests in this suite
+  test.beforeAll(() => {
+    if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+      throw new Error('Deck Management tests require REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables');
+    }
+  });
+
   let deckCardSelectorPrefix: string; // To store the selector for the created deck
   let uniqueDeckName: string;
 
@@ -20,7 +33,7 @@ test.describe('Deck Management', () => {
   test.beforeEach(async ({ page }) => {
     uniqueDeckName = `Test Deck ${Date.now()}`;
     // Log in for each test
-    await login(page, TEST_USER_EMAIL, TEST_USER_PASSWORD);
+    await login(page, TEST_USER_EMAIL!, TEST_USER_PASSWORD!);
     // Go to the decks page (login should redirect here, but explicit navigation is safer)
     await page.goto('/'); 
     await page.waitForSelector('.decks-container', { state: 'visible' });

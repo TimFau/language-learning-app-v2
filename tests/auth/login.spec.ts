@@ -1,25 +1,33 @@
 import { test, expect } from '@playwright/test';
-import { login } from '../utils/test-utils';
+import { login, logout } from '../utils/test-utils';
+
+const TEST_USER_EMAIL = process.env.REACT_APP_TEST_USER_EMAIL;
+const TEST_USER_PASSWORD = process.env.REACT_APP_TEST_USER_PASSWORD;
+
+// // Ensure the test user credentials are set - Moved inside describe block
+// if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+//   throw new Error('REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables must be set');
+// }
 
 test.describe('Login Flow', () => {
+  // Check for environment variables before running tests in this suite
+  test.beforeAll(() => {
+    if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+      throw new Error('Login Flow tests require REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables');
+    }
+  });
+
   test.beforeEach(async ({ page }) => {
     // Navigate to the home page before each test
     await page.goto('/');
   });
 
   test('should login successfully with valid credentials', async ({ page }) => {
-    await page.click('[data-testid="login-link"]');
-    // Fill in the login form
-    await page.fill('[data-testid="login-email-input"]', 'playwrighttester@timfau.com');
-    await page.fill('[data-testid="login-password-input"]', 'test123');
-    
-    // Click the login button
-    await page.click('[data-testid="login-submit-button"]');
-    
-    // Verify successful login by checking for redirect to home page
-    await expect(page).toHaveURL('/');
-    // Verify we can see authenticated content
+    await login(page, TEST_USER_EMAIL!, TEST_USER_PASSWORD!);
+
+    // Verify successful login (e.g., check for a logged-in indicator or redirect)
     await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
+    await expect(page).toHaveURL('/'); // Or the expected dashboard URL
   });
 
   test('should show error message with invalid credentials', async ({ page }) => {
@@ -49,11 +57,8 @@ test.describe('Login Flow', () => {
   });
 
   test('should persist login state after page reload', async ({ page }) => {
-    // First login
-    await page.click('[data-testid="login-link"]');
-    await page.fill('[data-testid="login-email-input"]', 'playwrighttester@timfau.com');
-    await page.fill('[data-testid="login-password-input"]', 'test123');
-    await page.click('[data-testid="login-submit-button"]');
+    // First login using the helper with env vars
+    await login(page, TEST_USER_EMAIL!, TEST_USER_PASSWORD!);
     
     // Verify initial login
     await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
@@ -63,6 +68,20 @@ test.describe('Login Flow', () => {
     
     // Verify we're still logged in after reload
     await expect(page.locator('[data-testid="create-deck-button"]')).toBeVisible();
+    await expect(page).toHaveURL('/');
+  });
+
+  test('should logout successfully', async ({ page }) => {
+    // First, log in
+    await login(page, TEST_USER_EMAIL!, TEST_USER_PASSWORD!);
+    await expect(page.locator('[data-testid="logout-button"]')).toBeVisible();
+
+    // Then, log out using the helper
+    await logout(page);
+
+    // Verify logged out state (e.g., login link is visible again)
+    await expect(page.locator('[data-testid="login-link"]')).toBeVisible();
+    await expect(page.locator('[data-testid="logout-button"]')).not.toBeVisible();
     await expect(page).toHaveURL('/');
   });
 }); 

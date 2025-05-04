@@ -1,6 +1,21 @@
 import { test, expect } from '@playwright/test';
 
+const TEST_USER_EMAIL = process.env.REACT_APP_TEST_USER_EMAIL;
+const TEST_USER_PASSWORD = process.env.REACT_APP_TEST_USER_PASSWORD;
+
+// // Ensure the test user credentials are set - Moved inside describe block
+// if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+//   throw new Error('REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables must be set');
+// }
+
 test.describe('Registration Flow', () => {
+  // Check for environment variables before running tests in this suite
+  test.beforeAll(() => {
+    if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
+      throw new Error('Registration Flow tests require REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables');
+    }
+  });
+
   test.beforeEach(async ({ page }) => {
     // Navigate to the home page before each test
     await page.goto('/');
@@ -10,8 +25,10 @@ test.describe('Registration Flow', () => {
     // Fill in the registration form
     await page.locator('[data-testid="register-first-name-input"] input').fill('Test');
     await page.locator('[data-testid="register-last-name-input"] input').fill('User');
-    await page.locator('[data-testid="register-email-input"] input').fill(`test${Date.now()}@example.com`);
-    await page.locator('[data-testid="register-password-input"] input').fill('Test123!');
+    // Use a unique email for each test run to avoid conflicts
+    const uniqueEmail = `testuser-${Date.now()}@example.com`;
+    await page.locator('[data-testid="register-email-input"] input').fill(uniqueEmail);
+    await page.locator('[data-testid="register-password-input"] input').fill(TEST_USER_PASSWORD!);
     
     // Click the register button
     await page.click('[data-testid="register-submit-button"]');
@@ -39,7 +56,7 @@ test.describe('Registration Flow', () => {
     await page.locator('[data-testid="register-first-name-input"] input').fill('Test');
     await page.locator('[data-testid="register-last-name-input"] input').fill('User');
     await page.locator('[data-testid="register-email-input"] input').fill('invalid-email');
-    await page.locator('[data-testid="register-password-input"] input').fill('Test123!');
+    await page.locator('[data-testid="register-password-input"] input').fill(TEST_USER_PASSWORD!);
     
     // Click the register button
     await page.click('[data-testid="register-submit-button"]');
@@ -50,10 +67,11 @@ test.describe('Registration Flow', () => {
 
   test('should show error for duplicate email', async ({ page }) => {
     // Fill in the registration form with an email that already exists
-    await page.locator('[data-testid="register-first-name-input"] input').fill('Test');
+    await page.locator('[data-testid="register-first-name-input"] input').fill('Another Test User');
     await page.locator('[data-testid="register-last-name-input"] input').fill('User');
-    await page.locator('[data-testid="register-email-input"] input').fill('playwrighttester@timfau.com');
-    await page.locator('[data-testid="register-password-input"] input').fill('Test123!');
+    // Use the fixed test user email to check for duplicate registration
+    await page.locator('[data-testid="register-email-input"] input').fill(TEST_USER_EMAIL!);
+    await page.locator('[data-testid="register-password-input"] input').fill(TEST_USER_PASSWORD!);
     
     // Click the register button
     await page.click('[data-testid="register-submit-button"]');
