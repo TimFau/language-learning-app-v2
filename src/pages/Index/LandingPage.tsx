@@ -185,7 +185,7 @@ export default function GuestPage(props: LoggedOutProps) {
                 <div className="hero-text">
                     <h1>Build your own language flashcards - instantly</h1>
                     <p>Turn any Google Sheet into a quiz-ready flashcard deck in seconds. Study when you want, how you want.</p>
-                    <p>LangPulse is a fast, flexible flashcard web app built for learners who want total control over their vocal. No bloat. No barriers.</p>
+                    <p>LangPulse is a fast, flexible flashcard web app built for learners who want total control over their vocab. No bloat. No barriers.</p>
                 </div>
                 <div className="hero-image">
                     <img src={'/images/langpulse-hero-image.png'} alt="Language learning illustration" />

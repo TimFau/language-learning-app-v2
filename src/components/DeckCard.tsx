@@ -1,11 +1,11 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Link } from "@mui/material"
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import { useContext, useState } from "react";
-import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
+import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos } from '@mui/icons-material';
 
 type DeckCardProps = {
     item: any
@@ -64,26 +64,40 @@ const DeckCard = (props: DeckCardProps) => {
                         <div className="card-content-top">
                             <div className="deck-info">
                                 <Language />
-                                <Typography variant="h6"><span>{deck.Language2}</span></Typography>
+                                <Typography variant="subtitle2" component="span">{deck.Language2}</Typography>
                             </div>
                             <span className="deck-categories">
-                                {props.item.categories?.map((category: string) => <Chip label={category} key={category} />)}
+                                {deck.categories?.map((category: string) => <Chip label={category} key={category} size="small" />)}
                             </span>
                         </div>
-                        <Typography gutterBottom variant="h4" component="h2" className="deck-name">
+                        <Typography gutterBottom variant="h5" component="h3" className="deck-name">
                             {deckName}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <CardActions>
+                <CardActions disableSpacing>
                     {props.item.type !== 'user' ?
-                    <IconButton
-                        aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
-                        onClick={(e) => { e.stopPropagation(); props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId) }}
-                        size="large">
-                        {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
-                        
-                    </IconButton>
+                    <>
+                        <IconButton
+                            aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
+                            onClick={(e) => { 
+                                e.stopPropagation(); 
+                                if (authCtx.userToken) {
+                                    props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)
+                                } else {
+                                    console.log("User must be logged in to save decks");
+                                }
+                            }}
+                            size="large">
+                            {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
+                            
+                        </IconButton>
+                        {!authCtx.userToken && (
+                            <Link href="#" onClick={(e) => {e.preventDefault(); handleClick();}} className="try-now-link" data-testid="try-now-link">
+                                Try Now <ArrowForwardIos />
+                            </Link>
+                        )}
+                    </>
                     :
                     <>
                         <IconButton

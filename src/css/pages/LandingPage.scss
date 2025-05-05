@@ -28,6 +28,7 @@
 
         .logo-container {
             width: 170px;
+            max-width: calc(100% - 140px);
             img {
                 width: 100%;
             }

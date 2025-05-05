@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer }  from '@mui/material';
+import { Drawer, Typography }  from '@mui/material';
 import deckService from '../../../services/deckService';
 import DeckCard from '../../../components/DeckCard';
 
@@ -47,13 +47,22 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     } else {
       return (
         <Drawer anchor="bottom" open={props.open} onClose={props.onClose} className="demo-drawer">
-            <div className="decks-container">
-                {items.map(item => (
-                    <DeckCard
-                        item={item}
-                        key={item.id.toString()}
-                    />
-                ))}
+            <div className="drawer-content">
+                <Typography variant="h4" component="h2" className="title">
+                    Explore a Demo Deck
+                </Typography>
+                <Typography variant="body1" className="subtitle">
+                    Choose a sample deck to try LangPulse instantly.
+                </Typography>
+
+                <div className="decks-container">
+                    {items.map(item => (
+                        <DeckCard
+                            item={item}
+                            key={item.id.toString()}
+                        />
+                    ))}
+                </div>
             </div>
         </Drawer>
       )
