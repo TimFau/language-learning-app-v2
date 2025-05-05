@@ -29,7 +29,7 @@ export default function deckDialog(props: deckDialogProps) {
             {props.deckDataLoaded ?
             <React.Fragment>
             <DialogContent dividers>
-                <Typography gutterBottom>Selected List: <strong>{props.currentDeckName}</strong></Typography>
+                <Typography gutterBottom>Selected List: <strong data-testid="deck-name">{props.currentDeckName}</strong></Typography>
                 <Typography >Choose Mode</Typography>
                 <ButtonGroup
                     color="primary"
@@ -70,6 +70,7 @@ export default function deckDialog(props: deckDialogProps) {
                 // On Click
                     // Send value to getDeckData in App.js
                 onClick={() => props.startDeck()}
+                data-testid="start-deck-button"
             >Start Deck</Button>
             </React.Fragment>
             :

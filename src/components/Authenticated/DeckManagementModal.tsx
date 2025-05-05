@@ -154,6 +154,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     type="text"
                     fullWidth
                     margin="normal"
+                    inputProps={{ "data-testid": "deck-name-input" } as any}
                 />
                 <TextField
                     onChange={handleChange}
@@ -166,6 +167,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     margin="normal"
                     error={deckErrorMsg !== ''}
                     helperText={deckErrorMsg}
+                    inputProps={{ "data-testid": "deck-id-input" } as any}
                 />
                 <TextField
                     select
@@ -176,6 +178,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     label="Native Language"
                     fullWidth
                     margin="normal"
+                    inputProps={{ "data-testid": "native-language-input" } as any}
                 >
                     {languageOptions.map((language: string) => <MenuItem value={language} key={language}>{language}</MenuItem>)}
                 </TextField>
@@ -188,6 +191,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     label="Learning Language"
                     fullWidth
                     margin="normal"
+                    inputProps={{ "data-testid": "learning-language-input" } as any}
                 >
                     {languageOptions.map((language: string) => {
                         if (language !== nativeLangauge) {
@@ -204,6 +208,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                         checked={makePublic}
                         name="MakePublic"
                         defaultChecked
+                        inputProps={{ "data-testid": "make-public-checkbox" } as any}
                         />
                     } 
                     label="Share this deck with the community to contribute to our growing collection of resources. Uncheck this box if you prefer to keep this deck private."
@@ -211,7 +216,12 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                 
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSubmit}>{isAdd ? "Add Deck" : "Save Deck"}</Button>
+                <Button 
+                    onClick={handleSubmit}
+                    data-testid="submit-deck-button"
+                >
+                    {isAdd ? "Add Deck" : "Save Deck"}
+                </Button>
             </DialogActions>
         </Dialog>
     )

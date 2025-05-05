@@ -20,11 +20,29 @@ export default function Login() {
     const authCtx = useContext(AuthContext);
 
     function login() {
+        // Reset errors
+        setEmailError('');
+        setPassError('');
+
+        let hasError = false;
+
+        // Validate required fields
+        if (!email) {
+            setEmailError('Please enter a valid email address');
+            hasError = true;
+        }
+        if (!password) {
+            setPassError('Please enter your password');
+            hasError = true;
+        }
+
+        if (hasError) {
+            return;
+        }
+
         userService.login(email, password)
         .then(async response => {
             const data = await response;
-            setEmailError('');
-            setPassError('');
             if (data.errors) {
                 const errorMsgs = data.errors;
                 for (let i = 0; i < errorMsgs.length; i++) {
@@ -60,10 +78,14 @@ export default function Login() {
 
     function handleEmail(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
+        // Clear error when user starts typing
+        if (emailError) setEmailError('');
     }
 
     function handlePassword(event: React.ChangeEvent<HTMLInputElement>) {
         setPassword(event.target.value);
+        // Clear error when user starts typing
+        if (passError) setPassError('');
     }
 
     return (
@@ -85,6 +107,7 @@ export default function Login() {
                     label="Email Address"
                     fullWidth
                     variant="standard"
+                    inputProps={{ "data-testid": "login-email-input" } as any}
                 />
                 <TextField 
                     margin="dense"
@@ -96,6 +119,7 @@ export default function Login() {
                     type="password"
                     fullWidth
                     variant="standard"
+                    inputProps={{ "data-testid": "login-password-input" } as any}
                 />
             </DialogContent>
             <DialogActions>
@@ -103,6 +127,7 @@ export default function Login() {
                     onClick={() => login()}
                     variant="contained"
                     color="primary"
+                    data-testid="login-submit-button"
                 >Login</Button>
             </DialogActions>
         </Dialog>
