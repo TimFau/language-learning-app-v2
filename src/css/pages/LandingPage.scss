@@ -11,7 +11,7 @@
 
 .landing-page-container {
     font-family: sans-serif; // TODO: Consider using $font-family-base from variables.scss
-    max-width: 600px; // Constrain width for better readability on large screens
+    max-width: 1000px; // Constrain width for better readability on large screens
     margin: 0 auto; // Center the container
     padding: 20px;
     color: $text-primary; // Use new variable
@@ -26,9 +26,11 @@
         padding: 20px 0; 
         margin-bottom: 40px;
 
-        .logo-placeholder {
-            font-weight: bold;
-            font-size: 24px; // Adjust as needed when logo is added
+        .logo-container {
+            width: 170px;
+            img {
+                width: 100%;
+            }
         }
 
         .demo-button {
@@ -164,12 +166,12 @@
         .landing-header {
             padding: 15px 0;
             margin-bottom: 30px;
-            .logo-placeholder {
-                width: 170px;
-                img {
-                    width: 100%;
-                }
-            }
+            // .logo-container {
+            //     width: 170px;
+            //     img {
+            //         width: 100%;
+            //     }
+            // }
             .demo-button {
                  font-size: 12px; // Smaller button text
                  padding: 6px 12px !important; // Adjust padding
