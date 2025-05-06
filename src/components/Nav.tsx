@@ -33,50 +33,54 @@ export default function Nav() {
         {isLoggedIn() &&
         <header className="app-bar max-width-wrapper">
             <div className="app-bar-inner">
+                <Link to="/" className="logo-link">
+                    <img src="/images/langpulse-logo.png" alt="LangPulse Logo" className="nav-logo" />
+                </Link>
                 <div className="start">
-                    {!deckStarted ?
-                    <>
-                    <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
-                        <button className="nav-item-wrapper">
-                            <CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span>
-                        </button>
-                    </Link>
-                    <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
-                        <button className="nav-item-wrapper">
-                            <LocalLibraryIcon /> <span className="nav-label">Community Decks</span>
-                        </button>
-                    </Link>
-                    </>
-                    :
-                    <button className="nav-item" onClick={() => goToDeckSelector()}>
-                        <ExitToAppIcon /> <span className="nav-label">Exit Deck</span>
-                    </button>
-                    }
+                    {/* Items moved to .end div */}
                 </div>
                 <div className="end">
-                    {!deckStarted && pathName !== "/deck" &&
-                    <>
-                        <button 
-                            onClick={() => modalCtx.openModal()} 
-                            className="nav-item"
-                            data-testid="create-deck-button"
-                        >
-                            <span className="nav-item-wrapper">
-                                <AddIcon /> <span className="nav-label">Add Deck</span>
-                            </span>
+                    {deckStarted ? (
+                        <button className="nav-item" onClick={() => goToDeckSelector()}>
+                            <ExitToAppIcon /> <span className="nav-label">Exit Deck</span>
                         </button>
-                        <button
-                            onClick={handleLogout}
-                            color="secondary"
-                            className="nav-item logout"
-                            data-testid="logout-button"
-                        >
-                            <span className="nav-item-wrapper">
-                                <LogoutIcon /> <span className="nav-label">Logout</span>
-                            </span>
-                        </button>
-                    </>
-                    }
+                    ) : (
+                        <>
+                            <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
+                                <button className="nav-item-wrapper">
+                                    <CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span>
+                                </button>
+                            </Link>
+                            <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
+                                <button className="nav-item-wrapper">
+                                    <LocalLibraryIcon /> <span className="nav-label">Community Decks</span>
+                                </button>
+                            </Link>
+                            {pathName !== "/deck" && (
+                                <>
+                                    <button 
+                                        onClick={() => modalCtx.openModal()} 
+                                        className="nav-item"
+                                        data-testid="create-deck-button"
+                                    >
+                                        <span className="nav-item-wrapper">
+                                            <AddIcon /> <span className="nav-label">Add Deck</span>
+                                        </span>
+                                    </button>
+                                    <button
+                                        onClick={handleLogout}
+                                        color="secondary"
+                                        className="nav-item logout"
+                                        data-testid="logout-button"
+                                    >
+                                        <span className="nav-item-wrapper">
+                                            <LogoutIcon /> <span className="nav-label">Logout</span>
+                                        </span>
+                                    </button>
+                                </>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </header>
