@@ -23,6 +23,11 @@ export default function Nav() {
 
     const isLoggedIn = () => authCtx.userToken !== ''
 
+    function handleLogout() {
+        authCtx.onLogout();
+        navigate('/');
+    }
+
     return (
         <>
         {isLoggedIn() &&
@@ -61,7 +66,7 @@ export default function Nav() {
                             </span>
                         </button>
                         <button
-                            onClick={authCtx.onLogout}
+                            onClick={handleLogout}
                             color="secondary"
                             className="nav-item logout"
                             data-testid="logout-button"
