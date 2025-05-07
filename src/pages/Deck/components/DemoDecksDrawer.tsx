@@ -47,14 +47,15 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     } else {
       return (
         <Drawer anchor="bottom" open={props.open} onClose={props.onClose} className="demo-drawer">
-            <div className="drawer-content">
+            <div className="drawer-header">
                 <Typography variant="h4" component="h2" className="title">
                     Explore a Demo Deck
                 </Typography>
                 <Typography variant="body1" className="subtitle">
                     Choose a sample deck to try LangPulse instantly.
                 </Typography>
-
+            </div>
+            <div className="drawer-content">
                 <div className="decks-container">
                     {items.map(item => (
                         <DeckCard

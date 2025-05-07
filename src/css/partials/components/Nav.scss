@@ -9,7 +9,7 @@
         justify-content: space-between;
     }
     .logo-link {
-        max-width: 170px;
+        max-width: 145px;
         display: flex;
         align-items: center;
         img {
@@ -41,6 +41,8 @@
             position: relative;
             top: 3px;
             padding-right: 5px;
+            width: .7em;
+            height: .7em;
         }
     }
     .nav-item-wrapper {
@@ -62,7 +64,12 @@
         background: $cta-button-color;
         opacity: 100%;
     }
-    @media screen and (max-width: 800px) {
+    @media screen and (max-width: 450px) {
+        .nav-item-wrapper .nav-label {
+            display: block;
+        }
+    }
+    @media screen and (min-width: 550px)and (max-width: 740px) {
         .nav-item-wrapper .nav-label {
             display: block;
         }
