@@ -1,0 +1,30 @@
+.demo-drawer {
+	max-height: 75vh;
+	.drawer-header {
+		padding: 20px 20px 0 20px;
+	}
+	.drawer-content {
+		padding: 20px;
+		max-width: 100%;
+		max-height: 60vh;
+		overflow-y: auto;
+	}
+
+	.title {
+		font-size: 2rem;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+		color: #6c757d;
+	}
+
+	.decks-container {
+		max-width: 100%;
+	}
+	> .MuiPaper-root {
+		background: white;
+	}
+}

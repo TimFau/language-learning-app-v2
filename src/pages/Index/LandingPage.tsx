@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-// import { useDispatch } from 'react-redux'; // Removed
+import { useDispatch } from 'react-redux';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
-// import DemoDecksDrawer from '../Deck/components/DemoDecksDrawer'; // Old import
-import DemoDecksMenu from '../Deck/components/DemoDecksMenu'; // New import
+import DemoDecksDrawer from '../Deck/components/DemoDecksDrawer';
 // import heroImage from '../../../public/images/langpulse-hero-image.png'; // Assuming the image is placed here
 
 import { TextField, Button, Link } from '@mui/material/'; // Removed Paper, Card
@@ -22,22 +21,14 @@ const useStyles = makeStyles({
     }
 });
 
-// type LoggedOutProps = {
-//     open: boolean, // This open was for the DemoDecksDrawer, likely no longer needed at this level
-//     onClose: (event: React.UIEvent<HTMLElement>) => void, // Same for onClose
-// }
-// Removing open and onClose from LoggedOutProps as DemoDecksMenu manages its own visibility via anchorEl
-// If these props were for something else, this change might need review.
-// For now, assuming they were solely for the drawer.
+type LoggedOutProps = {
+    open: boolean,
+    onClose: (event: React.UIEvent<HTMLElement>) => void,
+}
 
-// interface LoggedOutProps {
-    // Retain other props if any, or leave empty if open/onClose were the only ones.
-    // For this refactor, assuming no other props are critical, or they are not used by DemoDecksMenu.
-// }
-
-export default function GuestPage(/* props: LoggedOutProps */) { // props might be empty now or have other unrelated props
-    const classes = useStyles(); // Removed props from useStyles if it was only using open/onClose
-    // const dispatch = useDispatch(); // Removed
+export default function GuestPage(props: LoggedOutProps) {
+    const classes = useStyles(props);
+    const dispatch = useDispatch();
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [userEmail, setUserEmail] = React.useState('');
@@ -53,17 +44,6 @@ export default function GuestPage(/* props: LoggedOutProps */) { // props might 
     const [passwordError, setPasswordError] = React.useState('');
 
     const authCtx = useContext(AuthContext);
-
-    // State for the Demo Decks Menu anchor
-    const [demoMenuAnchorEl, setDemoMenuAnchorEl] = React.useState<null | HTMLElement>(null);
-
-    const handleDemoMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setDemoMenuAnchorEl(event.currentTarget);
-    };
-
-    const handleDemoMenuClose = () => {
-        setDemoMenuAnchorEl(null);
-    };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -141,7 +121,7 @@ export default function GuestPage(/* props: LoggedOutProps */) { // props might 
                     let apiErrors: string[] = []; 
                     for (let i = 0; i < errorMsgs.length; i++) {
                         let errorMsg = errorMsgs[i].message;
-                        if (errorMsg.includes('Field "email" has to be unique.')) {
+                        if (errorMsg.includes('Field \"email\" has to be unique.')) {
                             setEmailError('You are already registered with this email address.'); 
                             apiErrors.push('You are already registered with this email address.');
                         } else if (errorMsg.includes('This value is not a valid email address.')) {
@@ -178,7 +158,7 @@ export default function GuestPage(/* props: LoggedOutProps */) { // props might 
             })
             .catch(error => {
                 console.error('Account creation/login network/unexpected catch:', error);
-                if (error.message.includes('Value for field "email" in collection "directus_users" has to be unique.')) {
+                if (error.message.includes('Value for field \"email\" in collection \"directus_users\" has to be unique.')) {
                     const errMsg = 'You are already registered with this email address.';
                     setEmailError(errMsg); 
                     setAlertMsgs([errMsg]);
@@ -197,14 +177,7 @@ export default function GuestPage(/* props: LoggedOutProps */) { // props might 
                 <div className="logo-container">
                     <img src={'/images/langpulse-logo.png'} alt="LangPulse Logo" />
                 </div> 
-                <Button 
-                    variant="contained" 
-                    onClick={handleDemoMenuOpen} // Changed from Redux dispatch
-                    className="demo-button"
-                    id="demo-decks-button" // For aria-labelledby in Menu
-                >
-                    Try a Demo Deck
-                </Button>
+                <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})} className="demo-button">Try a Demo Deck</Button>
             </header>
 
             {/* Hero Section */}
@@ -306,13 +279,9 @@ export default function GuestPage(/* props: LoggedOutProps */) { // props might 
                 
             </section>
             
-            {/* <DemoDecksDrawer 
-                open={props.open} // Old props
-                onClose={props.onClose} // Old props
-            /> */}
-            <DemoDecksMenu 
-                anchorEl={demoMenuAnchorEl}
-                onClose={handleDemoMenuClose}
+            <DemoDecksDrawer 
+                open={props.open}
+                onClose={props.onClose}
             />
         </div>
     )

@@ -16,8 +16,8 @@ function RootPage (props: PropsFromRedux) {
         <Routes>
             <Route path="/" element={
                 <IndexPage 
-                    // demoDrawerOpen={props.demoDrawerOpen}
-                    // setDemoDrawerClosed={props.setDemoDrawerClosed}
+                    demoDrawerOpen={props.demoDrawerOpen}
+                    setDemoDrawerClosed={props.setDemoDrawerClosed}
                 />
             } />
             <Route path="/deck" element={
