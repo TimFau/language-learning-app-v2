@@ -78,6 +78,7 @@ const DeckCard = (props: DeckCardProps) => {
                 <CardActions disableSpacing>
                     {props.item.type !== 'user' ?
                     <>
+                        {authCtx.userToken && (
                         <IconButton
                             aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
                             onClick={(e) => { 
@@ -92,6 +93,7 @@ const DeckCard = (props: DeckCardProps) => {
                             {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
                             
                         </IconButton>
+                        )}
                         {!authCtx.userToken && (
                             <Link href="#" onClick={(e) => {e.preventDefault(); handleClick();}} className="try-now-link" data-testid="try-now-link">
                                 Try Now <ArrowForwardIos />
