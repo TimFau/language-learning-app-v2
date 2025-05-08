@@ -2,8 +2,8 @@ import React from 'react';
 
 import { 
     CircularProgress, Button, ButtonGroup, 
-    Typography, DialogTitle, DialogContent, Dialog }
-from '@mui/material/';
+    Typography, DialogTitle, DialogContent, Dialog, useMediaQuery
+} from '@mui/material/';
 
 interface deckDialogProps {
     language1: string | undefined,
@@ -21,48 +21,57 @@ interface deckDialogProps {
     setTranslationMode2: () => void
 }
 
-export default function deckDialog(props: deckDialogProps) {
+export default function DeckDialog(props: deckDialogProps) {
+    const isBelow400px = useMediaQuery('(max-width:399.95px)');
 
     return (
-        <Dialog open={props.deckDialogOpen} onClose={props.setDialogClosed} className="deck-dialog" id="deckDialog">
-            <DialogTitle id="simple-dialog-title">Deck Options</DialogTitle>
+        <Dialog open={props.deckDialogOpen} onClose={props.setDialogClosed} className="deck-options" id="deckDialog">
+            <DialogTitle id="simple-dialog-title">Set Up Your Session</DialogTitle>
             {props.deckDataLoaded ?
             <React.Fragment>
-            <DialogContent dividers>
-                <Typography gutterBottom>Selected List: <strong data-testid="deck-name">{props.currentDeckName}</strong></Typography>
-                <Typography >Choose Mode</Typography>
+            <DialogContent dividers className="deck-options-content">
+                <Typography gutterBottom className="deck-options-list-label">Selected List: <strong data-testid="deck-name">{props.currentDeckName}</strong></Typography>
+                <Typography className="deck-options-section-label">How do you want to study?</Typography>
                 <ButtonGroup
                     color="primary"
                     variant="outlined"
                     fullWidth
+                    className="deck-options-button-group"
+                    orientation={isBelow400px ? 'vertical' : 'horizontal'}
                 >
                     <Button
                         variant={props.inputMode === 'Flashcard' ? "contained" : 'outlined'}
                         onClick={() => props.setInputMode('Flashcard')}
+                        className="deck-options-button"
                     >Flashcard</Button>
                     <Button
                         variant={props.inputMode === 'Wordbank' ? 'contained' : 'outlined'}
                         onClick={() => props.setInputMode('Wordbank')}
+                        className="deck-options-button"
                     >Wordbank</Button>
                     <Button
                         variant={props.inputMode === 'Keyboard' ? 'contained' : 'outlined'}
                         onClick={() => props.setInputMode('Keyboard')}
+                        className="deck-options-button"
                     >Keyboard</Button>
                 </ButtonGroup>
-                <Typography >Choose Order</Typography>
+                <Typography className="deck-options-section-label">Translate From:</Typography>
                 <ButtonGroup
                     color="primary"
-                    orientation="vertical"
                     variant="outlined"
                     fullWidth
+                    className="deck-options-button-group"
+                    orientation="vertical"
                 >
                     <Button
                         variant={props.translateMode === '1to2' ? 'contained' : 'outlined'}
                         onClick={() => props.setTranslationMode1()}
+                        className="deck-options-button"
                     >{props.language1} to {props.language2}</Button>
                     <Button
                         variant={props.translateMode === '2to1' ? 'contained' : 'outlined'}
                         onClick={() => props.setTranslationMode2()}
+                        className="deck-options-button"
                     >{props.language2} to {props.language1}</Button>
                 </ButtonGroup>
             </DialogContent>
@@ -71,6 +80,8 @@ export default function deckDialog(props: deckDialogProps) {
                     // Send value to getDeckData in App.js
                 onClick={() => props.startDeck()}
                 data-testid="start-deck-button"
+                variant="contained"
+                className="start-deck-final-button"
             >Start Deck</Button>
             </React.Fragment>
             :
