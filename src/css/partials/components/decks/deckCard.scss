@@ -10,6 +10,10 @@
 		box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 	}
 
+    &:last-child {
+        margin-bottom: 0;
+    }
+
 	@media screen and (max-width: 960px) {
 		flex-basis: calc(100% - 15px);
 	}
