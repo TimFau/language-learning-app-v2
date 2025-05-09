@@ -4,8 +4,9 @@ import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 
 import DemoDecksDrawer from '../Deck/components/DemoDecksDrawer';
+// import heroImage from '../../../public/images/langpulse-hero-image.png'; // Assuming the image is placed here
 
-import { Paper, Card, TextField, Button, Link } from '@mui/material/';
+import { TextField, Button, Link } from '@mui/material/'; // Removed Paper, Card
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert } from '@mui/material';
 import { CheckIsEmail } from '../../scripts/Helpers';
@@ -169,19 +170,45 @@ export default function GuestPage(props: LoggedOutProps) {
         }
     }
     return (
-        <div className="container landing-page-container">
-            <Paper elevation={0} square={true} className="landing-page-wrapper">
-                <div className="start">
-                    <h1>Boost Your Language Learning <span>with LangPulse Flashcards</span></h1>
-                    <p>Our platform enables you to craft custom flashcards, word banks, and quizzes, serving as the ideal addition to your current language learning resources.</p>
-                    <div className="cta">
-                        <span>Give it a try:</span> <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})}>Load demo Deck</Button>
-                    </div>
+        <div className="landing-page-container"> 
+            {/* Header Section */}
+            <header className="landing-header">
+                {/* Placeholder for Logo */}
+                <div className="logo-container">
+                    <img src={'/images/langpulse-logo.png'} alt="LangPulse Logo" />
+                </div> 
+                <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})} className="demo-button">Try a Demo Deck</Button>
+            </header>
+
+            {/* Hero Section */}
+            <section className="landing-hero">
+                <div className="hero-text">
+                    <h1>Build your own language flashcards - instantly</h1>
+                    <p>Turn any Google Sheet into a quiz-ready flashcard deck in seconds. Study when you want, how you want.</p>
+                    <p>LangPulse is a fast, flexible flashcard web app built for learners who want total control over their vocab. No bloat. No barriers.</p>
                 </div>
-                <Card className="end">
-                    <h3>Join LangPulse Today</h3>
-                    <p>Create decks, save favorites, and manage it all from your dashboard.</p>
-                    <form>
+                <div className="hero-image">
+                    <img src={'/images/langpulse-hero-image.png'} alt="Language learning illustration" />
+                </div>
+            </section>
+
+            {/* Signup Section */}
+            <section className="landing-signup">
+                <h3>Join LangPulse Today</h3>
+                 {/* Only show top alert for API/general errors */}
+                 {(alertMsgs.length > 0 &&
+                    <Alert severity="warning" className={classes.alert} data-testid="register-alert">
+                        {alertMsgs.length > 1 ? (
+                            <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                {alertMsgs.map((msg, idx) => <li key={idx}>{msg}</li>)}
+                            </ul>
+                        ) : (
+                            alertMsgs[0]
+                        )}
+                    </Alert>
+                )}
+                <form>
+                    <div className="form-row">
                         <TextField
                             autoComplete="fname"
                             name="firstName"
@@ -189,19 +216,17 @@ export default function GuestPage(props: LoggedOutProps) {
                             required
                             id="firstName"
                             className="input"
-                            fullWidth
                             label="First Name"
                             autoFocus
                             value={firstName}
                             onChange={handleChange}
-                            error={firstNameError !== ''} // Use specific error state
-                            helperText={firstNameError} // Show specific error message
+                            error={firstNameError !== ''}
+                            helperText={firstNameError}
                             data-testid="register-first-name-input"
                         />
                         <TextField
                             variant="outlined"
                             required
-                            fullWidth
                             id="lastName"
                             className="input"
                             label="Last Name"
@@ -209,60 +234,51 @@ export default function GuestPage(props: LoggedOutProps) {
                             autoComplete="lname"
                             value={lastName}
                             onChange={handleChange}
-                            error={lastNameError !== ''} // Use specific error state
-                            helperText={lastNameError} // Show specific error message
+                            error={lastNameError !== ''}
+                            helperText={lastNameError}
                             data-testid="register-last-name-input"
                         />
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="email"
-                            className="input"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            value={userEmail}
-                            onChange={handleChange}
-                            error={emailError !== ''} // Use specific error state
-                            helperText={emailError} // Show specific error message
-                            data-testid="register-email-input"
-                        />
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            className="input"
-                            autoComplete="current-password"
-                            value={userPassword}
-                            onChange={handleChange}
-                            error={passwordError !== ''} // Use specific error state
-                            helperText={passwordError} // Show specific error message
-                            data-testid="register-password-input"
-                        />
-                    </form>
-                    {/* Only show top alert for API/general errors */}
-                    {(alertMsgs.length > 0 &&
-                        <Alert severity="warning" className={classes.alert} data-testid="register-alert">
-                            {alertMsgs.length > 1 ? (
-                                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                                    {alertMsgs.map((msg, idx) => <li key={idx}>{msg}</li>)}
-                                </ul>
-                            ) : (
-                                alertMsgs[0]
-                            )}
-                        </Alert>
-                    )}
-                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button">Create Account</Button>
-                    <div>
-                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link"><span className="acctTxt">Already have an account?</span> <span className="signIn">LOGIN</span></Link>
                     </div>
-                </Card>
-            </Paper>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="email"
+                        className="input"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        value={userEmail}
+                        onChange={handleChange}
+                        error={emailError !== ''}
+                        helperText={emailError}
+                        data-testid="register-email-input"
+                    />
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        className="input"
+                        autoComplete="current-password"
+                        value={userPassword}
+                        onChange={handleChange}
+                        error={passwordError !== ''}
+                        helperText={passwordError}
+                        data-testid="register-password-input"
+                    />
+                    <div className="login-link-container">
+                        <span className="acctTxt">Already have an account?</span> 
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link" className="signIn">Login</Link>
+                    </div>
+                    <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button" className="create-account-button">Create Account</Button>
+                </form>
+                
+            </section>
+            
             <DemoDecksDrawer 
                 open={props.open}
                 onClose={props.onClose}

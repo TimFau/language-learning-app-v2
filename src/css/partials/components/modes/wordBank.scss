@@ -1,4 +1,7 @@
 .Wordbank {
+	&.page-container {
+		padding-top: 0;
+	}
 	.word-bank {
 		flex-direction: column;
 		padding: 5px 25px;
@@ -33,9 +36,6 @@
 	}
 	.Wordbank & {
 		display: flex;
-	}
-	.material-icons {
-		// color: $black;
 	}
 	.MuiCardActions-spacing > :not(:first-child) {
 		margin-left: 0;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer }  from '@mui/material';
+import { Drawer, Typography, IconButton }  from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import deckService from '../../../services/deckService';
 import DeckCard from '../../../components/DeckCard';
 
@@ -47,13 +48,36 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     } else {
       return (
         <Drawer anchor="bottom" open={props.open} onClose={props.onClose} className="demo-drawer">
-            <div className="decks-container">
-                {items.map(item => (
-                    <DeckCard
-                        item={item}
-                        key={item.id.toString()}
-                    />
-                ))}
+            <div className="drawer-header">
+                <IconButton 
+                    aria-label="close"
+                    onClick={props.onClose} 
+                    sx={{ 
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                    data-testid="close-demo-drawer-button"
+                >
+                    <CloseIcon />
+                </IconButton>
+                <Typography variant="h4" component="h2" className="title">
+                    Explore <span>a Demo Deck</span>
+                </Typography>
+                <Typography variant="body1" className="subtitle">
+                    Choose a sample deck to try LangPulse instantly.
+                </Typography>
+            </div>
+            <div className="drawer-content">
+                <div className="decks-container">
+                    {items.map(item => (
+                        <DeckCard
+                            item={item}
+                            key={item.id.toString()}
+                        />
+                    ))}
+                </div>
             </div>
         </Drawer>
       )
