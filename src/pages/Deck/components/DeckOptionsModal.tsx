@@ -2,8 +2,11 @@ import React from 'react';
 
 import { 
     CircularProgress, Button, ButtonGroup, 
-    Typography, DialogTitle, DialogContent, Dialog, useMediaQuery
+    Typography, DialogTitle, DialogContent, Dialog, useMediaQuery, IconButton
 } from '@mui/material/';
+import CloseIcon from '@mui/icons-material/Close';
+import { useAppDispatch } from 'hooks';
+import { useNavigate } from 'react-router-dom';
 
 interface deckDialogProps {
     language1: string | undefined,
@@ -23,10 +26,46 @@ interface deckDialogProps {
 
 export default function DeckDialog(props: deckDialogProps) {
     const isBelow400px = useMediaQuery('(max-width:399.95px)');
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    // Handler for the close (exit deck) button
+    function handleExitDeck() {
+        dispatch({type: 'deck/setDeckStarted', value: false});
+        dispatch({type: 'deck/setDialog', value: false});
+        navigate('/');
+    }
 
     return (
-        <Dialog open={props.deckDialogOpen} onClose={props.setDialogClosed} className="deck-options" id="deckDialog">
-            <DialogTitle id="simple-dialog-title">Set Up Your Session</DialogTitle>
+        <Dialog 
+            open={props.deckDialogOpen} 
+            className="deck-options" 
+            id="deckDialog"
+            disableEscapeKeyDown
+            // Prevent closing by clicking the backdrop
+            // MUI Dialog uses 'onClose' with reason, so we need to block backdrop click
+            onClose={(_, reason) => {
+                if (reason !== 'backdropClick') {
+                    props.setDialogClosed();
+                }
+            }}
+        >
+            <DialogTitle id="simple-dialog-title">
+                Set Up Your Session
+                <IconButton
+                    aria-label="close"
+                    onClick={handleExitDeck}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                    data-testid="exit-deck-button"
+                >
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
             {props.deckDataLoaded ?
             <React.Fragment>
             <DialogContent dividers className="deck-options-content">
