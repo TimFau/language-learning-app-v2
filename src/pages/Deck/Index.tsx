@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import sheetService from 'services/sheetService';
 
 import ProgressBar from './components/ProgressBar';
@@ -30,6 +30,8 @@ function Deck(props: RootState) {
     const name: string = queryParams.get("name") || ''
     const id: string = queryParams.get("id") || ''
     const navigate = useNavigate()
+    const location = useLocation();
+    const from = location.state?.from;
 
     // State Functions
     const [langArr, setLangArr] = useState<{ langOneArr: langArray, langTwoArr: langArray }>({
@@ -167,7 +169,11 @@ function Deck(props: RootState) {
     function goToDeckSelector() {
         props.setDeckStartedFalse();
         props.setDeckDialogClose();
-        navigate('/')
+        if (from === '/decks') {
+            navigate('/decks');
+        } else {
+            navigate('/');
+        }
     }
     function startDeck() {
         getCard();
@@ -297,6 +303,7 @@ function Deck(props: RootState) {
                     language2={language2}
                     startDeck={startDeck}
                     deckDataLoaded={deckDataLoaded}
+                    from={from}
                 />
                 <DeckFinishedModal
                     langOneArr={langArr.langOneArr}

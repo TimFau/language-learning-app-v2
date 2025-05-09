@@ -8,7 +8,8 @@ import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos } from '@mui/icons-material';
 
 type DeckCardProps = {
-    item: any
+    item: any,
+    from?: string
 }
 
 const DeckCard = (props: DeckCardProps) => {
@@ -27,7 +28,8 @@ const DeckCard = (props: DeckCardProps) => {
             const now = new Date().toISOString();
             deckService.updateSavedDeck(userToken, savedDeckId, now)
         }
-        navigate(`/deck?name=${deckName}&id=${deckId}`);
+        const from = props.from || '/';
+        navigate(`/deck?name=${deckName}&id=${deckId}`, { state: { from } });
     }
 
     const handleEditDeck = () => {

@@ -21,7 +21,8 @@ interface deckDialogProps {
     setInputMode: (mode: string) => void,
     setDialogClosed: () => void,
     setTranslationMode1: () => void,
-    setTranslationMode2: () => void
+    setTranslationMode2: () => void,
+    from?: string
 }
 
 export default function DeckDialog(props: deckDialogProps) {
@@ -33,7 +34,11 @@ export default function DeckDialog(props: deckDialogProps) {
     function handleExitDeck() {
         dispatch({type: 'deck/setDeckStarted', value: false});
         dispatch({type: 'deck/setDialog', value: false});
-        navigate('/');
+        if (props.from === '/decks') {
+            navigate('/decks');
+        } else {
+            navigate('/');
+        }
     }
 
     return (

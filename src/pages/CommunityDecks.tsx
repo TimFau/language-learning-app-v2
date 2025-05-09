@@ -67,6 +67,7 @@ const CommunityDecks = () => {
                     <DeckCard
                         item={deck}
                         key={deck.id.toString()}
+                        from="/decks"
                     />
                 )
             )}

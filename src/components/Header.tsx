@@ -13,12 +13,17 @@ export default function Nav() {
     const modalCtx = useContext(ModalContext);
 
     let pathName = useLocation().pathname;
+    const location = useLocation();
     const navigate = useNavigate();
 
     function goToDeckSelector() {
         dispatch({type: 'deck/setDeckStarted', value: false});
         dispatch({type: 'deck/setDialog', value: false});
-        navigate('/')
+        if (location.state?.from === '/decks') {
+            navigate('/decks');
+        } else {
+            navigate('/');
+        }
     }
 
     const isLoggedIn = () => authCtx.userToken !== ''
