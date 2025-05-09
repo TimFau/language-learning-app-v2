@@ -225,60 +225,65 @@ function Deck(props: RootState) {
     return (
         <div className={"container page-container " + inputMode}>
             <div className="wrapper">
-                <ProgressBar 
-                    langOneArrLength={langArr.langOneArr.length}
-                    initialCount={initialCount}
-                />
-                <form onSubmit={handleSubmit}  id="mainApp">
-                    {inputMode === 'Flashcard' &&
-                        <FlashCard 
-                        showAnswerFc={showAnswerFc}
-                        showAnswer={showAnswer}
-                        getCard={getCard}
-                        archiveCard={archiveCard}
-                        langTo={langTo}
-                        langFrom={langFrom}
-                        randomNum={randomNum}
-                        >
-                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                        </FlashCard>
-                    }
-                    {inputMode === 'Keyboard' &&
-                        <Keyboard 
-                            langTo={langTo}
-                            langFrom={langFrom}
-                            randomNum={randomNum}
-                            translationInputValue={translationInputValue}
-                            keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
-                        >
-                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                        </Keyboard>
-                    }
-                    {inputMode === 'Wordbank' &&
-                        <WordBank 
-                            langTo={langTo}
-                            langFrom={langFrom}
-                            randomNum={randomNum}
-                            wordBank={wordBank}
-                            keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
-                        >
-                            Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
-                        </WordBank>
-                    }
-                </form>
-                {inputMode !== 'Flashcard' &&
-                    <BottomButtonsContainer 
-                        handleSubmit={handleSubmit}
-                        translateMode={translateMode}
-                        getCard={() => getCard()}
-                        randomNum={randomNum}
-                        langOneArr={langArr.langOneArr}
-                        langTwoArr={langArr.langTwoArr}
-                        success={success}
-                        incorrect={incorrect}
-                        showAnswer={showAnswer}
-                    />
-                }
+                {/* Only show main deck UI if modal is NOT open */}
+                {!props.deckDialogOpen && (
+                    <>
+                        <ProgressBar 
+                            langOneArrLength={langArr.langOneArr.length}
+                            initialCount={initialCount}
+                        />
+                        <form onSubmit={handleSubmit}  id="mainApp">
+                            {inputMode === 'Flashcard' &&
+                                <FlashCard 
+                                showAnswerFc={showAnswerFc}
+                                showAnswer={showAnswer}
+                                getCard={getCard}
+                                archiveCard={archiveCard}
+                                langTo={langTo}
+                                langFrom={langFrom}
+                                randomNum={randomNum}
+                                >
+                                    Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                                </FlashCard>
+                            }
+                            {inputMode === 'Keyboard' &&
+                                <Keyboard 
+                                    langTo={langTo}
+                                    langFrom={langFrom}
+                                    randomNum={randomNum}
+                                    translationInputValue={translationInputValue}
+                                    keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
+                                >
+                                    Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                                </Keyboard>
+                            }
+                            {inputMode === 'Wordbank' &&
+                                <WordBank 
+                                    langTo={langTo}
+                                    langFrom={langFrom}
+                                    randomNum={randomNum}
+                                    wordBank={wordBank}
+                                    keyboardModeHandleChange={(event: keyboardModeHandleChangeEvent) => keyboardModeHandleChange(event)}
+                                >
+                                    Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
+                                </WordBank>
+                            }
+                        </form>
+                        {inputMode !== 'Flashcard' &&
+                            <BottomButtonsContainer 
+                                handleSubmit={handleSubmit}
+                                translateMode={translateMode}
+                                getCard={() => getCard()}
+                                randomNum={randomNum}
+                                langOneArr={langArr.langOneArr}
+                                langTwoArr={langArr.langTwoArr}
+                                success={success}
+                                incorrect={incorrect}
+                                showAnswer={showAnswer}
+                            />
+                        }
+                    </>
+                )}
                 <DeckDialog
                     inputMode={inputMode}
                     currentDeckName={currentDeckName}
