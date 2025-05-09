@@ -30,7 +30,7 @@ export default function Nav() {
 
     return (
         <>
-        {isLoggedIn() &&
+        {(isLoggedIn() || pathName === '/deck') &&
         <header className="app-bar max-width-wrapper">
             <div className="app-bar-inner">
                 <Link to="/" className="logo-link">
@@ -46,16 +46,19 @@ export default function Nav() {
                         </button>
                     ) : (
                         <>
-                            <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
-                                <button className="nav-item-wrapper">
-                                    <CollectionsBookmarkIcon/> <span className="nav-label">My Decks</span>
-                                </button>
-                            </Link>
-                            <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
-                                <button className="nav-item-wrapper">
-                                    <LocalLibraryIcon /> <span className="nav-label">Community Decks</span>
-                                </button>
-                            </Link>
+                            {isLoggedIn() &&
+                                <>
+                                <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
+                                    <button className="nav-item-wrapper">
+                                        <CollectionsBookmarkIcon /> <span className="nav-label">My Decks</span>
+                                    </button>
+                                </Link>
+                                <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
+                                    <button className="nav-item-wrapper">
+                                        <LocalLibraryIcon /> <span className="nav-label">Community Decks</span>
+                                    </button>
+                                </Link></>
+                            }
                             {pathName !== "/deck" && (
                                 <>
                                     <button 
