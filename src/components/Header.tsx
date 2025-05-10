@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import DeckManagementModal from './Authenticated/DeckManagementModal';
 import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
+import ExitDeckConfirmDialog from './ExitDeckConfirmDialog';
 
 export default function Nav() {
     const dispatch = useAppDispatch();
@@ -15,6 +16,8 @@ export default function Nav() {
     let pathName = useLocation().pathname;
     const location = useLocation();
     const navigate = useNavigate();
+
+    const [exitDialogOpen, setExitDialogOpen] = useState(false);
 
     function goToDeckSelector() {
         dispatch({type: 'deck/setDeckStarted', value: false});
@@ -46,7 +49,7 @@ export default function Nav() {
                 </div>
                 <div className="end">
                     {deckStarted ? (
-                        <button className="nav-item" onClick={() => goToDeckSelector()}>
+                        <button className="nav-item" onClick={() => setExitDialogOpen(true)}>
                             <ExitToAppIcon /> <span className="nav-label">Exit Deck</span>
                         </button>
                     ) : (
@@ -93,6 +96,11 @@ export default function Nav() {
             </div>
         </header>
         }
+        <ExitDeckConfirmDialog
+            open={exitDialogOpen}
+            onClose={() => setExitDialogOpen(false)}
+            onConfirm={() => { setExitDialogOpen(false); goToDeckSelector(); }}
+        />
         <DeckManagementModal userId={authCtx.userId} addListDialogOpen={modalCtx.isModalOpen} closeDialog={() => modalCtx.closeModal()} />
         </>
     )
