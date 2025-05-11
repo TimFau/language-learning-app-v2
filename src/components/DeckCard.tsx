@@ -96,11 +96,6 @@ const DeckCard = (props: DeckCardProps) => {
                             
                         </IconButton>
                         )}
-                        {!authCtx.userToken && (
-                            <Link href="#" onClick={(e) => {e.preventDefault(); handleClick();}} className="try-now-link" data-testid="try-now-link">
-                                Try Now <ArrowForwardIos />
-                            </Link>
-                        )}
                     </>
                     :
                     <>
@@ -118,6 +113,9 @@ const DeckCard = (props: DeckCardProps) => {
                         </IconButton>
                     </>
                     }
+                    <Link href="#" onClick={(e) => {e.preventDefault(); handleClick();}} className="try-now-link" data-testid="try-now-link">
+                        {authCtx.userToken ? 'Study Now' : 'Try Now'} <ArrowForwardIos />
+                    </Link>
                 </CardActions>
             </Card>
             <Dialog
