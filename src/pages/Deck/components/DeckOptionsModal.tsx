@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { 
-    CircularProgress, Button, ButtonGroup, 
-    Typography, DialogTitle, DialogContent, Dialog, useMediaQuery, IconButton
+    Button, ButtonGroup, 
+    Typography, DialogTitle, DialogContent, Dialog, useMediaQuery, IconButton, Skeleton
 } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch } from 'hooks';
@@ -29,6 +29,13 @@ export default function DeckDialog(props: deckDialogProps) {
     const isBelow400px = useMediaQuery('(max-width:399.95px)');
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    // Temporary skeleton loading state for demo
+    const [showSkeleton, setShowSkeleton] = React.useState(true);
+    React.useEffect(() => {
+        const timer = setTimeout(() => setShowSkeleton(false), 5000);
+        return () => clearTimeout(timer);
+    }, []);
 
     // Handler for the close (exit deck) button
     function handleExitDeck() {
@@ -71,10 +78,12 @@ export default function DeckDialog(props: deckDialogProps) {
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            {props.deckDataLoaded ?
-            <React.Fragment>
             <DialogContent dividers className="deck-options-content">
-                <Typography gutterBottom className="deck-options-list-label">Selected List: <strong data-testid="deck-name">{props.currentDeckName}</strong></Typography>
+                <Typography gutterBottom className="deck-options-list-label">
+                  Selected List: <strong data-testid="deck-name">
+                    {(props.deckDataLoaded && !showSkeleton) ? props.currentDeckName : <Skeleton width={160} height={19} style={{ display: 'inline-block', verticalAlign: 'middle' }} />}
+                  </strong>
+                </Typography>
                 <Typography className="deck-options-section-label">How do you want to study?</Typography>
                 <ButtonGroup
                     color="primary"
@@ -87,16 +96,19 @@ export default function DeckDialog(props: deckDialogProps) {
                         variant={props.inputMode === 'Flashcard' ? "contained" : 'outlined'}
                         onClick={() => props.setInputMode('Flashcard')}
                         className="deck-options-button"
+                        disabled={!props.deckDataLoaded || showSkeleton}
                     >Flashcard</Button>
                     <Button
                         variant={props.inputMode === 'Wordbank' ? 'contained' : 'outlined'}
                         onClick={() => props.setInputMode('Wordbank')}
                         className="deck-options-button"
+                        disabled={!props.deckDataLoaded || showSkeleton}
                     >Wordbank</Button>
                     <Button
                         variant={props.inputMode === 'Keyboard' ? 'contained' : 'outlined'}
                         onClick={() => props.setInputMode('Keyboard')}
                         className="deck-options-button"
+                        disabled={!props.deckDataLoaded || showSkeleton}
                     >Keyboard</Button>
                 </ButtonGroup>
                 <Typography className="deck-options-section-label">Translate From:</Typography>
@@ -107,30 +119,36 @@ export default function DeckDialog(props: deckDialogProps) {
                     className="deck-options-button-group"
                     orientation="vertical"
                 >
-                    <Button
-                        variant={props.translateMode === '1to2' ? 'contained' : 'outlined'}
-                        onClick={() => props.setTranslationMode1()}
-                        className="deck-options-button"
-                    >{props.language1} to {props.language2}</Button>
-                    <Button
-                        variant={props.translateMode === '2to1' ? 'contained' : 'outlined'}
-                        onClick={() => props.setTranslationMode2()}
-                        className="deck-options-button"
-                    >{props.language2} to {props.language1}</Button>
+                    {(props.deckDataLoaded && !showSkeleton) ? (
+                      <Button
+                          variant={props.translateMode === '1to2' ? 'contained' : 'outlined'}
+                          onClick={() => props.setTranslationMode1()}
+                          className="deck-options-button"
+                      >{props.language1} to {props.language2}</Button>
+                    ) : (
+                      <Skeleton variant="rectangular" height={36} width="100%" style={{ borderRadius: '6px 6px 0 0' }} />
+                    )}
+                    {(props.deckDataLoaded && !showSkeleton) ? (
+                      <Button
+                          variant={props.translateMode === '2to1' ? 'contained' : 'outlined'}
+                          onClick={() => props.setTranslationMode2()}
+                          className="deck-options-button"
+                      >{props.language2} to {props.language1}</Button>
+                    ) : (
+                      <Skeleton variant="rectangular" height={36} width="100%" style={{ borderRadius: '0 0 6px 6px' }} />
+                    )}
                 </ButtonGroup>
             </DialogContent>
-            <Button
-                // On Click
-                    // Send value to getDeckData in App.js
-                onClick={() => props.startDeck()}
-                data-testid="start-deck-button"
-                variant="contained"
-                className="start-deck-final-button"
-            >Start Deck</Button>
-            </React.Fragment>
-            :
-            <CircularProgress style={{margin: "100px 150px"}} />
-            }
+            {(props.deckDataLoaded && !showSkeleton) ? (
+              <Button
+                  onClick={() => props.startDeck()}
+                  data-testid="start-deck-button"
+                  variant="contained"
+                  className="start-deck-final-button"
+              >Start Deck</Button>
+            ) : (
+              <Skeleton variant="rectangular" height={44} width="100%" style={{ borderRadius: 6 }} />
+            )}
         </Dialog>
     )
 }
