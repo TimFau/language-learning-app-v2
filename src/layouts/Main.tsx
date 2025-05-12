@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import connector, { PropsFromRedux } from "../containers/Main.connector"
 
-import Nav from '../components/Nav';
+import Header from '../components/Header';
 import IndexPage from '../pages/Index/Index';
 import DeckPage from '../pages/Deck/Index';
 import CommunityDecks from '../pages/CommunityDecks';
@@ -12,7 +12,7 @@ function RootPage (props: PropsFromRedux) {
   
     return (
     <>
-        <Nav />
+        <Header />
         <Routes>
             <Route path="/" element={
                 <IndexPage 

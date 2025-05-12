@@ -1,0 +1,54 @@
+.deck-inputs-wrapper.MuiGrid-container {
+	@media screen and (max-width: 660px) {
+		max-width: 100%;
+		padding: 15px;
+	}
+	button {
+		margin-top: 10px;
+	}
+}
+.deck-options {
+	.MuiFormControl-root {
+		margin-bottom: 15px;
+	}
+
+	.deck-options-button-group {
+		button {
+			color: $text-primary;
+		}
+		// For active buttons in ButtonGroups
+		.MuiButton-contained {
+			background-color: $cta-button-color !important;
+			color: $white !important;
+			&:hover {
+				background-color: darken($cta-button-color, 10%) !important;
+			}
+		}
+	}
+
+	.deck-options-content {
+		padding-top: 8px;
+	}
+
+	.deck-options-list-label {
+		margin-bottom: 16px;
+	}
+
+	.deck-options-section-label {
+		margin-top: 16px;
+		margin-bottom: 8px;
+	}
+
+	// For the main "Start Deck" button
+	.start-deck-final-button {
+		background-color: $cta-button-color !important;
+		color: $white !important;
+		width: 100%;
+		border-radius: 0 0 4px 4px;
+		padding: 12px 0;
+		margin-top: auto;
+		&:hover {
+			background-color: darken($cta-button-color, 10%) !important;
+		}
+	}
+}
