@@ -1,13 +1,13 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { USERS_ME, CREATE_ACCOUNT, LOGIN } from "../queries"
+import { USERS_ME, CREATE_ACCOUNT, LOGIN } from 'queries';
 
-const endpoint = `${process.env.REACT_APP_API_BASE}/system`
+const endpoint = `${import.meta.env.VITE_API_BASE}/system`;
 
 const client = new ApolloClient({
     uri: endpoint,
     cache: new InMemoryCache(),
     headers: {
-    authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`,
+    authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
     },
 });
 

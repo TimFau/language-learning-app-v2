@@ -2,12 +2,14 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "target": "es2015",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
     "jsx": "react-jsx",
     "types": [
-      "react"
+      "react",
+      "vite/client"
     ],
-    "module": "esNext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "declaration": false,
@@ -25,9 +27,8 @@
     "allowJs": true,
     "lib": [
       "dom",
-      "es6",
       "dom.iterable",
-      "esnext"
+      "ESNext"
     ],
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -37,11 +38,11 @@
     "isolatedModules": true,
     "noEmit": true
   },
+  "include": ["src", "src/vite-env.d.ts"],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "build"
   ],
-  "include": [
-    "src"
-  ]
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -31,7 +31,7 @@ const theme = createTheme({
 
 // Create an instance of ApolloClient
 export const client = new ApolloClient({
-  uri: process.env.REACT_APP_API_BASE,
+  uri: import.meta.env.VITE_API_BASE,
   cache: new InMemoryCache(),
 });
 

@@ -1,3 +1,4 @@
+@use "sass:color";
 // Import base variables (assuming your build process handles this)
 // @import '../partials/base/variables'; // Make sure this line exists or is handled by your build
 
@@ -38,7 +39,7 @@
             background-color: $accent-orange !important; // Use new variable
             color: $white !important;
             &:hover {
-                background-color: darken($accent-orange, 10%) !important;
+                background-color: color.adjust($accent-orange, $lightness: -10%) !important;
             }
         }
     }
@@ -139,7 +140,7 @@
             text-transform: none !important; // Prevent uppercase
             border-radius: 8px !important;
             &:hover {
-                background-color: darken($cta-button-color, 10%) !important;
+                background-color: color.adjust($cta-button-color, $lightness: -10%) !important;
             }
         }
     }

@@ -3,7 +3,7 @@ import React from 'react';
 import { 
     Button, ButtonGroup, 
     Typography, DialogTitle, DialogContent, Dialog, useMediaQuery, IconButton, Skeleton
-} from '@mui/material/';
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch } from 'hooks';
 import { useNavigate } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { client } from './../App'
-import { DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, UPDATE_DECK, DELETE_DECK, SAVE_DECK, UNSAVE_DECK, UPDATE_SAVED_DECK } from "queries";
+import { DEMO_DECKS, USER_DECKS, SAVED_DECKS, CREATE_DECK, UPDATE_DECK, DELETE_DECK, SAVE_DECK, UNSAVE_DECK, UPDATE_SAVED_DECK } from 'queries';
 
 const getDemoDecks = async () => {
     const { data } = await client.query({ query: gql(DEMO_DECKS) });
