@@ -22,7 +22,7 @@ export default defineConfig({
       queries: resolve(__dirname, 'src/queries.ts'),
     },
   },
-  base: '/',
+  base: '/language-learning-app-v2/',
   server: {
     port: 3000,
   },

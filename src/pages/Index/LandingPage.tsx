@@ -175,7 +175,7 @@ export default function GuestPage(props: LoggedOutProps) {
             <header className="landing-header">
                 {/* Placeholder for Logo */}
                 <div className="logo-container">
-                    <img src={'/images/langpulse-logo.png'} alt="LangPulse Logo" />
+                    <img src={`${import.meta.env.BASE_URL}images/langpulse-logo.png`} alt="LangPulse Logo" />
                 </div> 
                 <Button variant="contained" onClick={() => dispatch({type: 'deck/setDemoDrawer', value: true})} className="demo-button">Try a Demo Deck</Button>
             </header>
@@ -188,7 +188,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     <p>LangPulse is a fast, flexible flashcard web app built for learners who want total control over their vocab. No bloat. No barriers.</p>
                 </div>
                 <div className="hero-image">
-                    <img src={'/images/langpulse-hero-image.png'} alt="Language learning illustration" />
+                    <img src={`${import.meta.env.BASE_URL}images/langpulse-hero-image.png`} alt="Language learning illustration" />
                 </div>
             </section>
 
