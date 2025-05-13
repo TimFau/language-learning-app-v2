@@ -13,9 +13,23 @@ The main goals of this version (V2) are as follows:
     - Reducing dependency on Google Sheets by introducing new ways to retrieve and store data.
 - Transitioning to Typescript to enhance learning opportunities and simplify maintenance.
 - Creating a robust foundation for implementing various new functionalities.
+- Using Vite as the build tool for faster development and production builds.
 
 ## Running Project Locally
 
-Before running the project, please ensure that you have Node.js version 15 installed.
+Before running the project, please ensure that you have Node.js version 22 installed.
 
-To start the application, use the command 'npm run start'.
+To run the development server:
+```bash
+npm run dev
+```
+
+To build for production:
+```bash
+npm run build
+```
+
+To preview the production build:
+```bash
+npm run preview
+```

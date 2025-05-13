@@ -1,19 +1,19 @@
 import { test, expect } from '@playwright/test';
 import { login, logout } from '../utils/test-utils';
 
-const TEST_USER_EMAIL = process.env.REACT_APP_TEST_USER_EMAIL;
-const TEST_USER_PASSWORD = process.env.REACT_APP_TEST_USER_PASSWORD;
+const TEST_USER_EMAIL = process.env.VITE_TEST_USER_EMAIL;
+const TEST_USER_PASSWORD = process.env.VITE_TEST_USER_PASSWORD;
 
 // // Ensure the test user credentials are set - Moved inside describe block
 // if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
-//   throw new Error('REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables must be set');
+//   throw new Error('VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD environment variables must be set');
 // }
 
 test.describe('Login Flow', () => {
   // Check for environment variables before running tests in this suite
   test.beforeAll(() => {
     if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
-      throw new Error('Login Flow tests require REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables');
+      throw new Error('Login Flow tests require VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD environment variables');
     }
   });
 

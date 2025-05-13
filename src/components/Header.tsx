@@ -42,7 +42,7 @@ export default function Nav() {
         <header className="app-bar max-width-wrapper">
             <div className="app-bar-inner">
                 <Link to="/" className="logo-link">
-                    <img src="/images/langpulse-logo.png" alt="LangPulse Logo" className="nav-logo" />
+                    <img src={`${import.meta.env.BASE_URL}images/langpulse-logo.png`} alt="LangPulse Logo" className="nav-logo" />
                 </Link>
                 <div className="start">
                     {/* Items moved to .end div */}
