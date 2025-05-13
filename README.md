@@ -17,7 +17,7 @@ The main goals of this version (V2) are as follows:
 
 ## Running Project Locally
 
-Before running the project, please ensure that you have Node.js version 18 or higher installed.
+Before running the project, please ensure that you have Node.js version 22 installed.
 
 To run the development server:
 ```bash
