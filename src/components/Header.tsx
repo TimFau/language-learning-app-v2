@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
@@ -18,6 +18,18 @@ export default function Nav() {
     const navigate = useNavigate();
 
     const [exitDialogOpen, setExitDialogOpen] = useState(false);
+    const [isFixed, setIsFixed] = useState(false);
+    const headerRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (headerRef.current) {
+                setIsFixed(window.scrollY > headerRef.current.offsetTop);
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     function goToDeckSelector() {
         dispatch({type: 'deck/setDeckStarted', value: false});
@@ -39,7 +51,7 @@ export default function Nav() {
     return (
         <>
         {(isLoggedIn() || pathName === '/deck') &&
-        <header className="app-bar max-width-wrapper">
+        <header ref={headerRef} className={`app-bar max-width-wrapper${isFixed ? ' fixed-header' : ''}`}>
             <div className="app-bar-inner">
                 <Link to="/" className="logo-link">
                     <img src={`${import.meta.env.BASE_URL}images/langpulse-logo.png`} alt="LangPulse Logo" className="nav-logo" />
