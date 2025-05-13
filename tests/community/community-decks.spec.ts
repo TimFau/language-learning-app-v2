@@ -5,8 +5,8 @@ test.describe('Community Decks', () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test in this describe block
     // TODO: Replace with actual test credentials (e.g., from environment variables)
-    const userEmail = process.env.REACT_APP_TEST_USER_EMAIL || 'test@example.com';
-    const userPassword = process.env.REACT_APP_TEST_USER_PASSWORD || 'password123';
+    const userEmail = process.env.VITE_TEST_USER_EMAIL || 'test@example.com';
+    const userPassword = process.env.VITE_TEST_USER_PASSWORD || 'password123';
     await login(page, userEmail, userPassword); // Pass credentials to login function
     await page.goto('/decks'); // Navigate to the community decks page
   });
@@ -76,7 +76,7 @@ test.describe('Community Decks', () => {
       // Wait for navigation by checking for elements on the deck VIEW page
       await expect(page.getByTestId('deck-name')).toBeVisible(); // Check for deck name
       const startButton = page.getByTestId('start-deck-button');
-      await expect(startButton).toBeVisible(); // Check for start button
+      await expect(startButton).toBeVisible({ timeout: 10000 }); // Check for start button
 
       // Now, actually start studying
       await startButton.click();

@@ -31,11 +31,13 @@ export default function DeckDialog(props: deckDialogProps) {
     const navigate = useNavigate();
 
     // Temporary skeleton loading state for demo
-    const [showSkeleton, setShowSkeleton] = React.useState(true);
-    React.useEffect(() => {
-        const timer = setTimeout(() => setShowSkeleton(false), 5000);
-        return () => clearTimeout(timer);
-    }, []);
+    // const [showSkeleton, setShowSkeleton] = React.useState(true);
+    // React.useEffect(() => {
+    //     const timer = setTimeout(() => setShowSkeleton(false), 5000);
+    //     return () => clearTimeout(timer);
+    // }, []);
+    // Remove skeleton state, rely only on props.deckDataLoaded
+    const showSkeleton = !props.deckDataLoaded;
 
     // Handler for the close (exit deck) button
     function handleExitDeck() {
