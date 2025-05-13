@@ -6,7 +6,7 @@ import userService from 'services/userService';
 import DemoDecksDrawer from '../Deck/components/DemoDecksDrawer';
 // import heroImage from '../../../public/images/langpulse-hero-image.png'; // Assuming the image is placed here
 
-import { TextField, Button, Link } from '@mui/material/'; // Removed Paper, Card
+import { TextField, Button, Link } from '@mui/material'; // Removed Paper, Card
 import makeStyles from '@mui/styles/makeStyles';
 import { Alert } from '@mui/material';
 import { CheckIsEmail } from '../../scripts/Helpers';

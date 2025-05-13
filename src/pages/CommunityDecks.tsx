@@ -2,7 +2,7 @@ import DeckCard from "components/DeckCard";
 import { useContext } from "react"
 import AuthContext from 'context/auth-context';
 import { gql, useQuery } from "@apollo/client";
-import { COMMUNITY_DECKS, SAVED_DECKS } from "queries";
+import { COMMUNITY_DECKS, SAVED_DECKS } from 'queries';
 import { Link } from "react-router-dom";
 
 const CommunityDecks = () => {

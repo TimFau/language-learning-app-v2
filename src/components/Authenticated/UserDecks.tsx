@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { CircularProgress, Typography } from '@mui/material/';
+import { CircularProgress, Typography } from '@mui/material';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/DeckCard';
 import { gql, useQuery } from '@apollo/client';

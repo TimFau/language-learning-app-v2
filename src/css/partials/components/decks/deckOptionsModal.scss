@@ -1,3 +1,4 @@
+@use "sass:color";
 .deck-inputs-wrapper.MuiGrid-container {
 	@media screen and (max-width: 660px) {
 		max-width: 100%;
@@ -21,7 +22,7 @@
 			background-color: $cta-button-color !important;
 			color: $white !important;
 			&:hover {
-				background-color: darken($cta-button-color, 10%) !important;
+				background-color: color.adjust($cta-button-color, $lightness: -10%) !important;
 			}
 		}
 	}
@@ -48,7 +49,7 @@
 		padding: 12px 0;
 		margin-top: auto;
 		&:hover {
-			background-color: darken($cta-button-color, 10%) !important;
+			background-color: color.adjust($cta-button-color, $lightness: -10%) !important;
 		}
 	}
 }

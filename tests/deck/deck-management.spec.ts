@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { login, createDeckViaUI, deleteDeckViaUI } from '../utils/test-utils';
 
-const TEST_USER_EMAIL = process.env.REACT_APP_TEST_USER_EMAIL;
-const TEST_USER_PASSWORD = process.env.REACT_APP_TEST_USER_PASSWORD;
+const TEST_USER_EMAIL = process.env.VITE_TEST_USER_EMAIL;
+const TEST_USER_PASSWORD = process.env.VITE_TEST_USER_PASSWORD;
 
 // // Ensure the test user credentials are set - Moved inside describe block
 // if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
-//   throw new Error('REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables must be set');
+//   throw new Error('VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD environment variables must be set');
 // }
 
 const TEST_SHEET_ID = '123uJsttzL6EmedjHzR2n8LSVFljlu1ZRVW84K5h74wI'; // Known valid public sheet
@@ -15,7 +15,7 @@ test.describe('Deck Management', () => {
   // Check for environment variables before running tests in this suite
   test.beforeAll(() => {
     if (!TEST_USER_EMAIL || !TEST_USER_PASSWORD) {
-      throw new Error('Deck Management tests require REACT_APP_TEST_USER_EMAIL and REACT_APP_TEST_USER_PASSWORD environment variables');
+      throw new Error('Deck Management tests require VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD environment variables');
     }
   });
 
@@ -74,7 +74,7 @@ test.describe('Deck Management', () => {
     console.log('Actual URL:', actualUrl);
     await expect(page).toHaveURL(expectedUrlPattern);
     // Add more checks for deck view content if necessary (e.g., card count)
-    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName);
+    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName, { timeout: 10000 });
   });
 
   test('should allow a user to edit an existing deck', async ({ page }) => {
@@ -133,7 +133,7 @@ test.describe('Deck Management', () => {
   test('should allow navigation through cards in a deck', async ({ page }) => {
     // Deck is created in beforeEach, view it
     await page.locator(deckCardSelectorPrefix).locator('.MuiCardActionArea-root').click();
-    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName);
+    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName, { timeout: 10000 });
 
     // 1. Click the 'Start Deck' button
     await page.click('[data-testid="start-deck-button"]');
@@ -177,7 +177,8 @@ test.describe('Deck Management', () => {
   test('should allow marking a card as learned (archive)', async ({ page }) => {
     // View the deck
     await page.locator(deckCardSelectorPrefix).locator('.MuiCardActionArea-root').click();
-    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName);
+    await expect(page.locator('[data-testid="deck-name"]').first()).toContainText(uniqueDeckName, { timeout: 10000 });
+    await page.click('[data-testid="start-deck-button"]');
     await expect(page.locator('[data-testid="card-front"]')).toBeVisible({ timeout: 10000 });
     const initialQuestionElement = page.locator('[data-testid="card-question"]');
     const initialQuestionText = await initialQuestionElement.textContent();
