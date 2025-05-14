@@ -1,5 +1,5 @@
 import DeckCard from "components/DeckCard";
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import AuthContext from 'context/auth-context';
 import { gql, useQuery } from "@apollo/client";
 import { COMMUNITY_DECKS, SAVED_DECKS } from 'queries';
@@ -19,6 +19,11 @@ const CommunityDecks = () => {
         variables: { userToken: authCtx.userToken, userId: authCtx.userId },
         skip: !authCtx.userToken // Skip query if not authenticated
     });
+
+    // Scroll to top on mount (fixes mobile reload issue)
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // Show login prompt if not authenticated
     if (!authCtx.userToken) {
