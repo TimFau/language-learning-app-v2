@@ -9,6 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import AuthContext from 'context/auth-context';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Login() {
 
@@ -16,6 +17,7 @@ export default function Login() {
     const [passError, setPassError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const authCtx = useContext(AuthContext);
 
@@ -40,6 +42,7 @@ export default function Login() {
             return;
         }
 
+        setLoading(true);
         userService.login(email, password)
         .then(async response => {
             const data = await response;
@@ -58,6 +61,7 @@ export default function Login() {
                         setPassError("Please enter your password");
                     }
                 }
+                setLoading(false);
                 return false
             } else {
                 const userDetails = await userService.getAccountDetails(data.auth_login.access_token).then(response => response)
@@ -65,6 +69,7 @@ export default function Login() {
                 const userId = userDetails.users_me.id
                 const userName = userDetails.users_me.username
                 authCtx.onLogin(accessToken, userId, userName)
+                setLoading(false);
                 return true
             }
         })
@@ -73,6 +78,7 @@ export default function Login() {
             if (error.message.includes('Invalid user credentials.')) {
                 alert('Invalid user credentials.');
             }
+            setLoading(false);
         })
     }
 
@@ -128,7 +134,10 @@ export default function Login() {
                     variant="contained"
                     color="primary"
                     data-testid="login-submit-button"
-                >Login</Button>
+                    disabled={loading}
+                >
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                </Button>
             </DialogActions>
         </Dialog>
     )
