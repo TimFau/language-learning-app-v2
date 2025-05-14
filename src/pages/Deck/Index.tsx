@@ -228,6 +228,9 @@ function Deck(props: RootState) {
         deckOptions(name, id)
     }, [name, id, setDeckDialogClose, setDeckDialogOpen])
 
+    // Only show DeckFinishedModal when deck is loaded, options modal is closed, and deck is finished
+    const showDeckFinishedModal = !props.deckDialogOpen && deckDataLoaded && langArr.langOneArr.length === 0;
+
     return (
         <div className={"container page-container " + inputMode}>
             <div className="wrapper">
@@ -305,10 +308,12 @@ function Deck(props: RootState) {
                     deckDataLoaded={deckDataLoaded}
                     from={from}
                 />
-                <DeckFinishedModal
-                    langOneArr={langArr.langOneArr}
-                    goToDeckSelector={() => goToDeckSelector()}
-                />
+                {showDeckFinishedModal && (
+                    <DeckFinishedModal
+                        langOneArr={langArr.langOneArr}
+                        goToDeckSelector={() => goToDeckSelector()}
+                    />
+                )}
             </div>
         </div>
     )
