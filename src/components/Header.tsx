@@ -9,6 +9,15 @@ import ExitDeckConfirmDialog from './ExitDeckConfirmDialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Paper from '@mui/material/Paper';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import Fab from '@mui/material/Fab';
+
+// Define the mobile nav breakpoint in JS (should match SCSS variable)
+export const MOBILE_NAV_BREAKPOINT = 660;
 
 export default function Nav() {
     const dispatch = useAppDispatch();
@@ -21,6 +30,13 @@ export default function Nav() {
     const navigate = useNavigate();
 
     const [exitDialogOpen, setExitDialogOpen] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(`(max-width:${MOBILE_NAV_BREAKPOINT}px)`);
+    const [bottomNavValue, setBottomNavValue] = useState(pathName);
+
+    useEffect(() => {
+        setBottomNavValue(pathName);
+    }, [pathName]);
 
     function goToDeckSelector() {
         dispatch({type: 'deck/setDeckStarted', value: false});
@@ -52,53 +68,106 @@ export default function Nav() {
                         {/* Items moved to .end div */}
                     </div>
                     <div className="end">
-                        {deckStarted ? (
-                            <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
-                                <span className="nav-label">Exit Deck</span>
-                            </Button>
-                        ) : (
+                        {/* Only show nav items in header if not mobile */}
+                        {!isMobile && (
                             <>
-                                {isLoggedIn() &&
+                                {deckStarted ? (
+                                    <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
+                                        <span className="nav-label">Exit Deck</span>
+                                    </Button>
+                                ) : (
                                     <>
-                                    <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
-                                        <Button className="nav-item-wrapper" startIcon={<CollectionsBookmarkIcon />}>
-                                            <span className="nav-label">My Decks</span>
-                                        </Button>
-                                    </Link>
-                                    <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
-                                        <Button className="nav-item-wrapper" startIcon={<LocalLibraryIcon />}>
-                                            <span className="nav-label">Community Decks</span>
-                                        </Button>
-                                    </Link></>
-                                }
-                                {pathName !== "/deck" && (
-                                    <>
-                                        <Button 
-                                            onClick={() => modalCtx.openModal()} 
-                                            className="nav-item"
-                                            data-testid="create-deck-button"
-                                            startIcon={<AddIcon />}
-                                        >
-                                            <span className="nav-label">Add Deck</span>
-                                        </Button>
-                                        <Button
-                                            onClick={handleLogout}
-                                            color="secondary"
-                                            className="nav-item logout"
-                                            data-testid="logout-button"
-                                            startIcon={<LogoutIcon />}
-                                        >
-                                            <span className="nav-label">Logout</span>
-                                        </Button>
+                                        {isLoggedIn() &&
+                                            <>
+                                            <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
+                                                <Button className="nav-item-wrapper" startIcon={<CollectionsBookmarkIcon />}>
+                                                    <span className="nav-label">My Decks</span>
+                                                </Button>
+                                            </Link>
+                                            <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
+                                                <Button className="nav-item-wrapper" startIcon={<LocalLibraryIcon />}>
+                                                    <span className="nav-label">Community Decks</span>
+                                                </Button>
+                                            </Link></>
+                                        }
+                                        {pathName !== "/deck" && (
+                                            <>
+                                                <Button 
+                                                    onClick={() => modalCtx.openModal()} 
+                                                    className="nav-item"
+                                                    data-testid="create-deck-button"
+                                                    startIcon={<AddIcon />}
+                                                >
+                                                    <span className="nav-label">Add Deck</span>
+                                                </Button>
+                                            </>
+                                        )}
                                     </>
                                 )}
                             </>
+                        )}
+                        {/* Always show logout button in header when logged in and not on /deck */}
+                        {isLoggedIn() && pathName !== "/deck" && (
+                            <Button
+                                onClick={handleLogout}
+                                color="secondary"
+                                className="nav-item logout"
+                                data-testid="logout-button"
+                                startIcon={<LogoutIcon />}
+                            >
+                                <span className="nav-label">Logout</span>
+                            </Button>
                         )}
                     </div>
                 </div>
             </Toolbar>
         </AppBar>
         }
+        {/* Bottom Navigation for mobile */}
+        {isMobile && isLoggedIn() && pathName !== '/deck' && (
+            <>
+                {/* Floating Action Button for Add Deck */}
+                <Fab
+                    color="primary"
+                    aria-label="add"
+                    onClick={() => modalCtx.openModal()}
+                    sx={{
+                        position: 'fixed',
+                        bottom: 26,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 1300,
+                        border: '3px solid white',
+                        boxShadow: 3,
+                    }}
+                >
+                    <AddIcon />
+                </Fab>
+                <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 1200 }} elevation={3} className="mobile-bottom-nav-root">
+                    <BottomNavigation
+                        className="mobile-bottom-nav"
+                        showLabels
+                        value={bottomNavValue}
+                        onChange={(event, newValue) => {
+                            setBottomNavValue(newValue);
+                            if (newValue === '/') navigate('/');
+                            if (newValue === '/decks') navigate('/decks');
+                        }}
+                    >
+                        <BottomNavigationAction
+                            label="My Decks"
+                            value="/"
+                            icon={<CollectionsBookmarkIcon />}
+                        />
+                        <BottomNavigationAction
+                            label="Community Decks"
+                            value="/decks"
+                            icon={<LocalLibraryIcon />}
+                        />
+                    </BottomNavigation>
+                </Paper>
+            </>
+        )}
         <ExitDeckConfirmDialog
             open={exitDialogOpen}
             onClose={() => setExitDialogOpen(false)}
