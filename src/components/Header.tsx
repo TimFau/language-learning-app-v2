@@ -16,7 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Fab from '@mui/material/Fab';
 
 // Define the mobile nav breakpoint in JS (should match SCSS variable)
-export const MOBILE_NAV_BREAKPOINT = 660;
+export const MOBILE_NAV_BREAKPOINT = 700;
 
 export default function Nav() {
     const dispatch = useAppDispatch();
