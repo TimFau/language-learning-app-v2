@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks'; 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
@@ -13,7 +13,6 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
 import Fab from '@mui/material/Fab';
 
 // Define the mobile nav breakpoint in JS (should match SCSS variable)
@@ -30,7 +29,6 @@ export default function Nav() {
     const navigate = useNavigate();
 
     const [exitDialogOpen, setExitDialogOpen] = useState(false);
-    const theme = useTheme();
     const isMobile = useMediaQuery(`(max-width:${MOBILE_NAV_BREAKPOINT}px)`);
     const [bottomNavValue, setBottomNavValue] = useState(pathName);
 
@@ -148,7 +146,7 @@ export default function Nav() {
                         className="mobile-bottom-nav"
                         showLabels
                         value={bottomNavValue}
-                        onChange={(event, newValue) => {
+                        onChange={(_, newValue) => {
                             setBottomNavValue(newValue);
                             if (newValue === '/') navigate('/');
                             if (newValue === '/decks') navigate('/decks');
