@@ -24,6 +24,10 @@
             line-height: 1.6;
         }
     }
+
+    @media screen and (max-width: $mobile-nav-breakpoint) {
+        padding-bottom: 80px; // Prevents BottomNavigation from blocking last card
+    }
 }
 
 .not-authenticated {

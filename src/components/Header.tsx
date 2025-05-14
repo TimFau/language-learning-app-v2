@@ -66,14 +66,15 @@ export default function Nav() {
                         {/* Items moved to .end div */}
                     </div>
                     <div className="end">
+                        {deckStarted &&
+                            <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
+                                <span className="nav-label">Exit Deck</span>
+                            </Button>
+                        }
                         {/* Only show nav items in header if not mobile */}
                         {!isMobile && (
                             <>
-                                {deckStarted ? (
-                                    <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
-                                        <span className="nav-label">Exit Deck</span>
-                                    </Button>
-                                ) : (
+                                {!deckStarted &&
                                     <>
                                         {isLoggedIn() &&
                                             <>
@@ -101,7 +102,7 @@ export default function Nav() {
                                             </>
                                         )}
                                     </>
-                                )}
+                                }
                             </>
                         )}
                         {/* Always show logout button in header when logged in and not on /deck */}
