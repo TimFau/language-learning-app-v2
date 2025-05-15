@@ -210,7 +210,7 @@ export default function GuestPage(props: LoggedOutProps) {
                 <form>
                     <div className="form-row">
                         <TextField
-                            autoComplete="fname"
+                            autoComplete="given-name"
                             name="firstName"
                             variant="outlined"
                             required
@@ -223,6 +223,7 @@ export default function GuestPage(props: LoggedOutProps) {
                             error={firstNameError !== ''}
                             helperText={firstNameError}
                             data-testid="register-first-name-input"
+                            type="text"
                         />
                         <TextField
                             variant="outlined"
@@ -231,12 +232,13 @@ export default function GuestPage(props: LoggedOutProps) {
                             className="input"
                             label="Last Name"
                             name="lastName"
-                            autoComplete="lname"
+                            autoComplete="family-name"
                             value={lastName}
                             onChange={handleChange}
                             error={lastNameError !== ''}
                             helperText={lastNameError}
                             data-testid="register-last-name-input"
+                            type="text"
                         />
                     </div>
                     <TextField
@@ -253,6 +255,7 @@ export default function GuestPage(props: LoggedOutProps) {
                         error={emailError !== ''}
                         helperText={emailError}
                         data-testid="register-email-input"
+                        type="email"
                     />
                     <TextField
                         variant="outlined"
@@ -263,7 +266,7 @@ export default function GuestPage(props: LoggedOutProps) {
                         type="password"
                         id="password"
                         className="input"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={userPassword}
                         onChange={handleChange}
                         error={passwordError !== ''}

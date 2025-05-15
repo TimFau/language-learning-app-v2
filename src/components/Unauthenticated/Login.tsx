@@ -23,7 +23,8 @@ export default function Login() {
 
     const authCtx = useContext(AuthContext);
 
-    function login() {
+    function login(event?: React.FormEvent<HTMLFormElement>) {
+        if (event) event.preventDefault();
         // Reset errors
         setEmailError('');
         setPassError('');
@@ -123,44 +124,46 @@ export default function Login() {
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 0 }}>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    value={email}
-                    onChange={handleEmail}
-                    error={emailError !== ''}
-                    helperText={emailError}
-                    label="Email Address"
-                    fullWidth
-                    variant="outlined"
-                    inputProps={{ "data-testid": "login-email-input" } as any}
-                    type="email"
-                    sx={{ mb: 2 }}
-                />
-                <TextField
-                    margin="dense"
-                    value={password}
-                    onChange={handlePassword}
-                    error={passError !== ''}
-                    helperText={passError}
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    inputProps={{ "data-testid": "login-password-input" } as any}
-                    sx={{ mb: 2 }}
-                />
-                <Button
-                    onClick={() => login()}
-                    variant="contained"
-                    color="primary"
-                    data-testid="login-submit-button"
-                    disabled={loading}
-                    fullWidth
-                    sx={{ mt: 1, mb: 1 }}
-                >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
-                </Button>
+                <form style={{ width: '100%' }} onSubmit={login}>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        value={email}
+                        onChange={handleEmail}
+                        error={emailError !== ''}
+                        helperText={emailError}
+                        label="Email Address"
+                        fullWidth
+                        variant="outlined"
+                        inputProps={{ "data-testid": "login-email-input" } as any}
+                        type="email"
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        margin="dense"
+                        value={password}
+                        onChange={handlePassword}
+                        error={passError !== ''}
+                        helperText={passError}
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                        inputProps={{ "data-testid": "login-password-input" } as any}
+                        sx={{ mb: 2 }}
+                    />
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        data-testid="login-submit-button"
+                        disabled={loading}
+                        fullWidth
+                        sx={{ mt: 1, mb: 1 }}
+                    >
+                        {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
+                    </Button>
+                </form>
             </DialogContent>
         </Dialog>
     )
