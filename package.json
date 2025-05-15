@@ -1,6 +1,6 @@
 {
   "name": "language-learning-app",
-  "homepage": "https://TimFau.github.io/language-learning-app-v2",
+  "homepage": "https://langpulse.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp CNAME build/",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",

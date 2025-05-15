@@ -40,7 +40,7 @@ export default function TranslationApp() {
     <AuthContextProvider>
       <ModalContextProvider>
         <ApolloProvider client={client}>
-          <BrowserRouter basename="/language-learning-app-v2">
+          <BrowserRouter basename="/">
             <ThemeProvider theme={theme}>
               <MainLayout />
             </ThemeProvider>
