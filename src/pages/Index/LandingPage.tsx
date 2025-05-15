@@ -145,12 +145,12 @@ export default function GuestPage(props: LoggedOutProps) {
                             setAlertMsgs([]); 
                             return;
                         } else {
-                            const errMsg = 'Account created but login failed (no token). Please try logging in manually.';
+                            const errMsg = 'Account created but log in failed (no token). Please try logging in manually.';
                             setAlertMsgs([errMsg]);
                             return;
                         }
                     } catch (loginError) {
-                        const errMsg = 'Account created but failed during login process. Please try logging in manually.';
+                        const errMsg = 'Account created but failed during log in process. Please try logging in manually.';
                         setAlertMsgs([errMsg]);
                         return;
                     }
@@ -210,19 +210,19 @@ export default function GuestPage(props: LoggedOutProps) {
                 <form>
                     <div className="form-row">
                         <TextField
-                            autoComplete="fname"
+                            autoComplete="given-name"
                             name="firstName"
                             variant="outlined"
                             required
                             id="firstName"
                             className="input"
                             label="First Name"
-                            autoFocus
                             value={firstName}
                             onChange={handleChange}
                             error={firstNameError !== ''}
                             helperText={firstNameError}
                             data-testid="register-first-name-input"
+                            type="text"
                         />
                         <TextField
                             variant="outlined"
@@ -231,12 +231,13 @@ export default function GuestPage(props: LoggedOutProps) {
                             className="input"
                             label="Last Name"
                             name="lastName"
-                            autoComplete="lname"
+                            autoComplete="family-name"
                             value={lastName}
                             onChange={handleChange}
                             error={lastNameError !== ''}
                             helperText={lastNameError}
                             data-testid="register-last-name-input"
+                            type="text"
                         />
                     </div>
                     <TextField
@@ -253,6 +254,7 @@ export default function GuestPage(props: LoggedOutProps) {
                         error={emailError !== ''}
                         helperText={emailError}
                         data-testid="register-email-input"
+                        type="email"
                     />
                     <TextField
                         variant="outlined"
@@ -263,7 +265,7 @@ export default function GuestPage(props: LoggedOutProps) {
                         type="password"
                         id="password"
                         className="input"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={userPassword}
                         onChange={handleChange}
                         error={passwordError !== ''}
@@ -272,7 +274,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     />
                     <div className="login-link-container">
                         <span className="acctTxt">Already have an account?</span> 
-                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link" className="signIn">Login</Link>
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link" className="signIn">Log in</Link>
                     </div>
                     <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button" className="create-account-button">Create Account</Button>
                 </form>

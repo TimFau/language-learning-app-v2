@@ -21,7 +21,7 @@ const DeckFinishedModal = ({ langOneArr, goToDeckSelector }: DeckFinishedModalPr
             variant="outlined"
             fullWidth
         >
-            <Button variant="contained" onClick={goToDeckSelector}>Return to Deck Loader</Button>
+            <Button variant="contained" onClick={goToDeckSelector}>Back to Decks</Button>
         </ButtonGroup>
     </Dialog>
 )

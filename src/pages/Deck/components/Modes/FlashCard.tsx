@@ -37,7 +37,7 @@ const flashCard = (props: FlashCardProps) => {
                     </div>
                 </CardContent>
             ) : (
-                <CardContent onClick={props.showAnswerFc} data-testid="card-front">
+                <CardContent onClick={props.showAnswerFc} data-testid="card-front" className="card-front">
                     <Typography color="textSecondary">{props.children}</Typography>
                     <h1 className="lang-from" data-testid="card-question">"{props.langFrom[props.randomNum]}"</h1>
                     <div className="btn-container">

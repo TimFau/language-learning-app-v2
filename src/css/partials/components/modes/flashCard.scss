@@ -4,6 +4,8 @@
 }
 .flash-card-container {
 	width: 100%;
+	flex-grow:1;
+	margin-top: 35px;
 	h1 {
 		color: $dark-shades;
 	}
@@ -24,6 +26,11 @@
 	.MuiCardContent-root:last-child {
 		padding: 60px 0;
 		min-width: 50vw;
+	}
+	.card-front {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
 	}
 }
 .flash-card-button {

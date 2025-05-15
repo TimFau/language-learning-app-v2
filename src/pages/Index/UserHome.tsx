@@ -36,7 +36,12 @@ export default function Account() {
 
     useEffect(function () {
         getAccountDetails();
-    })
+    }, []);
+
+    // Scroll to top on mount (fixes mobile reload issue)
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     
     return (
         <div className="container page-container">
