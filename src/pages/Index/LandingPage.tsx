@@ -217,7 +217,6 @@ export default function GuestPage(props: LoggedOutProps) {
                             id="firstName"
                             className="input"
                             label="First Name"
-                            autoFocus
                             value={firstName}
                             onChange={handleChange}
                             error={firstNameError !== ''}
