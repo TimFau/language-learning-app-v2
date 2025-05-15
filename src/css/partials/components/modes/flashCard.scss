@@ -6,6 +6,9 @@
 	width: 100%;
 	flex-grow:1;
 	margin-top: 35px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	h1 {
 		color: $dark-shades;
 	}
@@ -35,4 +38,21 @@
 }
 .flash-card-button {
 	margin-bottom: 30px;
+}
+.flash-card-outer-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+}
+.btn-container.flash-card-button-row {
+	margin-top: 24px;
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	max-width: 400px;
+	&.flipped {
+		justify-content: space-between;
+	}
 }
