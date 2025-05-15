@@ -10,6 +10,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import AuthContext from 'context/auth-context';
 import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Login() {
 
@@ -95,50 +97,71 @@ export default function Login() {
     }
 
     return (
-        <Dialog open={authCtx.loginOpen} onClose={() => authCtx.onLoginOpen(false, false)} className="login-dialog">
-            <DialogTitle>
-                {authCtx.isNewUser ? 'Account Created!' : 'Login'}
+        <Dialog
+            open={authCtx.loginOpen}
+            onClose={() => authCtx.onLoginOpen(false, false)}
+            className="login-dialog"
+            fullWidth
+            maxWidth="xs"
+            PaperProps={{
+                sx: { borderRadius: 3, p: 2 }
+            }}
+        >
+            <DialogTitle sx={{ m: 0, p: 0, pb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span style={{ flex: 1, fontWeight: 700, fontSize: 24, color: '#23234B' }}>
+                    {authCtx.isNewUser ? 'Account Created!' : 'Log in'}
+                </span>
+                <IconButton
+                    aria-label="close"
+                    onClick={() => authCtx.onLoginOpen(false, false)}
+                    sx={{
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                    data-testid="login-close-button"
+                >
+                    <CloseIcon />
+                </IconButton>
             </DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    {authCtx.isNewUser && 'Please login below'}
-                </DialogContentText>
-                <TextField 
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 0 }}>
+                <TextField
                     autoFocus
                     margin="dense"
                     value={email}
-                    onChange={handleEmail} 
+                    onChange={handleEmail}
                     error={emailError !== ''}
                     helperText={emailError}
                     label="Email Address"
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     inputProps={{ "data-testid": "login-email-input" } as any}
+                    type="email"
+                    sx={{ mb: 2 }}
                 />
-                <TextField 
+                <TextField
                     margin="dense"
                     value={password}
-                    onChange={handlePassword} 
+                    onChange={handlePassword}
                     error={passError !== ''}
                     helperText={passError}
                     label="Password"
                     type="password"
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                     inputProps={{ "data-testid": "login-password-input" } as any}
+                    sx={{ mb: 2 }}
                 />
-            </DialogContent>
-            <DialogActions>
                 <Button
                     onClick={() => login()}
                     variant="contained"
                     color="primary"
                     data-testid="login-submit-button"
                     disabled={loading}
+                    fullWidth
+                    sx={{ mt: 1, mb: 1 }}
                 >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
                 </Button>
-            </DialogActions>
+            </DialogContent>
         </Dialog>
     )
 }

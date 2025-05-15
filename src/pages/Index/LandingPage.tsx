@@ -145,12 +145,12 @@ export default function GuestPage(props: LoggedOutProps) {
                             setAlertMsgs([]); 
                             return;
                         } else {
-                            const errMsg = 'Account created but login failed (no token). Please try logging in manually.';
+                            const errMsg = 'Account created but log in failed (no token). Please try logging in manually.';
                             setAlertMsgs([errMsg]);
                             return;
                         }
                     } catch (loginError) {
-                        const errMsg = 'Account created but failed during login process. Please try logging in manually.';
+                        const errMsg = 'Account created but failed during log in process. Please try logging in manually.';
                         setAlertMsgs([errMsg]);
                         return;
                     }
@@ -272,7 +272,7 @@ export default function GuestPage(props: LoggedOutProps) {
                     />
                     <div className="login-link-container">
                         <span className="acctTxt">Already have an account?</span> 
-                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link" className="signIn">Login</Link>
+                        <Link underline="hover" onClick={() => authCtx.onLoginOpen(true, false)} data-testid="login-link" className="signIn">Log in</Link>
                     </div>
                     <Button variant="contained" color="primary" fullWidth onClick={() => createAccount()} data-testid="register-submit-button" className="create-account-button">Create Account</Button>
                 </form>
