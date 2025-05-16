@@ -5,6 +5,10 @@
 	padding: 25px 10%;
 	width: 100%;
 	box-sizing: border-box;
+	z-index: 100;
+	padding-bottom: env(safe-area-inset-bottom, 16px); // for iOS safe area
+	height: auto; // fallback
+	min-height: 64px; // recommended height for padding reference
 	@media screen and (max-width: 660px) {
 		padding: 25px;
 	}

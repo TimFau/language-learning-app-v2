@@ -27,8 +27,8 @@
     "universal-cookie": "^8.0.1"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build && cp CNAME build/",
+    "dev": "vite --host",
+    "build": "tsc && vite build && cp CNAME build/ && cp build/index.html build/404.html",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",

@@ -1,5 +1,4 @@
 body {
-  height: 100vh;
   background: $background-main;
   margin: 0;
 }
@@ -24,6 +23,7 @@ body {
 	flex-flow: column;
 	flex-grow: 1;
 	@include max-width-wrapper;
+
 	.wrapper {
 		display: flex;
 		flex-direction: column;
@@ -31,6 +31,8 @@ body {
 	}
 }
 header {
+	min-height: 80px;
+	justify-content: center;
 	a {
 		color: white;
 		text-decoration: none;
