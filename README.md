@@ -3,6 +3,8 @@
 **LangPulse** is a modern, flexible web app for building, studying, and sharing language flashcard decks. Designed for learners who want total control over their vocabulary, LangPulse lets you instantly turn any Google Sheet into a quiz-ready deck and join a growing community of language enthusiasts.
 
 > **Note:** This project is in active development. The app is accessible at [langpulse.com](https://langpulse.com) and is **not supported for local or self-hosted use** due to its reliance on a private Directus backend.
+>
+> **Hosting Notice:** LangPulse is hosted on fly.io with auto start/stop enabled. As a result, the API may be slow to respond on the first request after a period of inactivity. This is expected while the project is still in development.
 
 ## Features
 
