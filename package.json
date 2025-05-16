@@ -28,7 +28,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp CNAME build/",
+    "build": "tsc && vite build && cp CNAME build/ && cp build/index.html build/404.html",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
