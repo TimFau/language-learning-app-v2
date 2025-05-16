@@ -1,6 +1,8 @@
 /// Flashcard
 .page-container.Flashcard {
 	padding-top: 0;
+	height: calc(100dvh - 120px); // header height + page-container padding
+	// padding-bottom: 80px; // Add if we have issues with overlapping browser bar
 }
 .flash-card-container {
 	width: 100%;
