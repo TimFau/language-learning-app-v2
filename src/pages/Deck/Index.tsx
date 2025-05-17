@@ -9,6 +9,7 @@ import Keyboard from './components/Modes/Keyboard';
 import DeckDialog from './components/DeckOptionsModal';
 import BottomButtonsContainer from './components/BottomButtonsContainer';
 import DeckFinishedModal from './components/DeckFinishedModal';
+import ResumeProgressDialog from './components/ResumeProgressDialog';
 
 import { keyboardModeHandleChangeEvent, handleSubmitType } from './types';
 import { wordBankHelper, generateRandomNum } from './helpers';
@@ -61,6 +62,10 @@ function Deck(props: RootState) {
         return stored === null ? false : stored === 'true';
     });
     const { setDeckDialogOpen, setDeckDialogClose } = props;
+
+    // Progress persistence state
+    const [showResumeDialog, setShowResumeDialog] = useState(false);
+    const [pendingLoadProgress, setPendingLoadProgress] = useState<any>(null);
 
     /**
      * Selects a new flashcard from the deck. 
@@ -261,6 +266,87 @@ function Deck(props: RootState) {
     // Only show DeckFinishedModal when deck is loaded, options modal is closed, and deck is finished
     const showDeckFinishedModal = !props.deckDialogOpen && deckDataLoaded && langArr.langOneArr.length === 0;
 
+    // Save progress to localStorage (should be migrated to DB for cross-device persistence)
+    function saveProgress() {
+        const progress = {
+            langArr,
+            langOneArrInit,
+            langTwoArrInit,
+            language1,
+            language2,
+            langFrom,
+            langTo,
+            translationInputValue,
+            wordBank,
+            translateMode,
+            inputMode,
+            showAnswer,
+            success,
+            incorrect,
+            currentDeckName,
+            deckDataLoaded,
+            randomNum,
+            initialCount,
+            autoSpeak,
+            name,
+            id
+        };
+        localStorage.setItem('deckProgress', JSON.stringify(progress));
+    }
+    // Load progress from localStorage
+    function loadProgress(progress: any) {
+        setLangArr(progress.langArr);
+        setLangOneArrInit(progress.langOneArrInit);
+        setLangTwoArrInit(progress.langTwoArrInit);
+        setLanguage1(progress.language1);
+        setLanguage2(progress.language2);
+        setLangFrom(progress.langFrom);
+        setLangTo(progress.langTo);
+        setTranslationInputValue(progress.translationInputValue);
+        setWordBank(progress.wordBank);
+        setTranslateMode(progress.translateMode);
+        setInputMode(progress.inputMode);
+        setShowAnswer(progress.showAnswer);
+        setSuccess(progress.success);
+        setIncorrect(progress.incorrect);
+        setCurrentDeckName(progress.currentDeckName);
+        setDeckDataLoaded(progress.deckDataLoaded);
+        setRandomNum(progress.randomNum);
+        setInitialCount(progress.initialCount);
+        setAutoSpeak(progress.autoSpeak);
+        // Don't set name/id, those come from URL
+        props.setDeckStartedTrue();
+        props.setDeckDialogClose();
+    }
+    // Clear progress from localStorage
+    function clearProgress() {
+        localStorage.removeItem('deckProgress');
+    }
+    // Save progress on relevant state changes
+    useEffect(() => {
+        if (deckDataLoaded && langArr.langOneArr.length > 0) {
+            saveProgress();
+        }
+    }, [langArr, langOneArrInit, langTwoArrInit, language1, language2, langFrom, langTo, translationInputValue, wordBank, translateMode, inputMode, showAnswer, success, incorrect, currentDeckName, deckDataLoaded, randomNum, initialCount, autoSpeak]);
+    // On mount, check for saved progress
+    useEffect(() => {
+        const saved = localStorage.getItem('deckProgress');
+        if (saved) {
+            const progress = JSON.parse(saved);
+            // Only prompt if deck matches
+            if (progress.id === id && progress.name === name && progress.langArr.langOneArr.length > 0) {
+                setPendingLoadProgress(progress);
+                setShowResumeDialog(true);
+            }
+        }
+    }, [id, name]);
+    // When deck is finished, clear progress
+    useEffect(() => {
+        if (langArr.langOneArr.length === 0 && deckDataLoaded) {
+            clearProgress();
+        }
+    }, [langArr.langOneArr.length, deckDataLoaded]);
+
     return (
         <div className={"container page-container " + inputMode}>
             <div className="wrapper">
@@ -358,6 +444,20 @@ function Deck(props: RootState) {
                     <DeckFinishedModal
                         langOneArr={langArr.langOneArr}
                         goToDeckSelector={() => goToDeckSelector()}
+                    />
+                )}
+                {/* Resume Progress Modal */}
+                {showResumeDialog && (
+                    <ResumeProgressDialog
+                        open={showResumeDialog}
+                        onResume={() => {
+                            if (pendingLoadProgress) loadProgress(pendingLoadProgress);
+                            setShowResumeDialog(false);
+                        }}
+                        onStartOver={() => {
+                            clearProgress();
+                            setShowResumeDialog(false);
+                        }}
                     />
                 )}
             </div>

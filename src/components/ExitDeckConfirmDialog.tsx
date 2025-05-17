@@ -19,7 +19,8 @@ const ExitDeckConfirmDialog: React.FC<ExitDeckConfirmDialogProps> = ({ open, onC
     </DialogTitle>
     <DialogContent>
       <DialogContentText id="exit-deck-dialog-description">
-        Are you sure you want to exit the deck? You will lose your current progress.
+        Are you sure you want to exit the deck? <br />
+        <strong>Your progress is saved on this device.</strong> You can pick up where you left off if you resume this deck on the same device.
       </DialogContentText>
     </DialogContent>
     <DialogActions>
