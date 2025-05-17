@@ -63,11 +63,9 @@ export const AuthContextProvider = (props: any) => {
 
     const loginHandler = (accessToken: string, usersId: string, userName: string) => {
         console.log('loginHandler')
-        let cookieExpires = new Date();
-        cookieExpires.setMinutes(cookieExpires.getMinutes() + 20);
-        cookies.set('token', accessToken, { path: '/', expires: cookieExpires });
-        cookies.set('userId', usersId, { path: '/', expires: cookieExpires });
-        cookies.set('userName', userName, { path: '/', expires: cookieExpires });
+        cookies.set('token', accessToken, { path: '/' });
+        cookies.set('userId', usersId, { path: '/' });
+        cookies.set('userName', userName, { path: '/' });
         setUserToken(accessToken);
         setUserId(usersId);
         setUserName(userName);
