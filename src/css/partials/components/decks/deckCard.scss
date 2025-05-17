@@ -67,7 +67,7 @@
         }
     }
     .deck-name {
-		color: $dark-shades;
+		color: $primary-dark;
 		font-weight: bold;
 		font-size: 1.5rem;
         margin: 10px 0 10px 0;
@@ -75,7 +75,7 @@
 
 	.try-now-link {
 		font-weight: bold;
-		color: $main;
+		color: $cta-button-color;
 		text-decoration: none;
 		display: flex;
 		align-items: center;

@@ -16,11 +16,11 @@
 
         .MuiTypography-h6 { 
             margin-bottom: 1rem; 
-            color: $light-shades; // Use high-contrast light color
+            color: $text-primary;
         }
 
         .MuiTypography-body1 { 
-            color: $light-shades; // Use high-contrast light color
+            color: $text-secondary;
             line-height: 1.6;
         }
     }

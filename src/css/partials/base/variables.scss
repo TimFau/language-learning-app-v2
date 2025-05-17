@@ -5,8 +5,6 @@
 $font-family-base: 'Noto Sans JP', sans-serif;
 $font-family-secondary: 'PT Serif', serif;
 
-// --- NEW COLOR SCHEME --- 
-
 // Core Colors
 $primary-dark: #1A1A40;    // Primary Dark (Navy Blue)
 $accent-orange: #F7931E;   // Accent (Soft Orange)
@@ -23,27 +21,12 @@ $cta-button-color: #1A2D72; // CTA Button (Indigo Blue)
 $input-border-color: #D6D6D6; // Input Border (Light Gray)
 $input-focus-border-color: rgba(26, 26, 64, 0.8); // Input Focus Border (Navy Blue w/ opacity)
 
-// --- Compatibility Mappings --- 
-$light-shades: $background-main; // Previously background/light text
-$dark-shades: $primary-dark;     // Previously dark background/text
-$main: $cta-button-color;         // Previously main identity color, map to CTA button
-$dark-text: $text-primary;       // Previously dark text
-$light-text: $text-secondary;    // Previously light text
-
 // --- Framework / Status Colors --- 
 $primary: $primary-dark; // Map framework primary to new primary-dark
 $success: #69a769; 
-$warning: #e69731; // Consider aligning with $accent-orange if appropriate
-$info: #24223f;    // Consider aligning with $primary-dark or $cta-button-color if appropriate
+$warning: $accent-orange;
+$info: $primary-dark;
 $danger: #f44336; 
-
-
-// --- END NEW COLOR SCHEME & MAPPINGS ---
-
-// Remove or update the MUI override if not using $main anymore
-// .palette.primary {
-//     color: $main; 
-// }
 
 // Breakpoint for mobile navigation (used for BottomNavigation)
 $mobile-nav-breakpoint: 660px;

@@ -52,7 +52,7 @@ export default function UserDecks(props: UserListsProps) {
                                 Your deck collection is empty.
                             </Typography>
                             <Typography variant="body1">
-                                Click the "Add Deck" button above to create your own, or explore the "Community Decks" section to find and save decks shared by others!
+                                Click the "+" or "Add Deck" button to create your own, or explore the "Community Decks" section to find and save decks shared by others!
                             </Typography>
                         </div>
                     ) : (
