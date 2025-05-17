@@ -49,15 +49,17 @@ header {
 	}
 }
 .progress-container {
-	padding-top: 25px;
+	padding: 25px 0 15px 0;
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 	.progress {
 		height: 30px;
 	}
 	.progress-text {
 		position: relative;
-		top: 10px;
-		color: grey;
+		color: $text-secondary;
 	}
 }
 .spinner {

@@ -56,7 +56,10 @@ function Deck(props: RootState) {
     const [randomNum, setRandomNum] = useState<number>(0);
     const [initialCount, setInitialCount] = useState<number>(0);
     const [checkAccents] = useState<boolean>(false);
-    const [autoSpeak, setAutoSpeak] = useState(false);
+    const [autoSpeak, setAutoSpeak] = useState(() => {
+        const stored = sessionStorage.getItem('autoSpeakFlashcard');
+        return stored === null ? false : stored === 'true';
+    });
     const { setDeckDialogOpen, setDeckDialogClose } = props;
 
     /**
@@ -188,16 +191,23 @@ function Deck(props: RootState) {
 
     // Helper to determine language code for langFrom
     const getLangFromLangCode = () => {
-        // You may want to improve this logic for more languages
         const lang = translateMode === '1to2' ? language1 : language2;
-        if (lang && lang.toLowerCase().includes('spanish')) return 'es-ES';
-        if (lang && lang.toLowerCase().includes('french')) return 'fr-FR';
-        if (lang && lang.toLowerCase().includes('german')) return 'de-DE';
-        if (lang && lang.toLowerCase().includes('italian')) return 'it-IT';
-        if (lang && lang.toLowerCase().includes('portuguese')) return 'pt-PT';
-        if (lang && lang.toLowerCase().includes('russian')) return 'ru-RU';
-        if (lang && lang.toLowerCase().includes('japanese')) return 'ja-JP';
-        if (lang && lang.toLowerCase().includes('chinese')) return 'zh-CN';
+        const langMap: { [key: string]: string } = {
+            spanish: 'es-ES',
+            french: 'fr-FR',
+            german: 'de-DE',
+            italian: 'it-IT',
+            portuguese: 'pt-PT',
+            russian: 'ru-RU',
+            japanese: 'ja-JP',
+            chinese: 'zh-CN',
+        };
+        if (lang) {
+            const lower = lang.toLowerCase();
+            for (const key in langMap) {
+                if (lower.includes(key)) return langMap[key];
+            }
+        }
         return 'en-US';
     };
 
@@ -244,6 +254,10 @@ function Deck(props: RootState) {
         deckOptions(name, id)
     }, [name, id, setDeckDialogClose, setDeckDialogOpen])
 
+    useEffect(() => {
+        sessionStorage.setItem('autoSpeakFlashcard', autoSpeak.toString());
+    }, [autoSpeak]);
+
     // Only show DeckFinishedModal when deck is loaded, options modal is closed, and deck is finished
     const showDeckFinishedModal = !props.deckDialogOpen && deckDataLoaded && langArr.langOneArr.length === 0;
 
@@ -259,15 +273,19 @@ function Deck(props: RootState) {
                         />
                         <form onSubmit={handleSubmit}  id="mainApp">
                             {/* Auto-speak toggle */}
-                            <label style={{ display: 'block', marginBottom: 8 }}>
-                                <input
-                                    type="checkbox"
-                                    checked={autoSpeak}
-                                    onChange={e => setAutoSpeak(e.target.checked)}
-                                    style={{ marginRight: 8 }}
-                                />
-                                Automatically speak each question
-                            </label>
+                            <div className="auto-speak-toggle">
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={autoSpeak}
+                                        onChange={e => setAutoSpeak(e.target.checked)}
+                                        aria-checked={autoSpeak}
+                                        aria-label="Automatically speak each question"
+                                    />
+                                    <span className="slider" />
+                                </label>
+                                <span>Automatically speak each question</span>
+                            </div>
                             {inputMode === 'Flashcard' &&
                                 <FlashCard 
                                 showAnswerFc={showAnswerFc}
