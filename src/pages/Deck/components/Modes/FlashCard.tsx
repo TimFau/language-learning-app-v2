@@ -2,6 +2,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { useEffect } from 'react';
 
 interface FlashCardProps {
     showAnswer: boolean,
@@ -11,22 +13,64 @@ interface FlashCardProps {
     getCard: () => void,
     archiveCard: (event: React.UIEvent<HTMLElement>) => void,
     showAnswerFc: (event: React.UIEvent<HTMLElement>) => void,
-    children: React.ReactNode    
+    children: React.ReactNode,
+    autoSpeak: boolean,
+    langFromLangCode: string
 }
 
+const speak = (text: string, lang: string = 'en') => {
+    if ('speechSynthesis' in window) {
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        // Try to find a voice that matches the lang exactly
+        const voice = voices.find(v => v.lang === lang) 
+            // Or fallback to any voice that starts with the language (e.g., 'es')
+            || voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+        const utterance = new window.SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        if (voice) {
+            utterance.voice = voice;
+        }
+        synth.speak(utterance);
+    }
+};
+
 const flashCard = (props: FlashCardProps) => {
+    useEffect(() => {
+        if (!props.showAnswer && props.autoSpeak) {
+            speak(props.langFrom[props.randomNum], props.langFromLangCode);
+        }
+        // Only run when question changes or autoSpeak toggles
+    }, [props.langFrom, props.randomNum, props.showAnswer, props.autoSpeak, props.langFromLangCode]);
+
     return(
         <div className="flash-card-outer-container">
             <Card className="flash-card-container" data-testid="flashcard">
                 {props.showAnswer ? (
                     <CardContent data-testid="card-back">
                         <Typography color="textSecondary">Answer</Typography>
-                        <h1 className="lang-to" data-testid="card-answer">"{props.langTo[props.randomNum]}"</h1>
+                        <div className="flash-card-answer-row">
+                            <h1 className="lang-to" data-testid="card-answer">
+                                "{props.langTo[props.randomNum]}"
+                            </h1>
+                        </div>
                     </CardContent>
                 ) : (
                     <CardContent onClick={props.showAnswerFc} data-testid="card-front" className="card-front">
                         <Typography color="textSecondary">{props.children}</Typography>
-                        <h1 className="lang-from" data-testid="card-question">"{props.langFrom[props.randomNum]}"</h1>
+                        <div className="flash-card-question-row">
+                            <h1 className="lang-from" data-testid="card-question">
+                                "{props.langFrom[props.randomNum]}"
+                            </h1>
+                            <Button
+                                aria-label="Pronounce question"
+                                onClick={e => { e.stopPropagation(); speak(props.langFrom[props.randomNum], props.langFromLangCode); }}
+                                size="small"
+                                className="pronounce-btn"
+                            >
+                                <VolumeUpIcon />
+                            </Button>
+                        </div>
                     </CardContent>
                 )}
             </Card>
