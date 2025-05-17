@@ -16,29 +16,6 @@
         align-items: top;
         text-align: center;
     }
-    .start{
-        .greeting {
-            display: flex;
-            align-items: center;
-            h1 {
-                color: $light-shades;
-                margin: 7px 0 0 0;
-                @include anona-regular;
-                font-size: 47px;
-            }
-        }
-        h2 {
-            display: none;
-            font-size: 18px;
-            line-height: 1.7em;
-            color: $light-shades;
-            margin: 10px 0 0px 0;
-            text-align: left;
-            span {
-                display: block;
-            }
-        }
-    }
     .end {
         &.MuiCardActions-root {
             display: flex;
@@ -46,13 +23,5 @@
             flex-direction: column;
             padding: 0;
         }
-    }
-}
-#userListsContainer {
-    > h2 {
-        color: $light-shades;
-        text-align: left;
-        max-width: 1420px;
-        margin: 0 auto 15px auto;
     }
 }

@@ -34,13 +34,13 @@ const flashCard = (props: FlashCardProps) => {
                 <div className="btn-container flipped flash-card-button-row">
                     <Button
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         onClick={props.getCard}
                         data-testid="wrong-answer-button"
                     >I got it wrong</Button >
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="success"
                         onClick={props.archiveCard}
                         data-testid="correct-answer-button"
                     >I got it right</Button >

@@ -15,17 +15,41 @@ declare module '@mui/system' {
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#677E9D',
-      main: '#677E9D',
-      dark: '#677E9D',
+      light: '#333366',
+      main: '#1A1A40',
+      dark: '#00001a',
       contrastText: '#fff',
     },
     secondary: {
-      light: '#261F3C',
-      main: '#261F3C',
-      dark: '#261F3C',
+      light: '#F9B75C',
+      main: '#F7931E',
+      dark: '#C96A00',
       contrastText: '#fff',
-    }
+    },
+    background: {
+      default: '#FDFCFB',
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#1A1A40',
+      secondary: '#444444',
+    },
+    success: {
+      main: '#69a769',
+      contrastText: '#fff',
+    },
+    warning: {
+      main: '#F7931E',
+      contrastText: '#fff',
+    },
+    info: {
+      main: '#1A1A40',
+      contrastText: '#fff',
+    },
+    error: {
+      main: '#f44336',
+      contrastText: '#fff',
+    },
   },
 });
 

@@ -62,9 +62,6 @@ export default function Nav() {
                     <Link to="/" className="logo-link">
                         <img src={`${import.meta.env.BASE_URL}images/langpulse-logo.png`} alt="LangPulse Logo" className="nav-logo" />
                     </Link>
-                    <div className="start">
-                        {/* Items moved to .end div */}
-                    </div>
                     <div className="end">
                         {deckStarted &&
                             <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
