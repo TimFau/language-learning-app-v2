@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Use custom classNames instead of the MUI names when styling content with SCSS. This is cleaner to read, and also allows greater flexability if I want to switch away from MUI in the future 
