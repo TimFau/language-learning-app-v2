@@ -41,6 +41,19 @@ const CommunityDecks = () => {
             <h1>Loading...</h1>
         )
     }
+
+    // Handle 401 Unauthorized error
+    function hasStatusCode(err: any): err is { statusCode: number } {
+        return err && typeof err.statusCode === 'number';
+    }
+    const unauthorized = (error && error.networkError && hasStatusCode(error.networkError) && error.networkError.statusCode === 401) ||
+        (savedDecksError && savedDecksError.networkError && hasStatusCode(savedDecksError.networkError) && savedDecksError.networkError.statusCode === 401);
+    if (unauthorized) {
+        authCtx.onLogout();
+        authCtx.onLoginOpen(true, false);
+        return null;
+    }
+
     if (error || savedDecksError) {
         return (
             <h1>Error: ${error?.message || savedDecksError?.message}</h1>

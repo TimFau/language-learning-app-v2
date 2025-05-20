@@ -30,6 +30,12 @@ export default function Account() {
             return true
         })
         .catch(error => {
+            // Handle token expiration (401 Unauthorized)
+            if (error && error.networkError && error.networkError.statusCode === 401) {
+                authCtx.onLogout();
+                authCtx.onLoginOpen(true, false);
+                return;
+            }
             console.error('catch', error);
         })
     }
