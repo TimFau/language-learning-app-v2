@@ -33,6 +33,7 @@
         vertical-align: middle;
         justify-content: space-between;
         align-items: center;
+        min-height: 28px; // Ensures height consistency
 		margin-bottom: 10px;
         .MuiSvgIcon-root,
         .MuiAvatar-root  {
@@ -88,4 +89,16 @@
 			font-size: 1.1rem;
 		}
 	}
+}
+
+// Skeleton loader styles for deck cards
+.deck-card.deck-card-skeleton {
+  pointer-events: none;
+  .card-content-top {
+    .deck-info {
+      .deck-skeleton-icon {
+        margin-right: 8px;
+      }
+    }
+  }
 }
