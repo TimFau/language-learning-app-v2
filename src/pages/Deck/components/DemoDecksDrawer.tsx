@@ -20,7 +20,7 @@ interface DemoDeckDrawerProps {
 }
 
 // Artificial delay for skeleton testing
-const ENABLE_ARTIFICIAL_DELAY = true;
+const ENABLE_ARTIFICIAL_DELAY = false;
 const ARTIFICIAL_DELAY_MS = 2000;
 
 export default function DemoDecks(props: DemoDeckDrawerProps) {
@@ -33,7 +33,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
         const fetchData = () => deckService.getDemoDecks().then(
             (result) => {
                 setItems(result);
-                // setLoading(false);
+                setLoading(false);
             },
             // Note: it's important to handle errors here
             // instead of a catch() block so that we don't swallow
