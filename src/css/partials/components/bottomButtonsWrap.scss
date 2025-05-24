@@ -30,7 +30,7 @@
 			color: $success;
 			display: block;
 			margin: 0;
-			font-size: 24px;
+			font-size: $font-size-xl;
 		}
 		button {
 			background: #51B53F;
@@ -48,7 +48,7 @@
 			color: $danger;
 			display: block;
 			margin: 0 0 5px 0;
-			font-size: 24px;
+			font-size: $font-size-xl;
 			font-weight: bold;
 			line-height: 15px;
 		}

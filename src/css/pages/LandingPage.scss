@@ -11,7 +11,7 @@
 // $background-color: #f8f9fa; // Light background for the page - REMOVED
 
 .landing-page-container {
-    font-family: sans-serif; // TODO: Consider using $font-family-base from variables.scss
+    font-family: $font-family-base;
     max-width: 1000px; // Constrain width for better readability on large screens
     margin: 0 auto; // Center the container
     padding: 20px;
@@ -53,14 +53,14 @@
         .hero-text {
             flex: 1;
             h1 {
-                font-size: 36px;
+                font-size: $font-size-h2;
                 margin-top: 0;
                 margin-bottom: 15px;
                 line-height: 1.2;
                 color: $text-primary;
             }
             p {
-                font-size: 18px;
+                font-size: $font-size-lg;
                 color: $text-secondary; // Use new variable
             }
         }
@@ -82,7 +82,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
         h3 {
-            font-size: 28px;
+            font-size: $font-size-h3;
             text-align: center;
             margin-bottom: 30px;
         }
@@ -175,7 +175,7 @@
             //     }
             // }
             .demo-button {
-                 font-size: 12px; // Smaller button text
+                 font-size: $font-size-xs; // Smaller button text
                  padding: 6px 12px !important; // Adjust padding
             }
         }
@@ -184,11 +184,8 @@
             margin-bottom: 40px;
              gap: 20px;
             .hero-text {
-                h1 {
-                    font-size: 28px;
-                }
                 p {
-                    font-size: 16px;
+                    font-size: $font-size-base;
                 }
             }
              .hero-image {
@@ -199,7 +196,7 @@
         .landing-signup {
              padding: 20px;
              h3 {
-                 font-size: 24px;
+                 font-size: $font-size-xl;
              }
             .form-row {
                 flex-direction: column;
