@@ -205,7 +205,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                         <InfoOutlinedIcon className="deck-management-modal-sheet-info-icon" fontSize="small" />
                     </IconButton>
                 </div>
-                <Dialog open={infoModalOpen} onClose={() => setInfoModalOpen(false)}>
+                <Dialog open={infoModalOpen} onClose={() => setInfoModalOpen(false)} className='deck-management-modal'>
                     <div className="deck-management-modal-header-row">
                         <DialogTitle className="deck-management-modal-title">How to share your Google Sheet</DialogTitle>
                         <IconButton

@@ -1,99 +1,97 @@
 .deck-management-modal {
-  &-sheet-info-row {
-    display: flex;
-    align-items: center;
-    margin-top: $spacing-xs;
-    margin-bottom: $spacing-sm;
-    font-size: $font-size-base;
-  }
-
-  &-sheet-info-text {
-    margin-right: $spacing-xs + 2px;
-    color: $text-secondary;
-  }
-
-  &-sheet-info-icon-btn {
-    padding: 2px;
-    margin-left: 2px;
-    line-height: 1;
-  }
-
-  &-sheet-info-icon {
-    color: $cta-button-color;
-    cursor: pointer;
-    vertical-align: middle;
-  }
-
-  &-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 $spacing-sm 0 $spacing-base;
-    padding-top: 6px;
-  }
-
-  &-title {
-    flex: 1;
-    margin: 0;
-    font-size: $font-size-lg;
-    font-weight: 600;
-    line-height: $line-height-heading;
-    letter-spacing: 0.01em;
-  }
-
-  &-close-btn {
-    color: $text-secondary;
-    background: transparent;
-    &:hover, &:focus {
-      color: $cta-button-color;
-      background: $background-main;
+    .MuiDialogContent-root {
+        padding-top: 0;
     }
-  }
-
-  &-sheet-modal-content {
-    padding: $spacing-sm 0 0 0;
-    min-width: 270px;
-  }
-
-  &-sheet-modal-img-placeholder {
-    margin: $spacing-base 0 $spacing-sm 0;
-    width: 100%;
-    min-height: 80px;
-    background: $background-main;
-    border: 1px dashed $input-border-color;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $text-secondary;
-    font-size: $font-size-sm;
-    img {
-      max-width: 100%;
-      height: auto;
+    &-sheet-info-row {
+        display: flex;
+        align-items: center;
+        margin-top: $spacing-xs;
+        margin-bottom: $spacing-sm;
+        font-size: $font-size-base;
     }
-  }
 
-  &-sheet-modal-back-btn {
-    display: block;
-    margin: $spacing-lg auto 0 auto;
-    padding: 7px 24px;
-    background: $cta-button-color;
-    color: $white;
-    border: none;
-    border-radius: 4px;
-    font-size: $font-size-base;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    &:hover,
-    &:focus {
-      background: darken($cta-button-color, 10%);
-      outline: none;
+    &-sheet-info-text {
+        margin-right: $spacing-xs + 2px;
+        color: $text-secondary;
     }
-  }
 
-  &-sheet-tooltip {
-    max-width: 270px;
-    font-size: $font-size-sm;
-    line-height: $line-height-base;
-  }
+    &-sheet-info-icon-btn {
+        padding: 2px;
+        margin-left: 2px;
+        line-height: 1;
+    }
+
+    &-sheet-info-icon {
+        color: $cta-button-color;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+
+    &-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 $spacing-sm 0 $spacing-base;
+        padding-top: 6px;
+    }
+
+    &-title {
+        flex: 1;
+        margin: 0;
+        font-size: $font-size-lg;
+        font-weight: 600;
+        line-height: $line-height-heading;
+        letter-spacing: 0.01em;
+    }
+
+    &-close-btn {
+        color: $text-secondary;
+        background: transparent;
+        &:hover, &:focus {
+        color: $cta-button-color;
+        background: $background-main;
+        }
+    }
+
+    &-sheet-modal-content {
+        ol {
+            margin: 0;
+        }
+    }
+
+    &-sheet-modal-img-placeholder {
+        margin: $spacing-base 0 $spacing-sm 0;
+        width: 100%;
+        min-height: 80px;
+        background: $background-main;
+        border: 1px dashed $input-border-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $text-secondary;
+        font-size: $font-size-sm;
+        img {
+        max-width: 100%;
+        height: auto;
+        }
+    }
+
+    &-sheet-modal-back-btn {
+        display: block;
+        margin: $spacing-lg auto 0 auto;
+        padding: 7px 24px;
+        background: $cta-button-color;
+        color: $white;
+        border: none;
+        border-radius: 4px;
+        font-size: $font-size-base;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        &:hover,
+        &:focus {
+        background: darken($cta-button-color, 10%);
+        outline: none;
+        }
+    }
 } 
