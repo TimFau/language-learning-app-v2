@@ -4,15 +4,15 @@
 	}
 	.word-bank {
 		flex-direction: column;
-		padding: 5px 25px;
+		padding: $spacing-xs $spacing-lg;
 		.MuiCard-root > div {
 			justify-content: center;
 		}
 		.MuiCardActions-root {
 			flex-direction: column;
-			margin: 0px 30%;
+			margin: 0px 15%;
 			button {
-				margin-bottom: 15px;
+				margin-bottom: $spacing-base - 1px;
 				@media screen and (min-width: 600px) {
 					min-width: 500px;
 				}

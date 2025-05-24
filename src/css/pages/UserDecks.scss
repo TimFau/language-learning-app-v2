@@ -3,13 +3,13 @@
 }
 .top-container {
     max-width: 1440px;
-    margin: 40px auto 0 auto;
+    margin: $spacing-xl auto 0 auto;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-end;
     .top-container-inner {
-        width: calc(100% - 20px);
+        width: calc(100% - #{$spacing-base});
         display: flex;
         flex-direction: row;
         justify-content: space-between;

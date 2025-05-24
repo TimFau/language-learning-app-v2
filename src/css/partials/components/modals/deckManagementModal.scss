@@ -2,13 +2,13 @@
   &-sheet-info-row {
     display: flex;
     align-items: center;
-    margin-top: 4px;
-    margin-bottom: 8px;
+    margin-top: $spacing-xs;
+    margin-bottom: $spacing-sm;
     font-size: $font-size-base;
   }
 
   &-sheet-info-text {
-    margin-right: 6px;
+    margin-right: $spacing-xs + 2px;
     color: $text-secondary;
   }
 
@@ -28,7 +28,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 8px 0 16px;
+    padding: 0 $spacing-sm 0 $spacing-base;
+    padding-top: 6px;
   }
 
   &-title {
@@ -36,7 +37,7 @@
     margin: 0;
     font-size: $font-size-lg;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: $line-height-heading;
     letter-spacing: 0.01em;
   }
 
@@ -50,12 +51,12 @@
   }
 
   &-sheet-modal-content {
-    padding: 8px 0 0 0;
+    padding: $spacing-sm 0 0 0;
     min-width: 270px;
   }
 
   &-sheet-modal-img-placeholder {
-    margin: 16px 0 8px 0;
+    margin: $spacing-base 0 $spacing-sm 0;
     width: 100%;
     min-height: 80px;
     background: $background-main;
@@ -73,7 +74,7 @@
 
   &-sheet-modal-back-btn {
     display: block;
-    margin: 18px auto 0 auto;
+    margin: $spacing-lg auto 0 auto;
     padding: 7px 24px;
     background: $cta-button-color;
     color: $white;
@@ -90,9 +91,9 @@
     }
   }
 
-  &__sheet-tooltip {
+  &-sheet-tooltip {
     max-width: 270px;
     font-size: $font-size-sm;
-    line-height: 1.5;
+    line-height: $line-height-base;
   }
 } 

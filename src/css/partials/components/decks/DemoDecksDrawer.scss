@@ -1,9 +1,9 @@
 .demo-drawer {
 	.drawer-header {
-		padding: 20px 20px 0 20px;
+		padding: $spacing-base $spacing-base 0 $spacing-base;
 	}
 	.drawer-content {
-		padding: 20px;
+		padding: $spacing-base;
 		max-width: 100%;
 		overflow-y: auto;
 	}
@@ -11,8 +11,8 @@
 	.title {
 		font-size: $font-size-xl;
 		font-weight: bold;
-		margin-bottom: 10px;
-		margin-right: 40px;
+		margin-bottom: $spacing-sm + 2px;
+		margin-right: $spacing-xl;
 		span {
 			display: inline-block;
 		}

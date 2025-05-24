@@ -4,18 +4,18 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 20px;
+    gap: $spacing-base;
 
     // Styles for the empty state message
     .empty-decks-message {
         text-align: center;
-        padding: 3rem 1rem; 
+        padding: $spacing-xl $spacing-base;
         width: 100%; // Take full width of the container
         max-width: 500px; 
-        margin: 2rem auto; // Center the message block
+        margin: $spacing-xl auto;
 
         .MuiTypography-h6 { 
-            margin-bottom: 1rem; 
+            margin-bottom: $spacing-base;
             color: $text-primary;
         }
 

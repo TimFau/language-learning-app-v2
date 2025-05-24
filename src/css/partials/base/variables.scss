@@ -1,20 +1,34 @@
-// Styling Rule: Always use an existing color variable from this file for any new styles. If a new color is needed, add a variable for it here.
+// ============================================================================
+// DESIGN SYSTEM VARIABLES
+// ============================================================================
+
 // Font Families
-$font-family-base: 'Noto Sans JP', sans-serif;
-$font-family-secondary: 'PT Serif', serif;
-$font-family-monospace: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+$font-family-base: 'Noto Sans JP', sans-serif; // Main UI font
+$font-family-secondary: 'PT Serif', serif;    // For headings, accents
+$font-family-monospace: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; // Code/monospace
 
 // Font Sizes
-$font-size-base: 1rem; // 16px
-$font-size-sm: 0.875rem; // 14px
-$font-size-xs: 0.75rem; // 12px
-$font-size-lg: 1.25rem; // 20px
-$font-size-xl: 1.5rem; // 24px
-$font-size-h2: 2.25rem; // 36px
-$font-size-h3: 1.5625rem; // 25px
-$font-size-display-1: 5rem; // 80px
+$font-size-xs: 0.75rem;      // 12px, captions, small text
+$font-size-sm: 0.875rem;     // 14px, buttons, labels
+$font-size-base: 1rem;       // 16px, body text
+$font-size-lg: 1.25rem;      // 20px, section headers
+$font-size-xl: 1.5rem;       // 24px, large headers
+$font-size-h2: 2.25rem;      // 36px, main page titles
+$font-size-h3: 1.5625rem;    // 25px, subtitles
+$font-size-display-1: 5rem;  // 80px, hero/landing page
 
-// Import Roboto 300, 400, 500, & 700 & PT Serif 400
+// Line Heights
+$line-height-base: 1.5;      // For body text
+$line-height-heading: 1.2;   // For headings
+
+// Spacing Scale (use for margin, padding, gap)
+$spacing-xs: 4px;    // Extra small spacing
+$spacing-sm: 8px;    // Small spacing
+$spacing-base: 16px; // Base spacing, default for most layouts
+$spacing-lg: 24px;   // Large spacing, sections
+$spacing-xl: 40px;   // Extra large spacing, page gutters
+
+// Import Roboto 300, 400, 500, & 700 & PT Serif 400 (for reference, not used directly)
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif&family=Roboto:wght@300;400;500;700&display=swap');
 
 // Customize Bootstrap variables
@@ -39,10 +53,10 @@ $input-focus-border-color: rgba(26, 26, 64, 0.8); // Input Focus Border (Navy Bl
 
 // --- Framework / Status Colors --- 
 $primary: $primary-dark; // Map framework primary to new primary-dark
-$success: #69a769; 
-$warning: $accent-orange;
-$info: $primary-dark;
-$danger: #f44336; 
+$success: #69a769;       // Success state
+$warning: $accent-orange;// Warning state
+$info: $primary-dark;    // Info state
+$danger: #f44336;        // Error/danger state
 
 // Breakpoint for mobile navigation (used for BottomNavigation)
 $mobile-nav-breakpoint: 660px;

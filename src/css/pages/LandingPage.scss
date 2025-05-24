@@ -24,8 +24,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 0; 
-        margin-bottom: 40px;
+        padding: $spacing-base 0;
+        margin-bottom: $spacing-xl;
 
         .logo-container {
             width: 190px;
@@ -47,8 +47,8 @@
     .landing-hero {
         display: flex;
         align-items: center;
-        margin-bottom: 60px;
-        gap: 30px;
+        margin-bottom: $spacing-xl + $spacing-base;
+        gap: $spacing-lg + $spacing-sm;
 
         .hero-text {
             flex: 1;
@@ -77,27 +77,27 @@
 
     .landing-signup {
         background-color: $card-background; // Use new variable (or $white)
-        padding: 40px;
+        padding: $spacing-xl;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
         h3 {
             font-size: $font-size-h3;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: $spacing-lg + $spacing-sm;
         }
 
         .form-row {
             display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
+            gap: $spacing-base + $spacing-sm;
+            margin-bottom: $spacing-lg + $spacing-xs;
             .input {
                 flex: 1; // Make first/last name inputs share space
             }
         }
 
         .input {
-            margin-bottom: 25px; // Spacing for email/password
+            margin-bottom: $spacing-lg + $spacing-xs;
             .MuiOutlinedInput-root {
                 border-radius: 8px; // Rounded corners for inputs
                 // Add focus styling using new variable
@@ -116,13 +116,13 @@
 
         .login-link-container {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: $spacing-lg + $spacing-xs;
             font-size: $font-size-xs;
             color: $text-secondary; // Use new variable
 
             .signIn {
                 cursor: pointer;
-                margin-left: 5px;
+                margin-left: $spacing-xs + 1px;
                 color: $cta-button-color; // Use new variable for link color
                 font-weight: bold;
                 text-decoration: none;
@@ -135,7 +135,7 @@
         .create-account-button {
             background-color: $cta-button-color !important; // Use new variable
             color: $white !important;
-            padding: 12px 0 !important; // Adjust padding
+            padding: $spacing-sm 0 !important;
             font-size: $font-size-sm !important;
             text-transform: none !important; // Prevent uppercase
             border-radius: 8px !important;
@@ -157,17 +157,17 @@
             }
         }
         .landing-signup {
-            padding: 30px;
+            padding: $spacing-lg + $spacing-sm;
         }
     }
 
     @media screen and (max-width: 480px) {
         max-width: 100%;
-        padding: 15px;
+        padding: $spacing-sm;
 
         .landing-header {
-            padding: 15px 0;
-            margin-bottom: 30px;
+            padding: $spacing-sm 0;
+            margin-bottom: $spacing-xl;
             // .logo-container {
             //     width: 170px;
             //     img {
@@ -176,13 +176,13 @@
             // }
             .demo-button {
                  font-size: $font-size-xs; // Smaller button text
-                 padding: 6px 12px !important; // Adjust padding
+                 padding: $spacing-xs $spacing-base !important;
             }
         }
 
         .landing-hero {
-            margin-bottom: 40px;
-             gap: 20px;
+            margin-bottom: $spacing-xl;
+             gap: $spacing-base;
             .hero-text {
                 p {
                     font-size: $font-size-base;
@@ -194,7 +194,7 @@
         }
 
         .landing-signup {
-             padding: 20px;
+             padding: $spacing-base;
              h3 {
                  font-size: $font-size-xl;
              }
@@ -203,11 +203,11 @@
                 gap: 0; // Remove gap when stacked
                 margin-bottom: 0; // Adjust spacing handled by individual inputs now
                 .input {
-                    margin-bottom: 20px; // Add margin back when stacked
+                    margin-bottom: $spacing-base;
                 }
             }
              .input {
-                 margin-bottom: 20px;
+                 margin-bottom: $spacing-base;
              }
              .login-link-container {
                  font-size: $font-size-xs;

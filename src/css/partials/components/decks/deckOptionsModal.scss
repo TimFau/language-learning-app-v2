@@ -2,15 +2,15 @@
 .deck-inputs-wrapper.MuiGrid-container {
 	@media screen and (max-width: 660px) {
 		max-width: 100%;
-		padding: 15px;
+		padding: $spacing-sm;
 	}
 	button {
-		margin-top: 10px;
+		margin-top: $spacing-sm + 2px;
 	}
 }
 .deck-options {
 	.MuiFormControl-root {
-		margin-bottom: 15px;
+		margin-bottom: $spacing-base - 1px;
 	}
 
 	.deck-options-button-group {
@@ -28,16 +28,16 @@
 	}
 
 	.deck-options-content {
-		padding-top: 8px;
+		padding-top: $spacing-sm;
 	}
 
 	.deck-options-list-label {
-		margin-bottom: 16px;
+		margin-bottom: $spacing-base;
 	}
 
 	.deck-options-section-label {
-		margin-top: 16px;
-		margin-bottom: 8px;
+		margin-top: $spacing-base;
+		margin-bottom: $spacing-sm;
 	}
 
 	// For the main "Start Deck" button
@@ -46,7 +46,7 @@
 		color: $white !important;
 		width: 100%;
 		border-radius: 0 0 4px 4px;
-		padding: 12px 0;
+		padding: $spacing-sm 0;
 		margin-top: auto;
 		&:hover {
 			background-color: color.adjust($cta-button-color, $lightness: -10%) !important;

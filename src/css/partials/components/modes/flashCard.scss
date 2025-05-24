@@ -16,10 +16,10 @@
 	.btn-container {
 		&.flipped button {
 			&:first-of-type {
-				margin-right: 5px;
+				margin-right: $spacing-xs + 1px;
 			}
 			&:last-of-type {
-				margin-left: 5px;
+				margin-left: $spacing-xs + 1px;
 			}
 		}
 	}
@@ -28,7 +28,7 @@
 	}
 	.MuiCardContent-root,
 	.MuiCardContent-root:last-child {
-		padding: 60px 0;
+		padding: $spacing-xl + $spacing-lg 0;
 		min-width: 50vw;
 	}
 	.card-front {
@@ -37,11 +37,11 @@
 		justify-content: space-around;
 	}
 	.lang-from {
-		padding-left: 40px;
+		padding-left: $spacing-xl + $spacing-base;
 	}
 }
 .flash-card-button {
-	margin-bottom: 30px;
+	margin-bottom: $spacing-xl;
 }
 .flash-card-outer-container {
 	display: flex;
@@ -51,13 +51,13 @@
 	width: 100%;
 }
 .btn-container.flash-card-button-row {
-	margin-top: 24px;
+	margin-top: $spacing-lg;
 	display: flex;
 	width: 100%;
 	justify-content: center;
 
 	&.flipped {
-		gap: 15px;
+		gap: $spacing-base - 5px;
 		@media screen and (max-width: 800px) {
 			justify-content: space-between;
 		}
@@ -66,8 +66,8 @@
 	button {
 		@media screen and (min-width: 800px) {
 			height: 50px;
-			padding-left: 32px;
-			padding-right: 32px;
+			padding-left: $spacing-xl + $spacing-base;
+			padding-right: $spacing-xl + $spacing-base;
 		}
 	}
 }
@@ -75,7 +75,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
+	gap: $spacing-sm;
 	width: 100%;
 	position: relative;
 
@@ -86,7 +86,7 @@
 	}
 	.pronounce-btn {
 		min-width: 0;
-		padding: 4px;
+		padding: $spacing-xs;
 		margin-left: auto;
 	}
 }
@@ -95,7 +95,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
+	gap: $spacing-sm;
 	width: 100%;
 
 	.lang-to {
@@ -108,8 +108,8 @@
 .auto-speak-toggle {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	margin-bottom: 18px;
+	gap: $spacing-base - 6px;
+	margin-bottom: $spacing-lg - 6px;
 	font-size: $font-size-base;
 	font-weight: 500;
 	color: $primary-dark;
