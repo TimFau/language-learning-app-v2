@@ -1,0 +1,98 @@
+.deck-management-modal {
+  &-sheet-info-row {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-size: 0.97em;
+  }
+
+  &-sheet-info-text {
+    margin-right: 6px;
+    color: $text-secondary;
+  }
+
+  &-sheet-info-icon-btn {
+    padding: 2px;
+    margin-left: 2px;
+    line-height: 1;
+  }
+
+  &-sheet-info-icon {
+    color: $cta-button-color;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  &-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px 0 16px;
+  }
+
+  &-title {
+    flex: 1;
+    margin: 0;
+    font-size: 1.18em;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+
+  &-close-btn {
+    color: $text-secondary;
+    background: transparent;
+    &:hover, &:focus {
+      color: $cta-button-color;
+      background: $background-main;
+    }
+  }
+
+  &-sheet-modal-content {
+    padding: 8px 0 0 0;
+    min-width: 270px;
+  }
+
+  &-sheet-modal-img-placeholder {
+    margin: 16px 0 8px 0;
+    width: 100%;
+    min-height: 80px;
+    background: $background-main;
+    border: 1px dashed $input-border-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-secondary;
+    font-size: 0.95em;
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  &-sheet-modal-back-btn {
+    display: block;
+    margin: 18px auto 0 auto;
+    padding: 7px 24px;
+    background: $cta-button-color;
+    color: $white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    &:hover,
+    &:focus {
+      background: darken($cta-button-color, 10%);
+      outline: none;
+    }
+  }
+
+  &__sheet-tooltip {
+    max-width: 270px;
+    font-size: 0.98em;
+    line-height: 1.5;
+  }
+} 

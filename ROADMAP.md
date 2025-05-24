@@ -26,13 +26,13 @@ This document outlines planned and proposed features for future development of L
 - [ ] **Smart Resume**  
   Save user progress within decks to allow easy continuation.
 
-- [ ] **Spaced Repetition** *(Pro feature)*  
+- [ ] **Spaced Repetition**
   Move beyond deck-based memorization with intelligent scheduling of reviews, stored in Directus backend.
 
 - [ ] **Deck Completion Milestones**  
   Gamified progress tracking (e.g., streaks, XP, badges).
 
-- [ ] **Audio Pronunciation Upgrade**  
+- [ ] **Audio Pronunciation Upgrade**
   Explore improved voice options (e.g., ElevenLabs, Azure TTS) for higher-quality audio—especially for iOS and non-Chrome browsers.
 
 ---

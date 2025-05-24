@@ -3,4 +3,6 @@ description:
 globs: 
 alwaysApply: true
 ---
-Use custom classNames instead of the MUI names when styling content with SCSS. This is cleaner to read, and also allows greater flexability if I want to switch away from MUI in the future 
+Use custom classNames instead of the MUI names when styling content with SCSS. This is cleaner to read, and also allows greater flexability if I want to switch away from MUI in the future.
+
+All new CSS/SCSS class names must use kebab-case (not BEM, not camelCase, not PascalCase). Prefer flat or nested structure as in the rest of the app. Do not use double underscores or double hyphens in class names

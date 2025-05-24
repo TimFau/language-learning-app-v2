@@ -117,7 +117,7 @@
         .login-link-container {
             text-align: center;
             margin-bottom: 25px;
-            font-size: 14px;
+            font-size: $font-size-xs;
             color: $text-secondary; // Use new variable
 
             .signIn {
@@ -136,7 +136,7 @@
             background-color: $cta-button-color !important; // Use new variable
             color: $white !important;
             padding: 12px 0 !important; // Adjust padding
-            font-size: 16px !important;
+            font-size: $font-size-sm !important;
             text-transform: none !important; // Prevent uppercase
             border-radius: 8px !important;
             &:hover {
@@ -213,10 +213,10 @@
                  margin-bottom: 20px;
              }
              .login-link-container {
-                 font-size: 13px;
+                 font-size: $font-size-xs;
              }
              .create-account-button {
-                 font-size: 14px !important;
+                 font-size: $font-size-sm !important;
              }
         }
     }
