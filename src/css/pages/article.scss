@@ -1,0 +1,67 @@
+@import '../partials/base/variables';
+
+.article-page-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: $spacing-lg $spacing-base;
+  background: $card-background;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(26,26,64,0.04);
+}
+
+.article-title {
+  font-family: $font-family-secondary;
+  font-size: $font-size-h2;
+  color: $primary-dark;
+  margin-bottom: $spacing-base;
+}
+
+.article-body {
+  font-size: $font-size-base;
+  color: $text-primary;
+  line-height: $line-height-base;
+  margin-bottom: $spacing-lg;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid $input-border-color;
+  padding: $spacing-xs $spacing-sm;
+  text-align: left;
+}
+
+.article-body th {
+  background: $background-main;
+  font-weight: 600;
+}
+
+.article-cta-link {
+  display: inline-block;
+  background: $cta-button-color;
+  color: $white;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: $font-size-base;
+  transition: background 0.2s;
+  &:hover {
+    background: $accent-orange;
+    color: $primary-dark;
+  }
+}
+
+.article-loading,
+.article-error,
+.article-not-found {
+  text-align: center;
+  color: $text-secondary;
+  font-size: $font-size-lg;
+  margin: $spacing-lg 0;
+} 

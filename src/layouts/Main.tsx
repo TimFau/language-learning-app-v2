@@ -3,10 +3,12 @@ import { Route, Routes } from 'react-router-dom';
 import connector, { PropsFromRedux } from "../containers/Main.connector"
 
 import Header from '../components/Header';
-import IndexPage from '../pages/Index/Index';
+import IndexPage from '../pages/index/Index';
 import DeckPage from '../pages/Deck/Index';
 import CommunityDecks from '../pages/CommunityDecks';
 import Login from '../components/Unauthenticated/Login';
+import ArticlePage from '../pages/Article/ArticlePage';
+import NotFound from '../pages/Article/NotFound';
 
 function RootPage (props: PropsFromRedux) {
   
@@ -35,6 +37,8 @@ function RootPage (props: PropsFromRedux) {
                 <CommunityDecks />
             }
             />
+            <Route path="/articles/:language/:slug" element={<ArticlePage />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
         <Login />
     </>
