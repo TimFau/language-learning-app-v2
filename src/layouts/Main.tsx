@@ -9,6 +9,7 @@ import CommunityDecks from '../pages/CommunityDecks';
 import Login from '../components/Unauthenticated/Login';
 import ArticlePage from '../pages/Article/ArticlePage';
 import NotFound from '../pages/Article/NotFound';
+import ArticlesListPage from '../pages/articles/Index';
 
 function RootPage (props: PropsFromRedux) {
   
@@ -38,6 +39,7 @@ function RootPage (props: PropsFromRedux) {
             }
             />
             <Route path="/articles/:language/:slug" element={<ArticlePage />} />
+            <Route path="/articles" element={<ArticlesListPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
         <Login />
