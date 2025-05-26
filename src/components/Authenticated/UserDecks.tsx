@@ -1,9 +1,10 @@
 import { useContext } from 'react';
-import { CircularProgress, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/DeckCard';
 import { gql, useQuery } from '@apollo/client';
 import { SAVED_DECKS, USER_DECKS } from 'queries';
+import DeckCardSkeleton from '../DeckCardSkeleton';
 
 interface UserListsProps {
     userId: string
@@ -31,7 +32,16 @@ export default function UserDecks(props: UserListsProps) {
     if (error || communityError) {
       return <div>Error: {error?.message || communityError?.message}</div>;
     } else if (loading || communityLoading) {
-      return <CircularProgress />;
+      return (
+        <div id="userListsContainer">
+          <h1 className="sr-only">My Decks</h1>
+          <div className="decks-container">
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <DeckCardSkeleton key={idx} />
+            ))}
+          </div>
+        </div>
+      );
     } else {
         const userDecks = data.decks.map((deck: any) => {
             return { type: "user", ...deck }

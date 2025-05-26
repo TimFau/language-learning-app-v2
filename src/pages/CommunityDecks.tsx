@@ -4,6 +4,7 @@ import AuthContext from 'context/auth-context';
 import { gql, useQuery } from "@apollo/client";
 import { COMMUNITY_DECKS, SAVED_DECKS } from 'queries';
 import { Link } from "react-router-dom";
+import DeckCardSkeleton from 'components/DeckCardSkeleton';
 
 const CommunityDecks = () => {
     const authCtx = useContext(AuthContext);
@@ -38,7 +39,14 @@ const CommunityDecks = () => {
     // Handle loading and error states for authenticated users
     if (loading || savedDecksLoading) {
         return (
-            <h1>Loading...</h1>
+            <div className="page-container">
+                <h1 className="sr-only">Community Decks</h1>
+                <div className="decks-container">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                        <DeckCardSkeleton key={idx} />
+                    ))}
+                </div>
+            </div>
         )
     }
 

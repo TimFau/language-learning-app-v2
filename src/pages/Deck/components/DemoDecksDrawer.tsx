@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer, Typography, IconButton, Skeleton, Card, CardContent, CardActions }  from '@mui/material';
+import { Drawer, Typography, IconButton }  from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import deckService from '../../../services/deckService';
 import DeckCard from '../../../components/DeckCard';
+import DeckCardSkeleton from '../../../components/DeckCardSkeleton';
 
 //
 // This drawer contains decks that are available for guest users to try out the app
@@ -85,26 +86,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
                 <div className="decks-container">
                     {loading ? (
                         Array.from({ length: 3 }).map((_, idx) => (
-                            <Card className="deck-card deck-card-skeleton" key={idx}>
-                                <CardContent>
-                                    <div className="card-content-top">
-                                        <div className="deck-info">
-                                            <Skeleton variant="circular" width={24} height={24} className="deck-skeleton-icon" />
-                                            <Skeleton variant="text" width={60} height={20} className="deck-skeleton-lang" />
-                                        </div>
-                                        {/* Add back if categories become required attribute */}
-                                        {/* <div className="deck-categories">
-                                            <Skeleton variant="rounded" width={50} height={28} className="deck-skeleton-chip" />
-                                        </div> */}
-                                    </div>
-                                    <Skeleton variant="text" width="70%" height={32} className="deck-name deck-skeleton-name" />
-                                </CardContent>
-                                <CardActions style={{ justifyContent: 'flex-end' }}>
-                                    <div>
-                                        <Skeleton variant="text" width={80} height={30} className="deck-skeleton-cta" />
-                                    </div>
-                                </CardActions>
-                            </Card>
+                            <DeckCardSkeleton key={idx} />
                         ))
                     ) : (
                         items.map(item => (
