@@ -25,6 +25,28 @@
         }
     }
 
+    // Cold start message styles
+    .cold-start-message {
+        text-align: center;
+        text-transform: none;
+        padding: $spacing-lg $spacing-base;
+        width: 100%;
+        max-width: 500px;
+        margin: $spacing-lg auto 0 auto;
+        background: $background-main;
+        border: 1px dashed $accent-orange;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(26,26,64,0.04);
+        .MuiTypography-h6 {
+            color: $accent-orange;
+            margin-bottom: $spacing-base;
+        }
+        .MuiTypography-body1 {
+            color: $text-secondary;
+            font-size: $font-size-base;
+        }
+    }
+
     @media screen and (max-width: $mobile-nav-breakpoint) {
         padding-bottom: 80px; // Prevents BottomNavigation from blocking last card
     }

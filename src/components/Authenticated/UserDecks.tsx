@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import AuthContext from '../../context/auth-context';
 import DeckCard from 'components/DeckCard';
@@ -28,6 +28,16 @@ export default function UserDecks(props: UserListsProps) {
         context: { headers: { authorization: `Bearer ${authCtx.userToken}` } }
     });
   
+    // Cold start UX hooks (must be at top level)
+    const [isColdStart, setIsColdStart] = useState(false);
+    useEffect(() => {
+        if (loading || communityLoading) {
+            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            return () => clearTimeout(timer);
+        } else {
+            setIsColdStart(false);
+        }
+    }, [loading, communityLoading]);
 
     if (error || communityError) {
       return <div>Error: {error?.message || communityError?.message}</div>;
@@ -39,6 +49,16 @@ export default function UserDecks(props: UserListsProps) {
             {Array.from({ length: 3 }).map((_, idx) => (
               <DeckCardSkeleton key={idx} />
             ))}
+            {isColdStart && (
+              <div className="cold-start-message">
+                <Typography variant="h6" component="p" gutterBottom>
+                  Waking up the server...
+                </Typography>
+                <Typography variant="body1">
+                  Our backend is starting up (to save energy!). This can take a few seconds. Thanks for your patience!
+                </Typography>
+              </div>
+            )}
           </div>
         </div>
       );

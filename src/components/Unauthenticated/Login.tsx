@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import userService from 'services/userService';
 
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import AuthContext from 'context/auth-context';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ColdStartMessage from 'components/ColdStartMessage';
 
 export default function Login() {
 
@@ -18,8 +19,18 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isColdStart, setIsColdStart] = useState(false);
 
     const authCtx = useContext(AuthContext);
+
+    useEffect(() => {
+        if (loading) {
+            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            return () => clearTimeout(timer);
+        } else {
+            setIsColdStart(false);
+        }
+    }, [loading]);
 
     function login(event?: React.FormEvent<HTMLFormElement>) {
         if (event) event.preventDefault();
@@ -159,7 +170,9 @@ export default function Login() {
                         fullWidth
                         sx={{ mt: 1, mb: 1 }}
                     >
-                        {loading ? <CircularProgress size={24} color="inherit" /> : 'Log in'}
+                        {loading ? (
+                            isColdStart ? <ColdStartMessage maxSeconds={30} /> : <CircularProgress size={24} color="inherit" />
+                        ) : 'Log in'}
                     </Button>
                 </form>
             </DialogContent>

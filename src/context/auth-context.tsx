@@ -10,7 +10,8 @@ interface IAuthContext {
     loginOpen: boolean,
     onLogout: () => void,
     onLogin: (accessToken: string, userId: string, userName: string) => void,
-    onLoginOpen: (open: boolean, newUser: boolean) => void
+    onLoginOpen: (open: boolean, newUser: boolean) => void,
+    authLoading: boolean
 }
 
 const defaultState = {
@@ -21,7 +22,8 @@ const defaultState = {
     loginOpen: false,
     onLogout: () => {},
     onLogin: () => {},
-    onLoginOpen: () => {}
+    onLoginOpen: () => {},
+    authLoading: true
 }
 
 const cookies = new Cookies();
@@ -34,6 +36,7 @@ export const AuthContextProvider = (props: any) => {
     const [userName, setUserName] = useState('');
     const [isNewUser, setIsNewUser] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
+    const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
 		if (cookieExists('token')) {
@@ -48,6 +51,7 @@ export const AuthContextProvider = (props: any) => {
             console.log('userName Cookie Exists: Setting userName state')
 			setUserName(cookies.get('userName'));
 		}
+        setAuthLoading(false);
 	}, [])
 
     const logoutHandler = () => {
@@ -87,7 +91,8 @@ export const AuthContextProvider = (props: any) => {
             loginOpen: loginOpen,
             onLogout: logoutHandler,
             onLogin: loginHandler,
-            onLoginOpen: loginDialogHandler
+            onLoginOpen: loginDialogHandler,
+            authLoading: authLoading
         }}
     >
         {props.children}

@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Typography, LinearProgress } from '@mui/material';
 import UserDecks from '../../components/Authenticated/UserDecks';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
+import DeckCardSkeleton from '../../components/DeckCardSkeleton';
+import ColdStartMessage from '../../components/ColdStartMessage';
 
 export default function Account() {
 
@@ -11,6 +13,7 @@ export default function Account() {
     const userName = useAppSelector((state) => state.userName)
     const [userId, setUserId] = useState('');
     const [isReady, setIsReady] = useState(false);
+    const [isColdStart, setIsColdStart] = useState(false);
     const dispatch = useAppDispatch();
 
     function getAccountDetails() {
@@ -44,6 +47,15 @@ export default function Account() {
         getAccountDetails();
     }, []);
 
+    useEffect(() => {
+        if (!isReady) {
+            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            return () => clearTimeout(timer);
+        } else {
+            setIsColdStart(false);
+        }
+    }, [isReady]);
+
     // Scroll to top on mount (fixes mobile reload issue)
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -55,7 +67,15 @@ export default function Account() {
                 {isReady ? 
                 <UserDecks userId={userId} userName={userName} />
                 :
-                <CircularProgress />
+                isColdStart ? (
+                    <ColdStartMessage maxSeconds={30} />
+                ) : (
+                    <div className="decks-container">
+                        {Array.from({ length: 3 }).map((_, idx) => (
+                            <DeckCardSkeleton key={idx} />
+                        ))}
+                    </div>
+                )
                 }
             </div>
         </div>

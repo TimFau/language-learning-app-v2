@@ -7,6 +7,10 @@ import UserHome  from './UserHome';
 const IndexPage = (props: any) => {
     const authCtx = useContext(AuthContext);
 
+    if (authCtx.authLoading) {
+        return null; // or a global spinner if you want
+    }
+
     return (
         <>
         {authCtx.userToken === '' ?
