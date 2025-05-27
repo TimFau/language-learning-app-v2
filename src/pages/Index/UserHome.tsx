@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks';
-import { CircularProgress, Typography, LinearProgress } from '@mui/material';
 import UserDecks from '../../components/Authenticated/UserDecks';
 import AuthContext from 'context/auth-context';
 import userService from 'services/userService';
 import DeckCardSkeleton from '../../components/DeckCardSkeleton';
 import ColdStartMessage from '../../components/ColdStartMessage';
+import FetchErrorMessage from '../../components/Unauthenticated/FetchErrorMessage';
 
 export default function Account() {
 
@@ -14,18 +14,21 @@ export default function Account() {
     const [userId, setUserId] = useState('');
     const [isReady, setIsReady] = useState(false);
     const [isColdStart, setIsColdStart] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const dispatch = useAppDispatch();
 
     function getAccountDetails() {
+        setError(null);
         userService.getAccountDetails(authCtx.userToken)
         .then(async response => {
             const data = await response;
             if(data.errors) {
                 console.log('bad response', response)
-                const errorMessages = data.errors.map((error: any) => error.message);
+                const errorMessages = data.errors.map((error: any) => error.message).join(', ');
                 authCtx.onLogout()
                 authCtx.onLoginOpen(true, false);
-                throw new Error(errorMessages);
+                setError(errorMessages);
+                return;
             }
             dispatch({type: 'user/setUserName', value: data.users_me.first_name})
             setUserId(data.users_me.id)
@@ -39,6 +42,7 @@ export default function Account() {
                 authCtx.onLoginOpen(true, false);
                 return;
             }
+            setError(error.message || 'An unexpected error occurred.');
             console.error('catch', error);
         })
     }
@@ -64,7 +68,11 @@ export default function Account() {
     return (
         <div className="container page-container">
             <div className="wrapper" id="account">
-                {isReady ? 
+                {error ? (
+                    <div className="decks-container">
+                        <FetchErrorMessage error={error} onRetry={getAccountDetails} title="Error loading account details" />
+                    </div>
+                ) : isReady ? 
                 <UserDecks userId={userId} userName={userName} />
                 :
                 isColdStart ? (

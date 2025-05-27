@@ -4,6 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import deckService from '../../../services/deckService';
 import DeckCard from '../../../components/DeckCard';
 import DeckCardSkeleton from '../../../components/DeckCardSkeleton';
+import ColdStartMessage from '../../../components/ColdStartMessage';
+import FetchErrorMessage from '../../../components/Unauthenticated/FetchErrorMessage';
 
 //
 // This drawer contains decks that are available for guest users to try out the app
@@ -28,6 +30,7 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
     const [error, setError] = useState('');
     const [items, setItems] = useState<listItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isColdStart, setIsColdStart] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -40,22 +43,32 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
             // instead of a catch() block so that we don't swallow
             // exceptions from actual bugs in components.
             (error) => {
-                setError(error);
+                setError(error?.message || String(error));
                 setLoading(false);
                 console.log(error);
             }
         );
+        let coldStartTimer: ReturnType<typeof setTimeout> | null = null;
+        if (loading) {
+            coldStartTimer = setTimeout(() => setIsColdStart(true), 4000);
+        }
         if (ENABLE_ARTIFICIAL_DELAY) {
             setTimeout(fetchData, ARTIFICIAL_DELAY_MS);
         } else {
             fetchData();
         }
+        return () => {
+            if (coldStartTimer) clearTimeout(coldStartTimer);
+            setIsColdStart(false);
+        };
     }, [])
   
     if (error) {
       return (
         <Drawer anchor="bottom" open={props.open} onClose={props.onClose} className="demo-drawer">
-            <div>Error Loading Demo Deck List - Please Contact Site Admin to resume service - lla@timfau.com</div>
+            <div className="decks-container">
+                <FetchErrorMessage error={error} onRetry={() => window.location.reload()} title="Error loading demo decks" />
+            </div>
         </Drawer>
       )
     } else {
@@ -85,9 +98,13 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
             <div className="drawer-content">
                 <div className="decks-container">
                     {loading ? (
-                        Array.from({ length: 3 }).map((_, idx) => (
-                            <DeckCardSkeleton key={idx} />
-                        ))
+                        isColdStart ? (
+                            <ColdStartMessage maxSeconds={30} />
+                        ) : (
+                            Array.from({ length: 3 }).map((_, idx) => (
+                                <DeckCardSkeleton key={idx} />
+                            ))
+                        )
                     ) : (
                         items.map(item => (
                             <DeckCard

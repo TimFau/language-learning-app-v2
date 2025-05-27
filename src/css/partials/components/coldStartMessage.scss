@@ -1,0 +1,50 @@
+.cold-start-message {
+    text-align: center;
+    text-transform: none;
+    padding: $spacing-lg $spacing-base;
+    width: 100%;
+    max-width: 500px;
+    margin: $spacing-lg auto 0 auto;
+    background: $background-main;
+    border: 1px dashed $accent-orange;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(26,26,64,0.04);
+    .MuiTypography-h6 {
+        color: $accent-orange;
+        margin-bottom: $spacing-base;
+    }
+    .MuiTypography-body1 {
+        color: $text-secondary;
+        font-size: $font-size-base;
+    }
+}
+.cold-start-message-error {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    box-sizing: border-box;
+    .error-message {
+        color: $danger;
+        font-weight: 600;
+        margin-bottom: $spacing-base;
+        font-size: $font-size-base;
+    }
+    .retry-btn {
+        background-color: $cta-button-color;
+        color: $white;
+        border: none;
+        border-radius: 4px;
+        padding: $spacing-sm $spacing-lg;
+        font-size: $font-size-base;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: $spacing-base;
+        transition: background 0.2s;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        &:hover,
+        &:focus {
+            background: darken($cta-button-color, 10%);
+            outline: none;
+        }
+    }
+}

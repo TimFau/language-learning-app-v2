@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import userService from 'services/userService';
+import FetchErrorMessage from './FetchErrorMessage';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -20,11 +21,13 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [isColdStart, setIsColdStart] = useState(false);
+    const [apiError, setApiError] = useState<string | null>(null);
 
     const authCtx = useContext(AuthContext);
 
     useEffect(() => {
         if (loading) {
+            setApiError(null);
             const timer = setTimeout(() => setIsColdStart(true), 4000);
             return () => clearTimeout(timer);
         } else {
@@ -37,6 +40,7 @@ export default function Login() {
         // Reset errors
         setEmailError('');
         setPassError('');
+        setApiError(null);
 
         let hasError = false;
 
@@ -90,6 +94,7 @@ export default function Login() {
             if (error.message.includes('Invalid user credentials.')) {
                 alert('Invalid user credentials.');
             }
+            setApiError(error.message || 'An unexpected error occurred.');
             setLoading(false);
         })
     }
@@ -133,6 +138,9 @@ export default function Login() {
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 0 }}>
+                {apiError ? (
+                    <FetchErrorMessage error={apiError} onRetry={() => setApiError(null)} title="Error" />
+                ) : (
                 <form style={{ width: '100%' }} onSubmit={login}>
                     <TextField
                         autoFocus
@@ -175,6 +183,7 @@ export default function Login() {
                         ) : 'Log in'}
                     </Button>
                 </form>
+                )}
             </DialogContent>
         </Dialog>
     )

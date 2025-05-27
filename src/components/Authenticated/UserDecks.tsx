@@ -5,6 +5,7 @@ import DeckCard from 'components/DeckCard';
 import { gql, useQuery } from '@apollo/client';
 import { SAVED_DECKS, USER_DECKS } from 'queries';
 import DeckCardSkeleton from '../DeckCardSkeleton';
+import ColdStartMessage from 'components/ColdStartMessage';
 
 interface UserListsProps {
     userId: string
@@ -50,14 +51,7 @@ export default function UserDecks(props: UserListsProps) {
               <DeckCardSkeleton key={idx} />
             ))}
             {isColdStart && (
-              <div className="cold-start-message">
-                <Typography variant="h6" component="p" gutterBottom>
-                  Waking up the server...
-                </Typography>
-                <Typography variant="body1">
-                  Our backend is starting up (to save energy!). This can take a few seconds. Thanks for your patience!
-                </Typography>
-              </div>
+              <ColdStartMessage />
             )}
           </div>
         </div>
