@@ -71,28 +71,28 @@
   }
 }
 
-.articles-list-page-container {
+.lessons-list-page-container {
   max-width: 700px;
   margin: 0 auto;
   padding: $spacing-lg $spacing-base;
 
-  .articles-list-title {
+  .lessons-list-title {
     font-size: $font-size-h2;
     margin-bottom: $spacing-lg;
     color: $primary-dark;
     font-family: $font-family-secondary;
   }
 
-  .articles-list {
+  .lessons-list {
     list-style: none;
     padding: 0;
     margin: 0;
 
-    .articles-list-item {
+    .lessons-list-item {
       margin-bottom: $spacing-base;
     }
 
-    .articles-list-link {
+    .lessons-list-link {
       text-decoration: none;
       color: $text-primary;
       font-size: $font-size-lg;
@@ -106,9 +106,9 @@
     }
   }
 
-  .articles-loading,
-  .articles-error,
-  .articles-empty {
+  .lessons-loading,
+  .lessons-error,
+  .lessons-empty {
     text-align: center;
     margin-top: $spacing-lg;
     color: $text-secondary;

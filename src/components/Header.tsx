@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import DeckManagementModal from './Authenticated/DeckManagementModal';
-import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon } from '@mui/icons-material';
+import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
 import ExitDeckConfirmDialog from './ExitDeckConfirmDialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -84,7 +84,13 @@ export default function Nav() {
                                                 <Button className="nav-item-wrapper" startIcon={<LocalLibraryIcon />}>
                                                     <span className="nav-label">Community Decks</span>
                                                 </Button>
-                                            </Link></>
+                                            </Link>
+                                            <Link to="/lessons" className={['nav-item', pathName.startsWith('/lessons') ? 'active' : ''].join(' ')}>
+                                                <Button className="nav-item-wrapper" startIcon={<MenuBookIcon />}>
+                                                    <span className="nav-label">Lessons</span>
+                                                </Button>
+                                            </Link>
+                                            </>
                                         }
                                         {pathName !== "/deck" && (
                                             <>
@@ -129,7 +135,7 @@ export default function Nav() {
                     onClick={() => modalCtx.openModal()}
                     sx={{
                         position: 'fixed',
-                        bottom: 26,
+                        bottom: 55,
                         left: '50%',
                         transform: 'translateX(-50%)',
                         zIndex: 1300,
@@ -148,6 +154,7 @@ export default function Nav() {
                             setBottomNavValue(newValue);
                             if (newValue === '/') navigate('/');
                             if (newValue === '/decks') navigate('/decks');
+                            if (newValue === '/lessons') navigate('/lessons');
                         }}
                     >
                         <BottomNavigationAction
@@ -159,6 +166,11 @@ export default function Nav() {
                             label="Community Decks"
                             value="/decks"
                             icon={<LocalLibraryIcon />}
+                        />
+                        <BottomNavigationAction
+                            label="Lessons"
+                            value="/lessons"
+                            icon={<MenuBookIcon />}
                         />
                     </BottomNavigation>
                 </Paper>

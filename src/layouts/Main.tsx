@@ -7,9 +7,9 @@ import IndexPage from '../pages/index/Index';
 import DeckPage from '../pages/Deck/Index';
 import CommunityDecks from '../pages/CommunityDecks';
 import Login from '../components/Unauthenticated/Login';
-import ArticlePage from '../pages/Article/ArticlePage';
 import NotFound from '../pages/Article/NotFound';
-import ArticlesListPage from '../pages/articles/Index';
+import LessonsListPage from '../pages/lessons/LessonsListPage';
+import LessonPage from '../pages/lessons/LessonPage';
 
 function RootPage (props: PropsFromRedux) {
   
@@ -38,8 +38,8 @@ function RootPage (props: PropsFromRedux) {
                 <CommunityDecks />
             }
             />
-            <Route path="/articles/:language/:slug" element={<ArticlePage />} />
-            <Route path="/articles" element={<ArticlesListPage />} />
+            <Route path="/lessons/:language/:slug" element={<LessonPage />} />
+            <Route path="/lessons" element={<LessonsListPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
         <Login />

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import 'css/pages/article.scss';
+import 'css/pages/lessons.scss';
 
 const GET_ARTICLE = gql`
   query GetArticle($language: String!, $slug: String!) {

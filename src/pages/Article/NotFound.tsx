@@ -1,4 +1,4 @@
-import 'css/pages/article.scss';
+import 'css/pages/lesson.scss';
 
 export default function NotFound() {
   return (

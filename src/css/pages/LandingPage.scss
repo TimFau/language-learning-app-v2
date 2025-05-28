@@ -90,7 +90,6 @@
         .form-row {
             display: flex;
             gap: $spacing-base + $spacing-sm;
-            margin-bottom: $spacing-lg + $spacing-xs;
             .input {
                 flex: 1; // Make first/last name inputs share space
             }

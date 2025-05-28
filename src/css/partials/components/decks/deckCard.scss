@@ -4,6 +4,9 @@
 	border-radius: 12px;
 	box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 	transition: box-shadow 0.3s ease;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
 	&:hover {
 		box-shadow: 0 8px 20px rgba(0,0,0,0.12);
@@ -17,15 +20,30 @@
 		flex-basis: 100%;
 	}
 
+	&__action-area {
+		// ".deck-card &" for specificity to override the default MUI styles
+		&-top {
+			flex-grow: 1;
+			&__content {
+				width: 100%;
+			}
+			.deck-card & {
+				display: flex;
+				justify-content: flex-start;
+			}
+		}
+		&-bottom {
+			flex: 0;
+			.deck-card & {
+				padding: 0 $spacing-base $spacing-base $spacing-base;
+				justify-content: space-between;
+
+			}
+		}
+	}
+
 	.MuiCardContent-root {
 		padding-bottom: $spacing-sm;
-	}
-	.MuiCardActions-root {
-		padding-top: 0;
-		padding-bottom: $spacing-base;
-		padding-left: $spacing-base;
-		padding-right: $spacing-base;
-		justify-content: space-between;
 	}
 
     .card-content-top {

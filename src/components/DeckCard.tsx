@@ -61,8 +61,8 @@ const DeckCard = (props: DeckCardProps) => {
                 className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}
                 data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
             >
-                <CardActionArea onClick={() => handleClick()} data-testid={`deck-card-card-action-area`}>
-                    <CardContent>
+                <CardActionArea onClick={() => handleClick()} data-testid={`deck-card-action-area`} className="deck-card__action-area-top">
+                    <CardContent className="deck-card__action-area-top__content">
                         <div className="card-content-top">
                             <div className="deck-info">
                                 <Language />
@@ -77,7 +77,7 @@ const DeckCard = (props: DeckCardProps) => {
                         </Typography>
                     </CardContent>
                 </CardActionArea>
-                <CardActions disableSpacing>
+                <CardActions disableSpacing className="deck-card__action-area-bottom">
                     {props.item.type !== 'user' ?
                     <>
                         {authCtx.userToken && (
