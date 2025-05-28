@@ -57,6 +57,7 @@ export default function Account() {
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);
+            return undefined;
         }
     }, [isReady]);
 

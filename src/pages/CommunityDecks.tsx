@@ -33,6 +33,7 @@ const CommunityDecks = () => {
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);
+            return undefined;
         }
     }, [loading, savedDecksLoading]);
 

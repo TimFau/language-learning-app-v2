@@ -37,6 +37,7 @@ export default function UserDecks(props: UserListsProps) {
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);
+            return undefined;
         }
     }, [loading, communityLoading]);
 

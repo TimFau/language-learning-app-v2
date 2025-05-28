@@ -32,6 +32,7 @@ export default function Login() {
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);
+            return undefined;
         }
     }, [loading]);
 
