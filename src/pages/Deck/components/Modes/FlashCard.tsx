@@ -45,14 +45,21 @@ const flashCard = (props: FlashCardProps) => {
 
     return(
         <div className="flash-card-outer-container">
-            <Card className="flash-card-container" data-testid="flashcard">
+            <Card className={props.showAnswer ? "flash-card-container flash-card-stacked" : "flash-card-container"} data-testid="flashcard">
                 {props.showAnswer ? (
-                    <CardContent data-testid="card-back">
-                        <Typography color="textSecondary">Answer</Typography>
-                        <div className="flash-card-answer-row">
-                            <h1 className="lang-to" data-testid="card-answer">
-                                "{props.langTo[props.randomNum]}"
+                    <CardContent data-testid="card-back" className="flash-card-stacked-content">
+                        <div className="stacked-question">
+                            <Typography color="textSecondary">Question</Typography>
+                            <h1 className="lang-from stacked-question-text" data-testid="card-question">
+                                "{props.langFrom[props.randomNum]}"
                             </h1>
+                        </div>
+                        <div className="stacked-divider" />
+                        <div className="stacked-answer">
+                        	<Typography color="textSecondary">Answer</Typography>
+                            <h2 className="lang-to stacked-answer-text" data-testid="card-answer">
+                                "{props.langTo[props.randomNum]}"
+                            </h2>
                         </div>
                     </CardContent>
                 ) : (

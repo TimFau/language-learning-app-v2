@@ -10,8 +10,9 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	h1 {
+	.lang-from, .lang-to {
 		color: $primary-dark;
+		font-size: $font-size-xxl;
 	}
 	.btn-container {
 		&.flipped button {
@@ -28,7 +29,7 @@
 	}
 	.MuiCardContent-root,
 	.MuiCardContent-root:last-child {
-		padding: $spacing-xl + $spacing-lg 0;
+		padding: $spacing-xl;
 		min-width: 50vw;
 	}
 	.card-front {
@@ -153,5 +154,23 @@
 		input:checked + .slider:before {
 			transform: translateX(20px);
 		}
+	}
+}
+
+// --- Stacked flashcard layout ---
+.flash-card-stacked {
+	&.flash-card-container .lang-from {
+		padding-left: 0;
+	}
+	&-content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: $spacing-xl;
+		flex-grow: 1;
+	}
+	.stacked-divider {
+		border-top: 4px solid $input-border-color;
+		width: 100%;
 	}
 }

@@ -10,5 +10,5 @@ When adding or modifying CSS/SCSS styles, follow these guidelines:
 1.  **Prioritize Existing SCSS:** Look for an existing, relevant `.scss` file within the `src/css/` directory structure first. Add your styles there.
 2.  **Create New SCSS:** If no suitable file exists for the component or page you are styling, create a new `.scss` file in the appropriate subdirectory within `src/css/`.
 3.  **Inline Styling:** Use inline `style` attributes in React components only as a last resort, when the styling is highly dynamic or cannot be reasonably achieved through SCSS classes.
-4.  **Color Variables:** Always use an existing color variable from [`variables.scss`](mdc:src/css/partials/base/variables.scss) for any new styles. If a new color is needed, add a variable for it there.
-
+4.  **Color Variables:** Always use an existing color variable from ](mdc:src/css/partials/base/variables.scss) for any new styles. If a new color is needed, add a variable for it there.
+5.  **SCSS Variable Existence:** Always make sure a SCSS variable exists before using it. If you need a new variable, define it in [`variables.scss`](mdc:src/css/partials/base/variables.scss) in the same prompt where you use it.

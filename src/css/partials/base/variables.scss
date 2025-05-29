@@ -13,6 +13,7 @@ $font-size-sm: 0.875rem;     // 14px, buttons, labels
 $font-size-base: 1rem;       // 16px, body text
 $font-size-lg: 1.25rem;      // 20px, section headers
 $font-size-xl: 1.5rem;       // 24px, large headers
+$font-size-xxl: 2rem;        // 32px, extra large headers
 $font-size-h2: 2.25rem;      // 36px, main page titles
 $font-size-h3: 1.5625rem;    // 25px, subtitles
 $font-size-display-1: 5rem;  // 80px, hero/landing page
@@ -60,3 +61,5 @@ $danger: #f44336;        // Error/danger state
 
 // Breakpoint for mobile navigation (used for BottomNavigation)
 $mobile-nav-breakpoint: 660px;
+
+$border-radius-base: 3px;
