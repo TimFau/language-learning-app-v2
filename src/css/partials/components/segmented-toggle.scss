@@ -1,0 +1,36 @@
+@import '../base/variables';
+
+.segmented-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  button {
+    background-color: transparent;
+    border: 1px solid $primary-dark;
+    color: $primary-dark;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:first-child {
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    &.active {
+      background-color: $primary-dark;
+      color: $white;
+    }
+
+    &:hover:not(.active) {
+      background-color: rgba($primary-dark, 0.1);
+    }
+  }
+} 

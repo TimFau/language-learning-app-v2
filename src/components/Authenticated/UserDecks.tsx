@@ -6,6 +6,7 @@ import { gql, useQuery } from '@apollo/client';
 import { SAVED_DECKS, USER_DECKS } from 'queries';
 import DeckCardSkeleton from '../DeckCardSkeleton';
 import ColdStartMessage from 'components/ColdStartMessage';
+import '../../css/partials/components/segmented-toggle.scss';
 
 interface UserListsProps {
     userId: string
@@ -15,6 +16,10 @@ interface UserListsProps {
 export default function UserDecks(props: UserListsProps) {
     const authCtx = useContext(AuthContext);
     const userId = props.userId
+    const [activeView, setActiveView] = useState<'created' | 'saved'>(() => {
+        const savedView = localStorage.getItem('userDecksView');
+        return (savedView === 'created' || savedView === 'saved') ? savedView : 'created';
+    });
 
     const { loading, error, data } = useQuery(USER_DECKS, {
         variables: { userId },
@@ -41,6 +46,10 @@ export default function UserDecks(props: UserListsProps) {
         }
     }, [loading, communityLoading]);
 
+    useEffect(() => {
+        localStorage.setItem('userDecksView', activeView);
+    }, [activeView]);
+
     if (error || communityError) {
       return <div>Error: {error?.message || communityError?.message}</div>;
     } else if (loading || communityLoading) {
@@ -61,27 +70,48 @@ export default function UserDecks(props: UserListsProps) {
         const userDecks = data.decks.map((deck: any) => {
             return { type: "user", ...deck }
         })
-        const savedDecks = communityData.saved_decks.map((deck: any) => {
+        const savedDecksData = communityData.saved_decks.map((deck: any) => {
             return { isSaved: true, savedDeckId: deck.id, ...deck }
         })
-        const decks = [...userDecks, ...savedDecks];
-        console.log('data', data);
+        
+        const decksToDisplay = activeView === 'created' ? userDecks : savedDecksData;
+
+        const EmptyStateMessage = () => (
+            <div className="empty-decks-message">
+                <Typography variant="h6" component="p" gutterBottom>
+                    {activeView === 'created' ? "You haven't created any decks yet." : "You haven't saved any decks yet."}
+                </Typography>
+                <Typography variant="body1">
+                    {activeView === 'created' 
+                        ? 'Click the "+" or "Add Deck" button to create your own!'
+                        : 'Explore the "Community Decks" section to find and save decks shared by others!'}
+                </Typography>
+            </div>
+        );
+
         return (
         <>
             <div id="userListsContainer">
                 <h1 className="sr-only">My Decks</h1>
+                <div className="segmented-toggle">
+                    <button 
+                        className={activeView === 'created' ? 'active' : ''}
+                        onClick={() => setActiveView('created')}
+                    >
+                        Created
+                    </button>
+                    <button 
+                        className={activeView === 'saved' ? 'active' : ''}
+                        onClick={() => setActiveView('saved')}
+                    >
+                        Saved
+                    </button>
+                </div>
                 <div className="decks-container">
-                    {decks.length === 0 ? (
-                        <div className="empty-decks-message">
-                            <Typography variant="h6" component="p" gutterBottom>
-                                Your deck collection is empty.
-                            </Typography>
-                            <Typography variant="body1">
-                                Click the "+" or "Add Deck" button to create your own, or explore the "Community Decks" section to find and save decks shared by others!
-                            </Typography>
-                        </div>
+                    {decksToDisplay.length === 0 ? (
+                        <EmptyStateMessage />
                     ) : (
-                        decks.map((deck: any) => (
+                        decksToDisplay.map((deck: any) => (
                             <DeckCard
                                 item={deck}
                                 key={deck.deck_name + deck.id.toString()}
