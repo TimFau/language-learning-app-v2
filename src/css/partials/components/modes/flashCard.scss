@@ -174,28 +174,3 @@
 		width: 100%;
 	}
 }
-
-.question-animate-up {
-	opacity: 0;
-	transform: translateY(60px);
-	animation: slideUpFromCenter 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
-}
-
-.answer-fade-in {
-	opacity: 0;
-	animation: fadeInDelayed 0.3s ease-out 0s forwards;
-}
-
-@keyframes slideUpFromCenter {
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-@keyframes fadeInDelayed {
-	to {
-		opacity: 1;
-	}
-}
-
