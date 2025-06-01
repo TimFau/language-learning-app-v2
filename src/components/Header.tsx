@@ -15,8 +15,8 @@ import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Fab from '@mui/material/Fab';
 
-// Define the mobile nav breakpoint in JS (should match SCSS variable)
-export const MOBILE_NAV_BREAKPOINT = 700;
+// Define the mobile nav breakpoint in JS (should match the SCSS variable "$mobile-nav-breakpoint")
+export const MOBILE_NAV_BREAKPOINT = 820;
 
 export default function Nav() {
     const dispatch = useAppDispatch();
@@ -135,9 +135,8 @@ export default function Nav() {
                     onClick={() => modalCtx.openModal()}
                     sx={{
                         position: 'fixed',
-                        bottom: 55,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
+                        bottom: 65,
+                        right: '10px',
                         zIndex: 1300,
                         border: '3px solid white',
                         boxShadow: 3,
