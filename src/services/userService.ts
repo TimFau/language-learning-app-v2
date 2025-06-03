@@ -12,7 +12,11 @@ const client = new ApolloClient({
 });
 
 const getAccountDetails = async (userToken: string) => {
-    const { data } = await client.query({ query: gql(USERS_ME), context: { headers: { authorization: `Bearer ${userToken}` } } });
+    const { data } = await client.query({
+        query: gql(USERS_ME),
+        context: { headers: { authorization: `Bearer ${userToken}` } },
+        fetchPolicy: 'no-cache'
+    });
     return data;
 }
 
