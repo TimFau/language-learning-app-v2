@@ -48,6 +48,7 @@
         align-items: center;
         margin-bottom: $spacing-xl + $spacing-base;
         gap: $spacing-lg + $spacing-sm;
+        flex-direction: column-reverse;
 
         .hero-text {
             flex: 1;
@@ -66,6 +67,7 @@
 
         .hero-image {
             flex: 0 0 40%; // Adjust size as needed
+            max-width: 75%;
             img {
                 max-width: 100%;
                 height: auto;
@@ -151,7 +153,7 @@
             .hero-image {
                 order: -1; // Move image above text on small screens
                 flex: 0 0 auto; // Reset flex basis
-                width: 60%; // Adjust image width
+                width: 100%; // Adjust image width
             }
         }
         .landing-signup {

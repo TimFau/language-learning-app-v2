@@ -183,9 +183,8 @@ export default function GuestPage(props: LoggedOutProps) {
             {/* Hero Section */}
             <section className="landing-hero">
                 <div className="hero-text">
-                    <h1>Build your own language flashcards - instantly</h1>
-                    <p>Turn any Google Sheet into a quiz-ready flashcard deck in seconds. Study when you want, how you want.</p>
-                    <p>LangPulse is a fast, flexible flashcard web app built for learners who want total control over their vocab. No bloat. No barriers.</p>
+                    <h1>From spreadsheet to study session—instantly.</h1>
+                    <p>Create interactive language flashcards from your own Google Sheets. No fluff. No paywalls. Just your language goals, your way.</p>
                 </div>
                 <div className="hero-image">
                     <img src={`${import.meta.env.BASE_URL}images/langpulse-hero-image.png`} alt="Language learning illustration" />
@@ -194,7 +193,7 @@ export default function GuestPage(props: LoggedOutProps) {
 
             {/* Signup Section */}
             <section className="landing-signup">
-                <h3>Join LangPulse Today</h3>
+                <h3>Create Your First Deck Now</h3>
                  {/* Only show top alert for API/general errors */}
                  {(alertMsgs.length > 0 &&
                     <Alert severity="warning" className={classes.alert} data-testid="register-alert">
