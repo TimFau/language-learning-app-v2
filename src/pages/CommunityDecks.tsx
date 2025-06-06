@@ -3,13 +3,14 @@ import { useContext, useEffect, useState } from "react"
 import AuthContext from 'context/auth-context';
 import { gql, useQuery } from "@apollo/client";
 import { COMMUNITY_DECKS, SAVED_DECKS } from 'queries';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DeckCardSkeleton from 'components/DeckCardSkeleton';
 import ColdStartMessage from 'components/ColdStartMessage';
 import FetchErrorMessage from '../components/Unauthenticated/FetchErrorMessage';
 
 const CommunityDecks = () => {
     const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
     const [isColdStart, setIsColdStart] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -38,10 +39,29 @@ const CommunityDecks = () => {
     }, [loading, savedDecksLoading]);
 
     useEffect(() => {
-        if (communityDecksError || savedDecksError) {
-            setError(communityDecksError?.message || savedDecksError?.message || 'An unexpected error occurred.');
+        const allErrors = [communityDecksError, savedDecksError].filter(Boolean);
+
+        if (allErrors.length === 0) {
+            setError(null);
+            return;
         }
-    }, [communityDecksError, savedDecksError]);
+
+        const hasAuthError = allErrors.some(error => {
+            const isInvalidToken = error?.graphQLErrors?.some((err: any) => err.extensions?.code === 'INVALID_TOKEN');
+            const networkError = error?.networkError as any;
+            const isUnauthorized = networkError && [401, 403].includes(networkError.statusCode);
+            return isInvalidToken || isUnauthorized;
+        });
+
+        if (hasAuthError) {
+            authCtx.onLogout();
+            authCtx.onLoginOpen(true, false);
+            navigate('/');
+            return;
+        }
+
+        setError(allErrors[0]?.message || 'An unexpected error occurred.');
+    }, [communityDecksError, savedDecksError, authCtx, navigate]);
 
     // Scroll to top on mount (fixes mobile reload issue)
     useEffect(() => {
@@ -80,15 +100,7 @@ const CommunityDecks = () => {
         );
     }
 
-    // Handle 401 Unauthorized error
-    function hasStatusCode(err: any): err is { statusCode: number } {
-        return err && typeof err.statusCode === 'number';
-    }
-    const unauthorized = (communityDecksError && communityDecksError.networkError && hasStatusCode(communityDecksError.networkError) && communityDecksError.networkError.statusCode === 401) ||
-        (savedDecksError && savedDecksError.networkError && hasStatusCode(savedDecksError.networkError) && savedDecksError.networkError.statusCode === 401);
-    if (unauthorized) {
-        authCtx.onLogout();
-        authCtx.onLoginOpen(true, false);
+    if (!communityDecks?.decks) {
         return null;
     }
 

@@ -22,22 +22,25 @@ export default function Account() {
         userService.getAccountDetails(authCtx.userToken)
         .then(async response => {
             const data = await response;
-            if(data.errors) {
-                console.log('bad response', response)
-                const errorMessages = data.errors.map((error: any) => error.message).join(', ');
-                authCtx.onLogout()
-                authCtx.onLoginOpen(true, false);
-                setError(errorMessages);
-                return;
-            }
             dispatch({type: 'user/setUserName', value: data.users_me.first_name})
             setUserId(data.users_me.id)
             setIsReady(true)
             return true
         })
         .catch(error => {
-            // Handle token expiration (401 Unauthorized)
-            if (error && error.networkError && error.networkError.statusCode === 401) {
+            if (error.graphQLErrors) {
+                const hasInvalidTokenError = error.graphQLErrors.some(
+                    (err: any) => err.extensions?.code === 'INVALID_TOKEN'
+                );
+                if (hasInvalidTokenError) {
+                    authCtx.onLogout();
+                    authCtx.onLoginOpen(true, false);
+                    setError("Your session has expired. Please log in again.");
+                    return;
+                }
+            }
+            // Handle token expiration (401 Unauthorized or 403 Forbidden)
+            if (error && error.networkError && (error.networkError.statusCode === 401 || error.networkError.statusCode === 403)) {
                 authCtx.onLogout();
                 authCtx.onLoginOpen(true, false);
                 return;
