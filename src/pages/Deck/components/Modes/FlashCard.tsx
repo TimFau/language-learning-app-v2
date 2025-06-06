@@ -19,7 +19,7 @@ interface FlashCardProps {
 }
 
 const speak = (text: string, lang: string = 'en') => {
-    if ('speechSynthesis' in window) {
+    if ('speechSynthesis' in window && text) {
         const synth = window.speechSynthesis;
         synth.cancel();
         const processedText = text.replace(/_{2,}/g, 'blank');
