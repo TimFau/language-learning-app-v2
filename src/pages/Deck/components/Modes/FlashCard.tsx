@@ -21,12 +21,14 @@ interface FlashCardProps {
 const speak = (text: string, lang: string = 'en') => {
     if ('speechSynthesis' in window) {
         const synth = window.speechSynthesis;
+        synth.cancel();
+        const processedText = text.replace(/_{2,}/g, 'blank');
         const voices = synth.getVoices();
         // Try to find a voice that matches the lang exactly
-        const voice = voices.find(v => v.lang === lang) 
+        const voice = voices.find(v => v.lang === lang)
             // Or fallback to any voice that starts with the language (e.g., 'es')
             || voices.find(v => v.lang.startsWith(lang.split('-')[0]));
-        const utterance = new window.SpeechSynthesisUtterance(text);
+        const utterance = new window.SpeechSynthesisUtterance(processedText);
         utterance.lang = lang;
         if (voice) {
             utterance.voice = voice;
