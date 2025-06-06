@@ -109,6 +109,29 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
     }
 
     function handleSubmit () {
+        function handleResult(result: any) {
+            console.log('new deck result', result)
+            handleClose()
+        }
+
+        function sendRequest(sheetId: string) {
+            if(isAdd) {
+                deckService.addDeck(deckName, sheetId, nativeLangauge, learningLanguage, makePublic, authCtx.userToken, authCtx.userId).then(
+                    handleResult,
+                    (error) => {
+                        console.log(error);
+                    }
+                )
+            } else if (isEdit) {
+                deckService.updateDeck(deckName, sheetId, nativeLangauge, learningLanguage, makePublic, id, authCtx.userToken).then(
+                    handleResult,
+                    (error) => {
+                        console.log(error);
+                    }
+                )
+            }
+        }
+        
         // Extract Sheet ID from input (URL or ID)
         const extractedId = extractSheetId(deckId);
         if (!extractedId) {
@@ -128,30 +151,6 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
         .catch((error) => {
             console.error('Error', error)
         })
-
-        const handleResult = (result: any) => {
-            console.log('new deck result', result)
-            handleClose()
-        }
-
-        // Add deck to user_decks or update existing item
-        function sendRequest(sheetId: string) {
-            if(isAdd) {
-                deckService.addDeck(deckName, sheetId, nativeLangauge, learningLanguage, makePublic, authCtx.userToken, authCtx.userId).then(
-                    handleResult,
-                    (error) => {
-                        console.log(error);
-                    }
-                )
-            } else if (isEdit) {
-                deckService.updateDeck(deckName, sheetId, nativeLangauge, learningLanguage, makePublic, id, authCtx.userToken).then(
-                    handleResult,
-                    (error) => {
-                        console.log(error);
-                    }
-                )
-            }
-        }
     }
 
     function handleClose() {
@@ -249,7 +248,9 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     margin="normal"
                     inputProps={{ "data-testid": "native-language-input" } as any}
                 >
-                    {languageOptions.map((language: string) => <MenuItem value={language} key={language}>{language}</MenuItem>)}
+                    {languageOptions.map((language, index) => (
+                        <MenuItem key={index} value={language}>{language}</MenuItem>
+                    ))}
                 </TextField>
                 <TextField
                     select
@@ -262,13 +263,11 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                     margin="normal"
                     inputProps={{ "data-testid": "learning-language-input" } as any}
                 >
-                    {languageOptions.map((language: string) => {
-                        if (language !== nativeLangauge) {
-                            return <MenuItem value={language} key={language}>{language}</MenuItem>
-                        }
-                        return null
-                    })}
+                    {languageOptions.map((language, index) => (
+                        <MenuItem key={index} value={language}>{language}</MenuItem>
+                    ))}
                 </TextField>
+                
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -296,4 +295,4 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
     )
 }
 
-export default DeckManagementModal
+export default DeckManagementModal;
