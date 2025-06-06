@@ -106,19 +106,19 @@ const CommunityDecks = () => {
 
     // Process and display decks for authenticated users
     const decks = communityDecks.decks.map((deck: any) => {
+        const deckWithMeta = { ...deck };
         if (savedDecks) {
             const savedDeck = savedDecks.saved_decks.find((savedDeckItem: any) => savedDeckItem.deck_relation?.id === deck.id)
             if (savedDeck) {
-                return {
-                    isSaved: true,
-                    savedDeckId: savedDeck.id,
-                    ...deck
-                }
+                deckWithMeta.isSaved = true;
+                deckWithMeta.savedDeckId = savedDeck.id;
             }
-            return deck
         }
-        return deck
-    }).filter((deck:any) => deck.user_created?.username !== authCtx.userName)
+        if (deck.user_created?.username === authCtx.userName) {
+            deckWithMeta.isOwnDeck = true;
+        }
+        return deckWithMeta;
+    });
 
     return (
         <div className="page-container">

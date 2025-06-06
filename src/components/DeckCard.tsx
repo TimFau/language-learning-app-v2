@@ -58,7 +58,11 @@ const DeckCard = (props: DeckCardProps) => {
     return (
         <>
             <Card 
-                className={["deck-card", props.item.type === 'user' ? 'isUser' : 'notUser'].join(' ')}
+                className={[
+                    "deck-card", 
+                    props.item.type === 'user' ? 'isUser' : 'notUser',
+                    props.item.isOwnDeck ? 'is-own-deck' : ''
+                ].join(' ')}
                 data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
             >
                 <CardActionArea onClick={() => handleClick()} data-testid={`deck-card-action-area`} className="deck-card__action-area-top">
@@ -69,6 +73,7 @@ const DeckCard = (props: DeckCardProps) => {
                                 <Typography variant="subtitle2" component="span">{deck.Language2}</Typography>
                             </div>
                             <span className="deck-categories">
+                                {props.item.isOwnDeck && <Chip label="My Deck" size="small" className="my-deck-chip" color="primary" />}
                                 {deck.categories?.map((category: string) => <Chip label={category} key={category} size="small" />)}
                             </span>
                         </div>
@@ -81,20 +86,29 @@ const DeckCard = (props: DeckCardProps) => {
                     {props.item.type !== 'user' ?
                     <>
                         {authCtx.userToken && (
-                        <IconButton
-                            aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
-                            onClick={(e) => { 
-                                e.stopPropagation(); 
-                                if (authCtx.userToken) {
-                                    props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)
-                                } else {
-                                    console.log("User must be logged in to save decks");
-                                }
-                            }}
-                            size="large">
-                            {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
-                            
-                        </IconButton>
+                            props.item.isOwnDeck ? (
+                                <IconButton
+                                    aria-label={`Edit "${deckName}"`}
+                                    onClick={(e) => { e.stopPropagation(); handleEditDeck() }}
+                                    size="large">
+                                    <EditIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton
+                                    aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        if (authCtx.userToken) {
+                                            props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)
+                                        } else {
+                                            console.log("User must be logged in to save decks");
+                                        }
+                                    }}
+                                    size="large">
+                                    {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
+                                    
+                                </IconButton>
+                            )
                         )}
                     </>
                     :
