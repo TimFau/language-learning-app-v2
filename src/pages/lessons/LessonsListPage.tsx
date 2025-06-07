@@ -1,6 +1,15 @@
 import { gql, useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import 'css/pages/lesson.scss';
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  Typography,
+} from '@mui/material';
 
 const GET_LESSONS = gql`
   query GetLessons {
@@ -25,21 +34,40 @@ export default function LessonsListPage() {
   const lessons = data?.lessons || [];
 
   return (
-    <div className="lessons-list-page-container">
-      <h1 className="lessons-list-title">Lessons</h1>
-      {lessons.length === 0 ? (
-        <div className="lessons-empty">No lessons available yet.</div>
-      ) : (
-        <ul className="lessons-list">
-          {lessons.map((lesson: any) => (
-            <li key={lesson.slug} className="lessons-list-item">
-              <Link to={`${lesson.language}/${lesson.slug}`} className="lessons-list-link">
-                {lesson.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="lessons-list-page">
+      <Container maxWidth="lg">
+        <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
+          Lessons
+        </Typography>
+        {lessons.length === 0 ? (
+          <div className="lessons-empty">No lessons available yet.</div>
+        ) : (
+          <Grid container spacing={4}>
+            {lessons.map((lesson: any) => (
+              <Grid key={lesson.slug} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Card className="lesson-card">
+                  <CardActionArea
+                    component={Link}
+                    to={`${lesson.language}/${lesson.slug}`}
+                    className="lesson-card-action-area"
+                  >
+                    <CardMedia
+                      className="lesson-card-media"
+                      image="https://via.placeholder.com/345x140"
+                      title={lesson.title}
+                    />
+                    <CardContent className="lesson-card-content">
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {lesson.title}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Container>
     </div>
   );
 } 

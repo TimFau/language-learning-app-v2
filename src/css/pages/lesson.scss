@@ -71,39 +71,27 @@
   }
 }
 
-.lessons-list-page-container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: $spacing-lg $spacing-base;
+.lessons-list-page {
+  padding: $spacing-lg 0;
 
   .lessons-list-title {
-    font-size: $font-size-h2;
-    margin-bottom: $spacing-lg;
-    color: $primary-dark;
+    text-align: center;
+    margin-bottom: $spacing-xl !important;
     font-family: $font-family-secondary;
+    color: $primary-dark;
   }
 
-  .lessons-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .lesson-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-    .lessons-list-item {
-      margin-bottom: $spacing-base;
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
+  }
 
-    .lessons-list-link {
-      text-decoration: none;
-      color: $text-primary;
-      font-size: $font-size-lg;
-      font-weight: 500;
-      transition: color 0.2s;
-
-      &:hover {
-        color: $primary-dark;
-        text-decoration: underline;
-      }
-    }
+  .lesson-card-media {
+    height: 140px;
   }
 
   .lessons-loading,
@@ -114,4 +102,4 @@
     color: $text-secondary;
     font-size: $font-size-lg;
   }
-} 
+}
