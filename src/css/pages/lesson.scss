@@ -131,3 +131,22 @@
     font-size: $font-size-lg;
   }
 }
+
+.lessons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -16px; // Negative margin to counteract item padding
+
+  .lesson-grid-item {
+    padding: 16px; // Corresponds to spacing={4} -> 4*8px/2=16px
+    width: 100%;
+
+    @media (min-width: 600px) {
+      width: calc(50% - 32px);
+    }
+
+    @media (min-width: 960px) {
+      width: calc(33.3333% - 32px);
+    }
+  }
+}

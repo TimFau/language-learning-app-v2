@@ -10,26 +10,28 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 
 const GET_LESSONS = gql`
   query GetLessons {
     lessons {
-      title
-      slug
-      language
-      lesson_number
-      main_image {
-        id
-        title
-        filename_download
-        type
-        filesize
-        width
-        height
-      }
+      ...LessonCoreFields
     }
   }
+  ${LESSON_CORE_FIELDS}
 `;
+
+interface Lesson {
+  title: string;
+  slug: string;
+  language: string;
+  lesson_number: number;
+  main_image: {
+    id: string;
+  };
+  short_description: string;
+  Series: string[];
+}
 
 export default function LessonsListPage() {
   const { loading, error, data } = useQuery(GET_LESSONS);
@@ -40,7 +42,19 @@ export default function LessonsListPage() {
   if (error) {
     return <div className="lessons-error">Error loading lessons.</div>;
   }
-  const lessons = data?.lessons || [];
+  const lessons: Lesson[] = data?.lessons || [];
+
+  const lessonsBySeries: { [key: string]: Lesson[] } = lessons.reduce(
+    (acc, lesson) => {
+      const seriesName = lesson.Series?.[0] || 'Uncategorized';
+      if (!acc[seriesName]) {
+        acc[seriesName] = [];
+      }
+      acc[seriesName].push(lesson);
+      return acc;
+    },
+    {} as { [key: string]: Lesson[] }
+  );
 
   return (
     <div className="lessons-list-page">
@@ -51,38 +65,51 @@ export default function LessonsListPage() {
         {lessons.length === 0 ? (
           <div className="lessons-empty">No lessons available yet.</div>
         ) : (
-          <Grid container spacing={4}>
-            {lessons.map((lesson: any) => (
-              <Grid key={lesson.slug} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card className="lesson-card">
-                  <CardActionArea
-                    component={Link}
-                    to={`${lesson.language}/${lesson.slug}`}
-                    className="lesson-card-action-area"
-                  >
-                    <CardMedia
-                      component="img"
-                      className="lesson-card-media"
-                      image={
-                        lesson.main_image?.id
-                          ? `${import.meta.env.VITE_API_BASE?.replace(
-                              '/graphql',
-                              ''
-                            )}/assets/${lesson.main_image.id}`
-                          : 'https://via.placeholder.com/345x140'
-                      }
-                      alt={lesson.title}
-                    />
-                    <CardContent className="lesson-card-content">
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {lesson.title}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          Object.entries(lessonsBySeries).map(([seriesName, lessons]) => (
+            <div key={seriesName} className="series-group">
+              <Typography variant="h5" component="h2" gutterBottom className="series-title">
+                {seriesName}
+              </Typography>
+              <div className="lessons-grid">
+                {lessons.map((lesson: Lesson) => (
+                  <div key={lesson.slug} className="lesson-grid-item">
+                    <Card className="lesson-card">
+                      <CardActionArea
+                        component={Link}
+                        to={`${lesson.language}/${lesson.slug}`}
+                        className="lesson-card-action-area"
+                      >
+                        <CardMedia
+                          component="img"
+                          className="lesson-card-media"
+                          image={
+                            lesson.main_image?.id
+                              ? `${import.meta.env.VITE_API_BASE?.replace(
+                                  '/graphql',
+                                  ''
+                                )}/assets/${lesson.main_image.id}`
+                              : 'https://via.placeholder.com/345x140'
+                          }
+                          alt={lesson.title}
+                        />
+                        <CardContent className="lesson-card-content">
+                          <Typography variant="caption" display="block" color="text.secondary">
+                            Lesson {lesson.lesson_number}
+                          </Typography>
+                          <Typography gutterBottom variant="h5" component="h2">
+                            {lesson.title}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {lesson.short_description}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
         )}
       </Container>
     </div>

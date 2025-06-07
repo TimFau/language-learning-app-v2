@@ -12,27 +12,17 @@ import {
   Container,
   Typography,
 } from '@mui/material';
+import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 
 const GET_LESSON = gql`
   query GetLesson($language: String!, $slug: String!) {
     lessons(filter: { language: { _eq: $language }, slug: { _eq: $slug } }) {
-      title
-      slug
-      language
+      ...LessonCoreFields
       body
       deck_link
-      lesson_number
-      main_image {
-        id
-        title
-        filename_download
-        type
-        filesize
-        width
-        height
-      }
     }
   }
+  ${LESSON_CORE_FIELDS}
 `;
 
 export default function LessonPage() {
