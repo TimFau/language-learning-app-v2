@@ -3,6 +3,7 @@ import { gql, useQuery } from '@apollo/client';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import 'css/pages/lesson.scss';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -13,6 +14,8 @@ import {
   Typography,
 } from '@mui/material';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
+import ColdStartMessage from '../../components/ColdStartMessage';
+import { COLD_START_TIMEOUT } from '../../utils/constants';
 
 const GET_LESSON = gql`
   query GetLesson($language: String!, $slug: String!) {
@@ -31,9 +34,24 @@ export default function LessonPage() {
     variables: { language, slug },
     skip: !language || !slug,
   });
+  const [isColdStart, setIsColdStart] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
+      return () => clearTimeout(timer);
+    } else {
+      setIsColdStart(false);
+      return undefined;
+    }
+  }, [loading]);
 
   if (loading) {
-    return <div className="article-loading">Loading...</div>;
+    return isColdStart ? (
+      <ColdStartMessage />
+    ) : (
+      <div className="article-loading">Loading...</div>
+    );
   }
   if (error) {
     return <div className="article-error">Error loading article.</div>;

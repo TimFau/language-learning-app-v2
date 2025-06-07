@@ -7,6 +7,7 @@ import { SAVED_DECKS, USER_DECKS } from 'queries';
 import DeckCardSkeleton from '../DeckCardSkeleton';
 import ColdStartMessage from 'components/ColdStartMessage';
 import '../../css/partials/components/segmented-toggle.scss';
+import { COLD_START_TIMEOUT } from '../../utils/constants';
 
 interface UserListsProps {
     userId: string
@@ -38,7 +39,7 @@ export default function UserDecks(props: UserListsProps) {
     const [isColdStart, setIsColdStart] = useState(false);
     useEffect(() => {
         if (loading || communityLoading) {
-            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);

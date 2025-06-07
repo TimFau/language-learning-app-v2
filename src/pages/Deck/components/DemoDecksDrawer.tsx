@@ -6,6 +6,7 @@ import DeckCard from '../../../components/DeckCard';
 import DeckCardSkeleton from '../../../components/DeckCardSkeleton';
 import ColdStartMessage from '../../../components/ColdStartMessage';
 import FetchErrorMessage from '../../../components/Unauthenticated/FetchErrorMessage';
+import { COLD_START_TIMEOUT } from '../../../utils/constants';
 
 //
 // This drawer contains decks that are available for guest users to try out the app
@@ -50,7 +51,10 @@ export default function DemoDecks(props: DemoDeckDrawerProps) {
         );
         let coldStartTimer: ReturnType<typeof setTimeout> | null = null;
         if (loading) {
-            coldStartTimer = setTimeout(() => setIsColdStart(true), 4000);
+            coldStartTimer = setTimeout(
+                () => setIsColdStart(true),
+                COLD_START_TIMEOUT
+            );
         }
         if (ENABLE_ARTIFICIAL_DELAY) {
             setTimeout(fetchData, ARTIFICIAL_DELAY_MS);

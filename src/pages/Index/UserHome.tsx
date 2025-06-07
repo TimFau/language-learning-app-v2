@@ -6,6 +6,7 @@ import userService from 'services/userService';
 import DeckCardSkeleton from '../../components/DeckCardSkeleton';
 import ColdStartMessage from '../../components/ColdStartMessage';
 import FetchErrorMessage from '../../components/Unauthenticated/FetchErrorMessage';
+import { COLD_START_TIMEOUT } from '../../utils/constants';
 
 export default function Account() {
 
@@ -56,7 +57,7 @@ export default function Account() {
 
     useEffect(() => {
         if (!isReady) {
-            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);

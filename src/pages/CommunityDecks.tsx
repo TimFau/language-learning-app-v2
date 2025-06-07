@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DeckCardSkeleton from 'components/DeckCardSkeleton';
 import ColdStartMessage from 'components/ColdStartMessage';
 import FetchErrorMessage from '../components/Unauthenticated/FetchErrorMessage';
+import { COLD_START_TIMEOUT } from '../utils/constants';
 
 const CommunityDecks = () => {
     const authCtx = useContext(AuthContext);
@@ -30,7 +31,7 @@ const CommunityDecks = () => {
     useEffect(() => {
         if (loading || savedDecksLoading) {
             setError(null);
-            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);

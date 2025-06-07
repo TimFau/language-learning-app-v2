@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'css/pages/lesson.scss';
 import {
@@ -7,10 +8,11 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid,
   Typography,
 } from '@mui/material';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
+import ColdStartMessage from '../../components/ColdStartMessage';
+import { COLD_START_TIMEOUT } from '../../utils/constants';
 
 const GET_LESSONS = gql`
   query GetLessons {
@@ -35,9 +37,24 @@ interface Lesson {
 
 export default function LessonsListPage() {
   const { loading, error, data } = useQuery(GET_LESSONS);
+  const [isColdStart, setIsColdStart] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
+      return () => clearTimeout(timer);
+    } else {
+      setIsColdStart(false);
+      return undefined;
+    }
+  }, [loading]);
 
   if (loading) {
-    return <div className="lessons-loading">Loading...</div>;
+    return isColdStart ? (
+      <ColdStartMessage />
+    ) : (
+      <div className="lessons-loading">Loading...</div>
+    );
   }
   if (error) {
     return <div className="lessons-error">Error loading lessons.</div>;

@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ColdStartMessage from 'components/ColdStartMessage';
+import { COLD_START_TIMEOUT } from '../../utils/constants';
 
 export default function Login() {
 
@@ -28,7 +29,7 @@ export default function Login() {
     useEffect(() => {
         if (loading) {
             setApiError(null);
-            const timer = setTimeout(() => setIsColdStart(true), 4000);
+            const timer = setTimeout(() => setIsColdStart(true), COLD_START_TIMEOUT);
             return () => clearTimeout(timer);
         } else {
             setIsColdStart(false);
