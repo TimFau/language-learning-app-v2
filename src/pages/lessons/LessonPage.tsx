@@ -1,7 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import 'css/pages/lesson.scss';
 import { useState, useEffect } from 'react';
 import {
@@ -16,6 +14,7 @@ import {
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
+import LessonContent from './components/LessonContent';
 
 const GET_LESSON = gql`
   query GetLesson($language: String!, $slug: String!) {
@@ -23,6 +22,7 @@ const GET_LESSON = gql`
       ...LessonCoreFields
       body
       deck_link
+      lesson_content
     }
   }
   ${LESSON_CORE_FIELDS}
@@ -86,11 +86,7 @@ export default function LessonPage() {
             >
               {lesson.title}
             </Typography>
-            <Box className="lesson-page-body">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {lesson.body}
-              </ReactMarkdown>
-            </Box>
+            <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
               {lesson.deck_link && (
                 <Button
@@ -116,4 +112,4 @@ export default function LessonPage() {
       </Container>
     </Box>
   );
-} 
+}

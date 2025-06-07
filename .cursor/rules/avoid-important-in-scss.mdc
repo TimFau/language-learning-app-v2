@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Avoid Using `!important` in SCSS
+
+In order to maintain clean, predictable, and scalable stylesheets, the use of `!important` is strongly discouraged. It can lead to specificity wars and make debugging CSS difficult.
+
+## Overriding Styles
+
+When you need to override existing styles, especially those from a component library like Material-UI (MUI), you should almost always use **increased specificity**.
+
+### How to Increase Specificity
+
+Instead of this:
+
+```scss
+.my-custom-class {
+  background-color: blue !important;
+}
+```
+
+Do this by targeting the component's root class:
+
+```scss
+.my-custom-class {
+  &.MuiButton-root {
+    background-color: blue;
+  }
+}
+```
+
+By chaining your custom class with the component's class (`.MuiButton-root` in this example), you create a more specific selector that will override the base styles without resorting to `!important`.
+
+## When is `!important` Acceptable?
+
+There are very rare cases where `!important` might be necessary, such as overriding inline styles added by a third-party script that you cannot control.
+
+If you absolutely must use it, you **must** leave a comment explaining why it was necessary:
+
+```scss
+.my-component {
+  // EXCEPTION: This style is needed to override an inline style from the xyz-plugin.
+  display: block !important;
+}
+```
+
+This makes the code's intent clear and provides context for future developers.

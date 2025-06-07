@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# SCSS Variable Validation
+
+When making any modifications or additions to SCSS files, it is mandatory to verify that all SCSS variables (e.g., `$primary-color`, `$spacing-lg`) are defined in the project's global variables file.
+
+The single source of truth for all SCSS variables is `[variables.scss](mdc:src/css/partials/base/variables.scss)`.
+
+Before considering any task involving SCSS as complete, you must cross-reference your changes against this file to ensure no undefined variables are used. This prevents CSS compilation errors and maintains consistency with the established design system.

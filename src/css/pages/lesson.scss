@@ -5,10 +5,12 @@
 }
 
 .lesson-page-card {
-  margin-top: $spacing-lg;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-  border-radius: 12px !important;
   overflow: hidden;
+  &.MuiCard-root {
+    margin-top: $spacing-lg;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+  }
 }
 
 .lesson-page-media {
@@ -18,14 +20,18 @@
 }
 
 .lesson-page-content {
-  padding: $spacing-xl !important;
+  &.MuiCardContent-root {
+    padding: $spacing-xl;
+  }
 }
 
 .lesson-page-title {
   font-family: $font-family-secondary;
-  font-size: $font-size-h2 !important;
   color: $primary-dark;
-  margin-bottom: $spacing-lg !important;
+  &.MuiTypography-root {
+    font-size: $font-size-h2;
+    margin-bottom: $spacing-lg;
+  }
 }
 
 .lesson-page-body {
@@ -37,7 +43,6 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5em 0;
   }
 
   th,
@@ -66,19 +71,21 @@
 }
 
 .lesson-page-cta {
-  background: $cta-button-color !important;
-  color: $white !important;
-  padding: $spacing-sm $spacing-lg !important;
-  border-radius: 4px !important;
-  text-decoration: none !important;
-  font-weight: 600 !important;
-  font-size: $font-size-base !important;
-  transition: background 0.2s !important;
   align-self: flex-start;
+  &.MuiButton-root {
+    background: $cta-button-color;
+    color: $white;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: $font-size-base;
+    transition: background 0.2s;
 
-  &:hover {
-    background: $accent-orange !important;
-    color: $primary-dark !important;
+    &:hover {
+      background: $accent-orange;
+      color: $primary-dark;
+    }
   }
 }
 
@@ -103,9 +110,11 @@
 
   .lessons-list-title {
     text-align: center;
-    margin-bottom: $spacing-xl !important;
     font-family: $font-family-secondary;
     color: $primary-dark;
+    &.MuiTypography-root {
+      margin-bottom: $spacing-xl;
+    }
   }
 
   .lesson-card {
@@ -113,7 +122,7 @@
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -147,6 +156,78 @@
 
     @media (min-width: 960px) {
       width: calc(33.3333% - 32px);
+    }
+  }
+}
+
+.vocab-table-section {
+  margin-bottom: $spacing-xl;
+
+  .vocab-table-title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-family: $font-family-secondary;
+    &.MuiTypography-root {
+      font-size: $font-size-xl;
+      margin-bottom: $spacing-base;
+    }
+  }
+
+  .vocab-table-description {
+    &.MuiTypography-root {
+      margin-bottom: $spacing-base;
+    }
+  }
+
+  .vocab-table-container {
+    border: 1px solid $input-border-color;
+    &.MuiPaper-root {
+      box-shadow: none;
+      border-radius: 8px;
+    }
+  }
+
+  .vocab-table-tip,
+  .vocab-table-note {
+    margin-top: $spacing-sm;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    color: $text-secondary;
+  }
+}
+
+.callout-section {
+  background-color: $background-main;
+  border-radius: 8px;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  border-left: 4px solid $primary;
+
+  .callout-title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-family: $font-family-secondary;
+    &.MuiTypography-root {
+      font-size: $font-size-lg;
+      margin-bottom: $spacing-sm;
+    }
+  }
+
+  .callout-text {
+    margin-bottom: $spacing-base;
+  }
+
+  .callout-link {
+    &.MuiButton-root {
+      background: $cta-button-color;
+      color: $white;
+
+      &:hover {
+        background: $accent-orange;
+      }
     }
   }
 }
