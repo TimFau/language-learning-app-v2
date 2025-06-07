@@ -14,7 +14,6 @@
 .lesson-page-media {
   width: 100%;
   height: auto;
-  max-height: 400px;
   object-fit: cover;
 }
 
@@ -119,7 +118,8 @@
   }
 
   .lesson-card-media {
-    height: 140px;
+    height: auto;
+    width: 100%;
   }
 
   .lessons-loading,

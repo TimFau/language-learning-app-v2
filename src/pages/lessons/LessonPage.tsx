@@ -22,6 +22,15 @@ const GET_LESSON = gql`
       body
       deck_link
       lesson_number
+      main_image {
+        id
+        title
+        filename_download
+        type
+        filesize
+        width
+        height
+      }
     }
   }
 `;
@@ -50,7 +59,14 @@ export default function LessonPage() {
           <CardMedia
             component="img"
             className="lesson-page-media"
-            image="https://via.placeholder.com/1200x400"
+            image={
+              lesson.main_image
+                ? `${import.meta.env.VITE_API_BASE?.replace(
+                    '/graphql',
+                    ''
+                  )}/assets/${lesson.main_image.id}`
+                : 'https://via.placeholder.com/1200x400'
+            }
             alt={lesson.title}
           />
           <CardContent className="lesson-page-content">

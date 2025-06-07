@@ -18,6 +18,15 @@ const GET_LESSONS = gql`
       slug
       language
       lesson_number
+      main_image {
+        id
+        title
+        filename_download
+        type
+        filesize
+        width
+        height
+      }
     }
   }
 `;
@@ -52,9 +61,17 @@ export default function LessonsListPage() {
                     className="lesson-card-action-area"
                   >
                     <CardMedia
+                      component="img"
                       className="lesson-card-media"
-                      image="https://via.placeholder.com/345x140"
-                      title={lesson.title}
+                      image={
+                        lesson.main_image?.id
+                          ? `${import.meta.env.VITE_API_BASE?.replace(
+                              '/graphql',
+                              ''
+                            )}/assets/${lesson.main_image.id}`
+                          : 'https://via.placeholder.com/345x140'
+                      }
+                      alt={lesson.title}
                     />
                     <CardContent className="lesson-card-content">
                       <Typography gutterBottom variant="h5" component="h2">
