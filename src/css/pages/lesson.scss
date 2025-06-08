@@ -39,6 +39,10 @@
 }
 
 .lesson-page {
+  &-back-button {
+    margin-bottom: $spacing-lg;
+    display: flex;
+  }
   &-description {
     padding-bottom: $spacing-lg;
   }

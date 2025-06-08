@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import 'css/pages/lesson.scss';
 import { useState, useEffect } from 'react';
@@ -10,6 +10,7 @@ import {
   Container,
   Typography,
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
@@ -30,6 +31,7 @@ const GET_LESSON = gql`
 
 export default function LessonPage() {
   const { language, slug } = useParams();
+  const navigate = useNavigate();
   const { loading, error, data } = useQuery(GET_LESSON, {
     variables: { language, slug },
     skip: !language || !slug,
@@ -70,6 +72,15 @@ export default function LessonPage() {
   return (
     <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
+        <Box className="lesson-page-back-button">
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(`/lessons`)}
+            variant="outlined"
+          >
+            Back to Lessons
+          </Button>
+        </Box>
         <Card className="lesson-page-card">
           <LessonHeader title={lesson.title} imageUrl={imageUrl} />
           <CardContent className="lesson-page-content">
