@@ -23,6 +23,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: $spacing-sm;
     
     @media (min-width: 960px) {
       flex: 0 1 50%;
@@ -30,6 +32,17 @@
     @media screen and (max-width: 760px) {
       flex-direction: column;
       gap: $spacing-sm;
+    }
+  }
+
+  .lesson-header-text {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-sm;
+    align-items: center;
+    text-align: center;
+    @media screen and (max-width: 760px) {
+      flex-direction: column;
     }
   }
 
@@ -48,6 +61,34 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       max-width: 500px;
       margin: 0 auto;
+    }
+  }
+
+  .lesson-series-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    margin-top: $spacing-xs;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .series-icon {
+      color: $text-secondary;
+      font-size: 20px;
+    }
+
+    .series-chip {
+      &.MuiChip-root {
+        background-color: $background-main;
+        border-color: $primary;
+        color: $text-primary;
+        font-size: $font-size-sm;
+        height: 28px;
+
+        &:hover {
+          background-color: rgba($primary, 0.04);
+        }
+      }
     }
   }
 }
