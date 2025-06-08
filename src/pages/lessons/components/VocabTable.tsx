@@ -95,11 +95,9 @@ const normalizeSpanishText = (text: string): string => {
 };
 
 const renderForeignPhrase = (phrase: string, englishTranslation: string, language: 'spanish' | 'french' | 'german', wordTranslations?: { [key: string]: string }) => {
-
   // TODO: remove englishTranslation if not needed
   console.log('englishTranslation', englishTranslation);
 
-  const words = phrase.split(' ');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedWord, setSelectedWord] = useState<{word: string, translation: string} | null>(null);
@@ -138,10 +136,32 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
     }
   };
 
+  // Process the phrase into words and separators
+  const processPhrase = (phrase: string) => {
+    return phrase.split(' ').map(segment => {
+      if (segment.includes('/')) {
+        const parts = segment.split('/');
+        return parts.reduce((acc: (string | { type: 'separator', value: string })[], part, idx) => {
+          if (idx > 0) acc.push({ type: 'separator', value: '/' });
+          acc.push(part);
+          return acc;
+        }, []);
+      }
+      return [segment];
+    }).flat();
+  };
+
+  const elements = processPhrase(phrase);
+
   return (
     <>
       <span className="foreign-phrase">
-        {words.map((word, index) => {
+        {elements.map((element, index) => {
+          if (typeof element === 'object' && element.type === 'separator') {
+            return <span key={`sep-${index}`}>{element.value}</span>;
+          }
+
+          const word = element as string;
           const normalizedWord = normalizeSpanishText(word);
           const translation = normalizedTranslations[normalizedWord];
           
