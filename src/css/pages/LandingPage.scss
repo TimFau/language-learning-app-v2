@@ -13,7 +13,7 @@
     font-family: $font-family-base;
     max-width: 1000px; // Constrain width for better readability on large screens
     margin: 0 auto; // Center the container
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     color: $text-primary; // Use new variable
     background-color: $background-main; // Use new variable
     min-height: 100vh; // Ensure it takes full height
@@ -23,7 +23,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: $spacing-base 0;
         margin-bottom: $spacing-xl;
 
         .logo-container {
@@ -168,12 +167,6 @@
         .landing-header {
             padding: $spacing-sm 0;
             margin-bottom: $spacing-xl;
-            // .logo-container {
-            //     width: 170px;
-            //     img {
-            //         width: 100%;
-            //     }
-            // }
             .demo-button {
                  font-size: $font-size-xs; // Smaller button text
                  padding: $spacing-xs $spacing-base !important;

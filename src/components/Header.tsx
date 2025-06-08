@@ -53,9 +53,12 @@ export default function Nav() {
         navigate('/');
     }
 
+    // Hide header on landing page for guests
+    const shouldShowHeader = isLoggedIn() || pathName === '/deck' || (pathName !== '/' && !isLoggedIn());
+
     return (
         <>
-        {(isLoggedIn() || pathName === '/deck') &&
+        {shouldShowHeader &&
         <AppBar position="sticky" color="default" elevation={1} sx={{ zIndex: 1000, borderBottom: 1, borderColor: 'divider', backgroundColor: 'background.main' }} className="app-bar">
             <Toolbar disableGutters sx={{ minHeight: 'unset', paddingY: '20px', paddingX: 0 }}>
                 <div className="app-bar-inner max-width-wrapper" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -68,44 +71,59 @@ export default function Nav() {
                                 <span className="nav-label">Exit Deck</span>
                             </Button>
                         }
-                        {/* Only show nav items in header if not mobile */}
-                        {!isMobile && (
+                        {/* Show nav items in header if authenticated and not mobile, or if guest (regardless of mobile) */}
+                        {(!isMobile || !isLoggedIn()) && (
                             <>
-                                {!deckStarted &&
+                                {!deckStarted && (
                                     <>
-                                        {isLoggedIn() &&
+                                        {isLoggedIn() ? (
                                             <>
-                                            <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
-                                                <Button className="nav-item-wrapper" startIcon={<CollectionsBookmarkIcon />}>
-                                                    <span className="nav-label">My Decks</span>
-                                                </Button>
-                                            </Link>
-                                            <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
-                                                <Button className="nav-item-wrapper" startIcon={<LocalLibraryIcon />}>
-                                                    <span className="nav-label">Community Decks</span>
-                                                </Button>
-                                            </Link>
-                                            <Link to="/lessons" className={['nav-item', pathName.startsWith('/lessons') ? 'active' : ''].join(' ')}>
-                                                <Button className="nav-item-wrapper" startIcon={<MenuBookIcon />}>
-                                                    <span className="nav-label">Lessons</span>
-                                                </Button>
-                                            </Link>
+                                                <Link to="/" className={['nav-item', pathName === '/' ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<CollectionsBookmarkIcon />}>
+                                                        <span className="nav-label">My Decks</span>
+                                                    </Button>
+                                                </Link>
+                                                <Link to="/decks" className={['nav-item', pathName === '/decks' ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<LocalLibraryIcon />}>
+                                                        <span className="nav-label">Community Decks</span>
+                                                    </Button>
+                                                </Link>
+                                                <Link to="/lessons" className={['nav-item', pathName.startsWith('/lessons') ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<MenuBookIcon />}>
+                                                        <span className="nav-label">Lessons</span>
+                                                    </Button>
+                                                </Link>
                                             </>
-                                        }
-                                        {pathName !== "/deck" && (
+                                        ) : (
                                             <>
-                                                <Button 
-                                                    onClick={() => modalCtx.openModal()} 
+                                                <Link to="/lessons" className={['nav-item', pathName.startsWith('/lessons') ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<MenuBookIcon />}>
+                                                        <span className="nav-label">Lessons</span>
+                                                    </Button>
+                                                </Link>
+                                                <Button
+                                                    onClick={() => navigate('/')}
+                                                    color="primary"
+                                                    variant="contained"
                                                     className="nav-item"
-                                                    data-testid="create-deck-button"
-                                                    startIcon={<AddIcon />}
+                                                    sx={{ marginLeft: 2 }}
                                                 >
-                                                    <span className="nav-label">Add Deck</span>
+                                                    Sign Up
                                                 </Button>
                                             </>
                                         )}
+                                        {isLoggedIn() && pathName !== "/deck" && (
+                                            <Button 
+                                                onClick={() => modalCtx.openModal()} 
+                                                className="nav-item"
+                                                data-testid="create-deck-button"
+                                                startIcon={<AddIcon />}
+                                            >
+                                                <span className="nav-label">Add Deck</span>
+                                            </Button>
+                                        )}
                                     </>
-                                }
+                                )}
                             </>
                         )}
                         {/* Always show logout button in header when logged in and not on /deck */}
@@ -125,7 +143,7 @@ export default function Nav() {
             </Toolbar>
         </AppBar>
         }
-        {/* Bottom Navigation for mobile */}
+        {/* Bottom Navigation for mobile - only for authenticated users */}
         {isMobile && isLoggedIn() && pathName !== '/deck' && (
             <>
                 {/* Floating Action Button for Add Deck */}
