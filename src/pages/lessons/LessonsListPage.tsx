@@ -9,6 +9,7 @@ import {
   CardMedia,
   Container,
   Typography,
+  Skeleton,
 } from '@mui/material';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 import ColdStartMessage from '../../components/ColdStartMessage';
@@ -35,6 +36,28 @@ interface Lesson {
   Series: string[];
 }
 
+function LessonCardSkeleton() {
+  return (
+    <div className="lesson-grid-item">
+      <Card className="lesson-card">
+        <CardActionArea className="lesson-card-action-area">
+          <Skeleton 
+            variant="rectangular" 
+            className="lesson-card-media"
+            height={140}
+          />
+          <CardContent className="lesson-card-content">
+            <Skeleton variant="text" width={60} />
+            <Skeleton variant="text" height={32} style={{ marginBottom: 8 }} />
+            <Skeleton variant="text" />
+            <Skeleton variant="text" width="80%" />
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </div>
+  );
+}
+
 export default function LessonsListPage() {
   const { loading, error, data } = useQuery(GET_LESSONS);
   const [isColdStart, setIsColdStart] = useState(false);
@@ -53,7 +76,23 @@ export default function LessonsListPage() {
     return isColdStart ? (
       <ColdStartMessage />
     ) : (
-      <div className="lessons-loading">Loading...</div>
+      <div className="page-container lessons-list-page">
+        <Container maxWidth="lg">
+          <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
+            <Skeleton width={200} />
+          </Typography>
+          <div className="series-group">
+            <Typography variant="h5" component="h2" gutterBottom className="series-title">
+              <Skeleton width={150} />
+            </Typography>
+            <div className="lessons-grid">
+              {[...Array(6)].map((_, index) => (
+                <LessonCardSkeleton key={index} />
+              ))}
+            </div>
+          </div>
+        </Container>
+      </div>
     );
   }
   if (error) {
