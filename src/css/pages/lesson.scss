@@ -296,6 +296,12 @@
     gap: $spacing-xs;
     color: $text-secondary;
   }
+
+  .vocab-table-cell {
+    &-translation > div  {
+      justify-content: space-between;
+    }
+  }
 }
 
 .callout-section {

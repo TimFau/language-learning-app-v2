@@ -9,7 +9,9 @@ import {
   TableRow,
   Typography,
   Box,
+  Button,
 } from '@mui/material';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 interface VocabItem {
   en: string;
@@ -31,6 +33,25 @@ interface TextObject {
   type: string;
   text: string;
 }
+
+const speak = (text: string, lang: string = 'es') => {
+  if ('speechSynthesis' in window && text) {
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    const processedText = text.replace(/_{2,}/g, 'blank');
+    const voices = synth.getVoices();
+    // Try to find a voice that matches the lang exactly
+    const voice = voices.find(v => v.lang === lang)
+      // Or fallback to any voice that starts with the language (e.g., 'es')
+      || voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+    const utterance = new window.SpeechSynthesisUtterance(processedText);
+    utterance.lang = lang;
+    if (voice) {
+      utterance.voice = voice;
+    }
+    synth.speak(utterance);
+  }
+};
 
 export default function VocabTable({ section }: VocabTableProps) {
   const renderText = (text: string | TextObject | undefined) => {
@@ -63,8 +84,20 @@ export default function VocabTable({ section }: VocabTableProps) {
           <TableBody>
             {section.vocab_items.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{item.en}</TableCell>
-                <TableCell>{item.es}</TableCell>
+                <TableCell className="vocab-table-cell vocab-table-cell-term">{item.en}</TableCell>
+                <TableCell className="vocab-table-cell vocab-table-cell-translation">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {item.es}
+                    <Button
+                      aria-label="Pronounce word"
+                      onClick={() => speak(item.es, 'es')}
+                      size="small"
+                      className="pronounce-btn"
+                    >
+                      <VolumeUpIcon />
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
