@@ -61,7 +61,7 @@ export default function LessonPage() {
     return <div className="article-not-found">Not Found</div>;
   }
   return (
-    <Box className="lesson-page-container">
+    <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
         <Card className="lesson-page-card">
           <CardMedia

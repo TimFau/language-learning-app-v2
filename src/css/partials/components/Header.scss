@@ -25,6 +25,7 @@
 
 .mobile-bottom-nav-root .mobile-bottom-nav {
   justify-content: space-between;
+  height: $mobile-nav-height;
   .MuiBottomNavigationAction-root {
     .MuiBottomNavigationAction-label {
       font-size: 0.75rem;

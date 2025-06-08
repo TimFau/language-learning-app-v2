@@ -59,7 +59,8 @@ $warning: $accent-orange;// Warning state
 $info: $primary-dark;    // Info state
 $danger: #f44336;        // Error/danger state
 
-// Breakpoint for mobile navigation (used for BottomNavigation)
+//  BottomNavigation
+$mobile-nav-height: 56px;
 $mobile-nav-breakpoint: 820px;
 
 $border-radius-base: 3px;

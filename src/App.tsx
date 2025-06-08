@@ -1,12 +1,13 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
-import { AuthContextProvider } from 'context/auth-context';
+import AuthContext, { AuthContextProvider } from 'context/auth-context';
 import { ModalContextProvider } from 'context/modal-context';
 
 import MainLayout from './layouts/Main';
 
 import './css/main.scss';
+import { useContext, useEffect } from 'react';
 
 declare module '@mui/system' {
   interface DefaultTheme extends Theme {}
@@ -59,6 +60,27 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+function AppContent() {
+  const authContext = useContext(AuthContext);
+
+  useEffect(() => {
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      if (!authContext.authLoading && authContext.userToken) {
+        rootElement.classList.add('logged-in');
+      } else {
+        rootElement.classList.remove('logged-in');
+      }
+    }
+  }, [authContext.authLoading, authContext.userToken]);
+
+  return (
+    <>
+      <MainLayout />
+    </>
+  );
+}
+
 export default function TranslationApp() {
   return (
     <AuthContextProvider>
@@ -66,7 +88,7 @@ export default function TranslationApp() {
         <ApolloProvider client={client}>
           <BrowserRouter basename="/">
             <ThemeProvider theme={theme}>
-              <MainLayout />
+              <AppContent />
             </ThemeProvider>
           </BrowserRouter>
         </ApolloProvider>

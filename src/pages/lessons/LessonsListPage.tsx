@@ -74,7 +74,7 @@ export default function LessonsListPage() {
   );
 
   return (
-    <div className="lessons-list-page">
+    <div className="page-container lessons-list-page">
       <Container maxWidth="lg">
         <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
           Lessons
