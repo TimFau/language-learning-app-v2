@@ -20,9 +20,9 @@ interface CalloutProps {
 export default function Callout({ section }: CalloutProps) {
   const renderText = () => {
     if (typeof section.text === 'object' && section.text !== null) {
-      return section.text.text;
+      return section.text.text || '';
     }
-    return section.text;
+    return section.text || '';
   };
 
   return (

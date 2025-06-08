@@ -56,9 +56,9 @@ const speak = (text: string, lang: string = 'es') => {
 export default function VocabTable({ section }: VocabTableProps) {
   const renderText = (text: string | TextObject | undefined) => {
     if (typeof text === 'object' && text !== null) {
-      return text.text;
+      return text.text || '';
     }
-    return text;
+    return text || '';
   };
 
   return (
