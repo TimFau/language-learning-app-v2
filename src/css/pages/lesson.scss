@@ -72,6 +72,7 @@
     margin-top: $spacing-xs;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 0 calc($lesson-header-flag-width - $spacing-base);
 
     .series-icon {
       color: $text-secondary;
@@ -98,7 +99,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  max-width: 50px;
+  max-width: $lesson-header-flag-width;
   border-radius: 4px;
   z-index: 1;
 }
