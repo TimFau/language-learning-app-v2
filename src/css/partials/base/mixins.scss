@@ -4,7 +4,6 @@
 	margin: 0 auto;
 	box-sizing: border-box;
 	@media screen and (max-width: 1480px) {
-		padding-left: $spacing-lg;
-		padding-right: $spacing-lg;
+		padding: $spacing-lg $spacing-base $spacing-base $spacing-base;
 	}
 }

@@ -4,12 +4,51 @@
   padding: $spacing-lg 0;
 }
 
-.lesson-page-card {
-  overflow: hidden;
-  &.MuiCard-root {
-    margin-top: $spacing-lg;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
+.lesson-header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  .lesson-header-content {
+    flex: 1;
+    min-width: 0;
+    padding-top: $spacing-lg;
+    
+    @media (min-width: 960px) {
+      flex: 0 1 50%;
+    }
+  }
+
+  .lesson-header-media {
+    flex: 1;
+    min-width: 0;
+    
+    @media (min-width: 960px) {
+      flex: 0 1 50%;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+}
+
+.lesson-page {
+  &-description {
+    padding-bottom: $spacing-lg;
+  }
+  &-card {
+    overflow: hidden;
+    &.MuiCard-root {
+      margin-top: $spacing-lg;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+    }
   }
 }
 
@@ -19,18 +58,15 @@
   object-fit: cover;
 }
 
-.lesson-page-content {
-  &.MuiCardContent-root {
-    padding: $spacing-xl;
-  }
-}
+// .lesson-page-content {
+  
+// }
 
 .lesson-page-title {
   font-family: $font-family-secondary;
   color: $primary-dark;
   &.MuiTypography-root {
     font-size: $font-size-h2;
-    margin-bottom: $spacing-lg;
   }
 }
 

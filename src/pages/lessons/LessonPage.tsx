@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   Container,
   Typography,
 } from '@mui/material';
@@ -15,6 +14,7 @@ import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragm
 import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
 import LessonContent from './components/LessonContent';
+import LessonHeader from './components/LessonHeader';
 
 const GET_LESSON = gql`
   query GetLesson($language: String!, $slug: String!) {
@@ -60,32 +60,19 @@ export default function LessonPage() {
   if (!lesson) {
     return <div className="article-not-found">Not Found</div>;
   }
+
+  const imageUrl = lesson.main_image
+    ? `${import.meta.env.VITE_API_BASE?.replace('/graphql', '')}/assets/${
+        lesson.main_image.id
+      }`
+    : 'https://via.placeholder.com/1200x400';
+
   return (
     <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
         <Card className="lesson-page-card">
-          <CardMedia
-            component="img"
-            className="lesson-page-media"
-            image={
-              lesson.main_image
-                ? `${import.meta.env.VITE_API_BASE?.replace(
-                    '/graphql',
-                    ''
-                  )}/assets/${lesson.main_image.id}`
-                : 'https://via.placeholder.com/1200x400'
-            }
-            alt={lesson.title}
-          />
+          <LessonHeader title={lesson.title} imageUrl={imageUrl} />
           <CardContent className="lesson-page-content">
-            <Typography
-              variant="h3"
-              component="h1"
-              gutterBottom
-              className="lesson-page-title"
-            >
-              {lesson.title}
-            </Typography>
             <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
               {lesson.deck_link && (
