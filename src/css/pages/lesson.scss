@@ -310,25 +310,23 @@
     }
   }
 
-  .spanish-phrase {
+  .foreign-phrase {
     display: inline-flex;
     flex-wrap: wrap;
     gap: 4px;
     
     .hoverable-word {
-      cursor: help;
+      cursor: pointer;
       border-bottom: 1px dotted $primary-dark;
       transition: all 0.2s ease;
+      color: inherit;
+      text-decoration: none;
       
       &:hover {
         color: $primary-dark;
+        border-bottom-style: solid;
       }
     }
-  }
-
-  .vocab-table-hover-tip {
-    border-radius: 8px;
-    padding: $spacing-sm $spacing-base;
   }
 }
 

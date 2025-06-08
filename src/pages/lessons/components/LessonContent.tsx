@@ -28,7 +28,7 @@ export default function LessonContent({ lesson }: { lesson: any }) {
           {sections.map((section: any, index: number) => {
             switch (section.type) {
               case 'vocab_table':
-                return <VocabTable key={index} section={section} />;
+                return <VocabTable key={index} section={section} language={lesson.language} />;
               case 'callout':
                 return <Callout key={index} section={section} />;
               default:

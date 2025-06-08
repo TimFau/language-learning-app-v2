@@ -14,12 +14,13 @@ import {
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import InfoIcon from '@mui/icons-material/Info';
-import { useState } from 'react';
 
 interface VocabItem {
   en: string;
-  es: string;
-  word_translations?: { [key: string]: string }; // Map of Spanish words to their English translations
+  es?: string;
+  fr?: string;
+  de?: string;
+  word_translations?: { [key: string]: string }; // Map of foreign words to their English translations
 }
 
 interface VocabTableProps {
@@ -31,12 +32,37 @@ interface VocabTableProps {
     tip?: string | TextObject | undefined;
     note?: string | TextObject | undefined;
   };
+  language: 'spanish' | 'french' | 'german';
 }
 
 interface TextObject {
   type: string;
   text: string;
 }
+
+const LANGUAGE_CONFIGS = {
+  spanish: {
+    wordRefCode: 'es',
+    speechLang: 'es',
+    displayName: 'Spanish'
+  },
+  french: {
+    wordRefCode: 'fr',
+    speechLang: 'fr-FR',
+    displayName: 'French'
+  },
+  german: {
+    wordRefCode: 'de',
+    speechLang: 'de-DE',
+    displayName: 'German'
+  },
+} as const;
+
+const LANGUAGE_KEYS = {
+  spanish: 'es',
+  french: 'fr',
+  german: 'de'
+} as const;
 
 const speak = (text: string, lang: string = 'es') => {
   if ('speechSynthesis' in window && text) {
@@ -61,13 +87,10 @@ const normalizeSpanishText = (text: string): string => {
   return text
     .toLowerCase()
     // Remove leading/trailing punctuation
-    .replace(/^[¿¡]+|[?.!]+$/g, '')
-    // Normalize accents and special characters
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .replace(/[¿¡?!.,]/g, '');
 };
 
-const renderSpanishPhrase = (phrase: string, englishTranslation: string, wordTranslations?: { [key: string]: string }) => {
+const renderForeignPhrase = (phrase: string, englishTranslation: string, language: 'spanish' | 'french' | 'german', wordTranslations?: { [key: string]: string }) => {
   const words = phrase.split(' ');
   
   if (words.length <= 1) {
@@ -82,19 +105,41 @@ const renderSpanishPhrase = (phrase: string, englishTranslation: string, wordTra
       }, {} as { [key: string]: string })
     : {};
 
+  const handleWordClick = (word: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    // Remove any punctuation marks for the search
+    const searchWord = word.replace(/[¿¡?!.,]/g, '');
+    const langConfig = LANGUAGE_CONFIGS[language];
+    window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+  };
+
   return (
-    <span className="spanish-phrase">
+    <span className="foreign-phrase">
       {words.map((word, index) => {
         const normalizedWord = normalizeSpanishText(word);
         const translation = normalizedTranslations[normalizedWord];
         return translation ? (
           <Tooltip 
             key={index} 
-            title={translation}
+            title={
+              <div>
+                {translation}
+                <br />
+                <small style={{ opacity: 0.8 }}>Click for full definition & conjugation</small>
+              </div>
+            }
             placement="top"
             arrow
           >
-            <span className="hoverable-word">{word}</span>
+            <a 
+              href={`https://www.wordreference.com/${LANGUAGE_CONFIGS[language].wordRefCode}/en/translation.asp?spen=${encodeURIComponent(word.replace(/[¿¡?!.,]/g, ''))}`}
+              className="hoverable-word"
+              onClick={(e) => handleWordClick(word, e)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {word}
+            </a>
           </Tooltip>
         ) : (
           <span key={index}>{word}</span>
@@ -104,8 +149,9 @@ const renderSpanishPhrase = (phrase: string, englishTranslation: string, wordTra
   );
 };
 
-export default function VocabTable({ section }: VocabTableProps) {
-  const [showTip, setShowTip] = useState(true);
+export default function VocabTable({ section, language }: VocabTableProps) {
+  const langConfig = LANGUAGE_CONFIGS[language];
+  const langKey = LANGUAGE_KEYS[language];
 
   const renderText = (text: string | TextObject | undefined) => {
     if (typeof text === 'object' && text !== null) {
@@ -126,18 +172,6 @@ export default function VocabTable({ section }: VocabTableProps) {
       >
         {renderText(section.description)}
       </Typography>
-      
-      {showTip && (
-        <Box className="vocab-table-hover-tip" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <InfoIcon fontSize="small" color="info" />
-          <Typography variant="body2" color="info.main">
-            Hover over individual Spanish words to see their translations
-            <Button size="small" onClick={() => setShowTip(false)} sx={{ ml: 2 }}>
-              Got it
-            </Button>
-          </Typography>
-        </Box>
-      )}
 
       <TableContainer component={Paper} className="vocab-table-container">
         <Table aria-label="vocabulary table" className="vocab-table">
@@ -145,32 +179,35 @@ export default function VocabTable({ section }: VocabTableProps) {
             <TableRow>
               <TableCell>English</TableCell>
               <TableCell>
-                Spanish
-                <Tooltip title="Hover over words to see individual translations" arrow placement="top">
+                {LANGUAGE_CONFIGS[language].displayName}
+                <Tooltip title={`Hover over words to see individual translations`} arrow placement="top">
                   <InfoIcon fontSize="small" sx={{ ml: 1, verticalAlign: 'middle', opacity: 0.7 }} />
                 </Tooltip>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {section.vocab_items.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell className="vocab-table-cell vocab-table-cell-term">{item.en}</TableCell>
-                <TableCell className="vocab-table-cell vocab-table-cell-translation">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {renderSpanishPhrase(item.es, item.en, item.word_translations)}
-                    <Button
-                      aria-label="Pronounce word"
-                      onClick={() => speak(item.es, 'es')}
-                      size="small"
-                      className="pronounce-btn"
-                    >
-                      <VolumeUpIcon />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {section.vocab_items.map((item, index) => {
+              const foreignText = item[langKey];
+              return (
+                <TableRow key={index}>
+                  <TableCell className="vocab-table-cell vocab-table-cell-term">{item.en}</TableCell>
+                  <TableCell className="vocab-table-cell vocab-table-cell-translation">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {foreignText && renderForeignPhrase(foreignText, item.en, language, item.word_translations)}
+                      <Button
+                        aria-label="Pronounce word"
+                        onClick={() => speak(foreignText || '', langConfig.speechLang)}
+                        size="small"
+                        className="pronounce-btn"
+                      >
+                        <VolumeUpIcon />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
