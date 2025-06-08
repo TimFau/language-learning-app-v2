@@ -54,7 +54,7 @@ export default function VocabTable({ section }: VocabTableProps) {
         {renderText(section.description)}
       </Typography>
       <TableContainer component={Paper} className="vocab-table-container">
-        <Table aria-label="vocabulary table">
+        <Table aria-label="vocabulary table" className="vocab-table">
           <TableHead>
             <TableRow>
               <TableCell>English</TableCell>

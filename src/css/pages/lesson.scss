@@ -45,6 +45,11 @@
     border-collapse: collapse;
   }
 
+  .vocab-table-container,
+  p + table {
+    margin: 1.5em 0;
+  }
+
   th,
   td {
     border: 1px solid $input-border-color;
