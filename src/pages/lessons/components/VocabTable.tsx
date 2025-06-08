@@ -11,9 +11,13 @@ import {
   Box,
   Button,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import InfoIcon from '@mui/icons-material/Info';
+import WordActionSheet from 'components/WordActionSheet';
+import { useState } from 'react';
 
 interface VocabItem {
   en: string;
@@ -91,11 +95,14 @@ const normalizeSpanishText = (text: string): string => {
 };
 
 const renderForeignPhrase = (phrase: string, englishTranslation: string, language: 'spanish' | 'french' | 'german', wordTranslations?: { [key: string]: string }) => {
+
+  // TODO: remove englishTranslation if not needed
+  console.log('englishTranslation', englishTranslation);
+
   const words = phrase.split(' ');
-  
-  if (words.length <= 1) {
-    return phrase;
-  }
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedWord, setSelectedWord] = useState<{word: string, translation: string} | null>(null);
 
   // Create normalized dictionary
   const normalizedTranslations = wordTranslations 
@@ -105,47 +112,89 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
       }, {} as { [key: string]: string })
     : {};
 
-  const handleWordClick = (word: string, event: React.MouseEvent) => {
+  const handleWordClick = (word: string, translation: string | undefined, event: React.MouseEvent) => {
     event.preventDefault();
-    // Remove any punctuation marks for the search
-    const searchWord = word.replace(/[¿¡?!.,]/g, '');
-    const langConfig = LANGUAGE_CONFIGS[language];
-    window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+    if (isMobile) {
+      setSelectedWord({ word, translation: translation || '' });
+    } else {
+      // Remove any punctuation marks for the search
+      const searchWord = word.replace(/[¿¡?!.,]/g, '');
+      const langConfig = LANGUAGE_CONFIGS[language];
+      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleWordReferenceClick = () => {
+    if (selectedWord) {
+      const searchWord = selectedWord.word.replace(/[¿¡?!.,]/g, '');
+      const langConfig = LANGUAGE_CONFIGS[language];
+      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleSpeak = () => {
+    if (selectedWord) {
+      speak(selectedWord.word, LANGUAGE_CONFIGS[language].speechLang);
+    }
   };
 
   return (
-    <span className="foreign-phrase">
-      {words.map((word, index) => {
-        const normalizedWord = normalizeSpanishText(word);
-        const translation = normalizedTranslations[normalizedWord];
-        return translation ? (
-          <Tooltip 
-            key={index} 
-            title={
-              <div>
-                {translation}
-                <br />
-                <small style={{ opacity: 0.8 }}>Click for full definition & conjugation</small>
-              </div>
+    <>
+      <span className="foreign-phrase">
+        {words.map((word, index) => {
+          const normalizedWord = normalizeSpanishText(word);
+          const translation = normalizedTranslations[normalizedWord];
+          
+          if (translation) {
+            if (isMobile) {
+              return (
+                <a 
+                  key={index}
+                  href="#"
+                  className="hoverable-word"
+                  onClick={(e) => handleWordClick(word, translation, e)}
+                >
+                  {word}
+                </a>
+              );
+            } else {
+              return (
+                <Tooltip 
+                  key={index} 
+                  title={
+                    <div>
+                      {translation}
+                      <br />
+                      <small style={{ opacity: 0.8 }}>Click for full definition & conjugation</small>
+                    </div>
+                  }
+                  placement="top"
+                  arrow
+                >
+                  <a 
+                    href="#"
+                    className="hoverable-word"
+                    onClick={(e) => handleWordClick(word, translation, e)}
+                  >
+                    {word}
+                  </a>
+                </Tooltip>
+              );
             }
-            placement="top"
-            arrow
-          >
-            <a 
-              href={`https://www.wordreference.com/${LANGUAGE_CONFIGS[language].wordRefCode}/en/translation.asp?spen=${encodeURIComponent(word.replace(/[¿¡?!.,]/g, ''))}`}
-              className="hoverable-word"
-              onClick={(e) => handleWordClick(word, e)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {word}
-            </a>
-          </Tooltip>
-        ) : (
-          <span key={index}>{word}</span>
-        );
-      })}
-    </span>
+          }
+          return <span key={index}>{word}</span>;
+        })}
+      </span>
+      <WordActionSheet
+        open={Boolean(selectedWord)}
+        onClose={() => setSelectedWord(null)}
+        word={selectedWord?.word || ''}
+        translation={selectedWord?.translation || ''}
+        onWordReference={handleWordReferenceClick}
+        onSpeak={handleSpeak}
+        language={language}
+      />
+    </>
   );
 };
 
