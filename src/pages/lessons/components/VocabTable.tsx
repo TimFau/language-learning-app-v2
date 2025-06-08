@@ -10,12 +10,16 @@ import {
   Typography,
   Box,
   Button,
+  Tooltip,
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import InfoIcon from '@mui/icons-material/Info';
+import { useState } from 'react';
 
 interface VocabItem {
   en: string;
   es: string;
+  word_translations?: { [key: string]: string }; // Map of Spanish words to their English translations
 }
 
 interface VocabTableProps {
@@ -53,7 +57,56 @@ const speak = (text: string, lang: string = 'es') => {
   }
 };
 
+const normalizeSpanishText = (text: string): string => {
+  return text
+    .toLowerCase()
+    // Remove leading/trailing punctuation
+    .replace(/^[¿¡]+|[?.!]+$/g, '')
+    // Normalize accents and special characters
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+};
+
+const renderSpanishPhrase = (phrase: string, englishTranslation: string, wordTranslations?: { [key: string]: string }) => {
+  const words = phrase.split(' ');
+  
+  if (words.length <= 1) {
+    return phrase;
+  }
+
+  // Create normalized dictionary
+  const normalizedTranslations = wordTranslations 
+    ? Object.entries(wordTranslations).reduce((acc, [key, value]) => {
+        acc[normalizeSpanishText(key)] = value;
+        return acc;
+      }, {} as { [key: string]: string })
+    : {};
+
+  return (
+    <span className="spanish-phrase">
+      {words.map((word, index) => {
+        const normalizedWord = normalizeSpanishText(word);
+        const translation = normalizedTranslations[normalizedWord];
+        return translation ? (
+          <Tooltip 
+            key={index} 
+            title={translation}
+            placement="top"
+            arrow
+          >
+            <span className="hoverable-word">{word}</span>
+          </Tooltip>
+        ) : (
+          <span key={index}>{word}</span>
+        );
+      })}
+    </span>
+  );
+};
+
 export default function VocabTable({ section }: VocabTableProps) {
+  const [showTip, setShowTip] = useState(true);
+
   const renderText = (text: string | TextObject | undefined) => {
     if (typeof text === 'object' && text !== null) {
       return text.text || '';
@@ -73,12 +126,30 @@ export default function VocabTable({ section }: VocabTableProps) {
       >
         {renderText(section.description)}
       </Typography>
+      
+      {showTip && (
+        <Box className="vocab-table-hover-tip" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InfoIcon fontSize="small" color="info" />
+          <Typography variant="body2" color="info.main">
+            Hover over individual Spanish words to see their translations
+            <Button size="small" onClick={() => setShowTip(false)} sx={{ ml: 2 }}>
+              Got it
+            </Button>
+          </Typography>
+        </Box>
+      )}
+
       <TableContainer component={Paper} className="vocab-table-container">
         <Table aria-label="vocabulary table" className="vocab-table">
           <TableHead>
             <TableRow>
               <TableCell>English</TableCell>
-              <TableCell>Spanish</TableCell>
+              <TableCell>
+                Spanish
+                <Tooltip title="Hover over words to see individual translations" arrow placement="top">
+                  <InfoIcon fontSize="small" sx={{ ml: 1, verticalAlign: 'middle', opacity: 0.7 }} />
+                </Tooltip>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -87,7 +158,7 @@ export default function VocabTable({ section }: VocabTableProps) {
                 <TableCell className="vocab-table-cell vocab-table-cell-term">{item.en}</TableCell>
                 <TableCell className="vocab-table-cell vocab-table-cell-translation">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {item.es}
+                    {renderSpanishPhrase(item.es, item.en, item.word_translations)}
                     <Button
                       aria-label="Pronounce word"
                       onClick={() => speak(item.es, 'es')}
