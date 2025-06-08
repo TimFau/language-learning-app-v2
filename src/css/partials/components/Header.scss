@@ -11,6 +11,9 @@
     .nav-item,
     .nav-item button span {
         color: $text-primary;
+        &.MuiButton-containedPrimary {
+            color: $white;
+        }
     }
 }
 
