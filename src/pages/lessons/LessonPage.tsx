@@ -82,7 +82,7 @@ export default function LessonPage() {
           </Button>
         </Box>
         <Card className="lesson-page-card">
-          <LessonHeader title={lesson.title} imageUrl={imageUrl} />
+          <LessonHeader title={lesson.title} imageUrl={imageUrl} language={language || ''} />
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
