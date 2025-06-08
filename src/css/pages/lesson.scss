@@ -5,6 +5,7 @@
 }
 
 .lesson-header {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
@@ -19,12 +20,12 @@
   .lesson-header-content {
     flex: 1;
     min-width: 0;
-    padding-top: $spacing-lg;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: $spacing-sm;
+    gap: $spacing-base;
+    padding: $spacing-lg $spacing-base 0 $spacing-base;
     
     @media (min-width: 960px) {
       flex: 0 1 50%;
@@ -93,6 +94,15 @@
   }
 }
 
+.lesson-header-flag-absolute {
+  position: absolute;
+  top: 0;
+  right: 0;
+  max-width: 50px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
 .lesson-page {
   &-back-button {
     margin-bottom: $spacing-lg;
@@ -116,10 +126,6 @@
   height: auto;
   object-fit: cover;
 }
-
-// .lesson-page-content {
-  
-// }
 
 .lesson-page-title {
   font-family: $font-family-secondary;

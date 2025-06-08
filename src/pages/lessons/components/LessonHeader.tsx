@@ -1,4 +1,5 @@
 import { Box, Typography, Chip } from '@mui/material';
+import { useState } from 'react';
 
 interface LessonHeaderProps {
   title: string;
@@ -8,8 +9,18 @@ interface LessonHeaderProps {
 }
 
 export default function LessonHeader({ title, imageUrl, language, series }: LessonHeaderProps) {
+  const [flagError, setFlagError] = useState(false);
+
   return (
     <Box className="lesson-header">
+      {!flagError && (
+        <img 
+          src={`/images/language_flags/${language}.png`}
+          alt={`${language} flag`}
+          className="lesson-header-flag-absolute"
+          onError={() => setFlagError(true)}
+        />
+      )}
       <Box className="lesson-header-content">
         {series && series.length > 0 && (
             <Box className="lesson-series-container">
@@ -24,11 +35,6 @@ export default function LessonHeader({ title, imageUrl, language, series }: Less
             </Box>
         )}
         <Box className="lesson-header-text">
-          <img 
-            src={`/images/language_flags/${language}.png`}
-            alt={`${language} flag`}
-            className="lesson-header-flag"
-          />
           <Typography
             variant="h3"
             component="h1"
