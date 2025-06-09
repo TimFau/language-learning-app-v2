@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import 'css/pages/lesson.scss';
+import 'css/pages/lessons.scss';
 import { useState, useEffect } from 'react';
 import {
   Box,
@@ -130,7 +131,7 @@ export default function LessonPage() {
             title={lesson.title} 
             imageUrl={imageUrl} 
             language={language || ''} 
-            series={lesson.Series}
+            lessonSeries={lesson.lesson_series}
           />
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />

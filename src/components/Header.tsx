@@ -60,7 +60,7 @@ export default function Nav() {
         <>
         {shouldShowHeader &&
         <AppBar position="sticky" color="default" elevation={1} sx={{ zIndex: 1000, borderBottom: 1, borderColor: 'divider', backgroundColor: 'background.main' }} className="app-bar">
-            <Toolbar disableGutters sx={{ minHeight: 'unset', paddingY: '20px', paddingX: 0 }}>
+            <Toolbar disableGutters sx={{ minHeight: 'unset' }}>
                 <div className="app-bar-inner max-width-wrapper" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Link to="/" className="logo-link">
                         <img src={`${import.meta.env.BASE_URL}images/langpulse-logo.png`} alt="LangPulse Logo" className="nav-logo" />

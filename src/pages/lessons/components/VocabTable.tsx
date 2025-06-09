@@ -232,7 +232,7 @@ export default function VocabTable({ section, language }: VocabTableProps) {
   return (
     <Box className="vocab-table-section">
       <Typography variant="h4" component="h2" className="vocab-table-title">
-        <Icon>{section.icon}</Icon> {renderText(section.title)}
+        {renderText(section.title)}
       </Typography>
       <Typography
         variant="body1"

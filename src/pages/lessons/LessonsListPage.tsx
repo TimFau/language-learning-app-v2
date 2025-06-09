@@ -33,7 +33,16 @@ interface Lesson {
     id: string;
   };
   short_description: string;
-  Series: string[];
+  lesson_series?: {
+    id: string;
+    title: string;
+    slug: string;
+    description: string;
+    image?: {
+      id: string;
+      filename_download: string;
+    };
+  };
 }
 
 function LessonCardSkeleton() {
@@ -102,11 +111,11 @@ export default function LessonsListPage() {
 
   const lessonsBySeries: { [key: string]: Lesson[] } = lessons.reduce(
     (acc, lesson) => {
-      const seriesName = lesson.Series?.[0] || 'Uncategorized';
-      if (!acc[seriesName]) {
-        acc[seriesName] = [];
+      const seriesTitle = lesson.lesson_series?.title || 'Uncategorized';
+      if (!acc[seriesTitle]) {
+        acc[seriesTitle] = [];
       }
-      acc[seriesName].push(lesson);
+      acc[seriesTitle].push(lesson);
       return acc;
     },
     {} as { [key: string]: Lesson[] }
