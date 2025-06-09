@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import 'css/pages/lesson.scss';
+import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
 
 interface Language {
   code: string;
@@ -21,9 +22,15 @@ const AVAILABLE_LANGUAGES: Language[] = [
 ];
 
 export default function LanguagesListPage() {
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Lessons' },
+  ];
+
   return (
     <div className="page-container languages-list-page">
       <Container maxWidth="lg">
+        <Breadcrumbs items={breadcrumbs} />
         <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
           Choose a Language
         </Typography>

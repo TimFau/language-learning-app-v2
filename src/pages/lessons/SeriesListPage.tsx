@@ -13,6 +13,7 @@ import 'css/pages/lesson.scss';
 import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
 import { useState, useEffect } from 'react';
+import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
 
 const LANGUAGE_CODE_MAP: { [key: string]: string } = {
   'es': 'spanish',
@@ -27,6 +28,7 @@ const GET_LANGUAGE_SERIES = gql`
       title
       slug
       description
+      short_description
       image {
         id
         filename_download
@@ -40,6 +42,7 @@ interface Series {
   title: string;
   slug: string;
   description: string;
+  short_description: string;
   image?: {
     id: string;
     filename_download: string;
@@ -89,12 +92,19 @@ export default function SeriesListPage() {
     return <Navigate to="/lessons" replace />;
   }
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Lessons', href: '/lessons' },
+    { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '' },
+  ];
+
   if (loading) {
     return isColdStart ? (
       <ColdStartMessage />
     ) : (
       <div className="page-container series-list-page">
         <Container maxWidth="lg">
+          <Breadcrumbs items={breadcrumbs} />
           <Typography variant="h4" component="h1" gutterBottom>
             <Skeleton width={200} />
           </Typography>
@@ -117,6 +127,7 @@ export default function SeriesListPage() {
   return (
     <div className="page-container series-list-page">
       <Container maxWidth="lg">
+        <Breadcrumbs items={breadcrumbs} />
         <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
           Available Series
         </Typography>
@@ -147,7 +158,7 @@ export default function SeriesListPage() {
                         {series.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {series.description}
+                        {series.short_description || series.description}
                       </Typography>
                     </CardContent>
                   </CardActionArea>

@@ -14,6 +14,7 @@ import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
 import { useState, useEffect } from 'react';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
+import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
 
 const LANGUAGE_CODE_MAP: { [key: string]: string } = {
   'es': 'spanish',
@@ -31,6 +32,7 @@ const GET_SERIES_LESSONS = gql`
         id
         title
         description
+        full_description
         image {
           id
           filename_download
@@ -54,6 +56,7 @@ interface Lesson {
     id: string;
     title: string;
     description: string;
+    full_description: string;
     image?: {
       id: string;
       filename_download: string;
@@ -106,11 +109,19 @@ export default function SeriesLessonsPage() {
   }
 
   if (loading) {
+    const breadcrumbs: BreadcrumbItem[] = [
+      { label: 'Home', href: '/' },
+      { label: 'Lessons', href: '/lessons' },
+      { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '', href: `/lessons/${language}` },
+      { label: 'Loading...' },
+    ];
+
     return isColdStart ? (
       <ColdStartMessage />
     ) : (
       <div className="page-container series-lessons-page">
         <Container maxWidth="lg">
+          <Breadcrumbs items={breadcrumbs} />
           <Typography variant="h4" component="h1" gutterBottom>
             <Skeleton width={200} />
           </Typography>
@@ -141,14 +152,22 @@ export default function SeriesLessonsPage() {
   const series = lessons[0].lesson_series;
   const sortedLessons = [...lessons].sort((a, b) => a.lesson_number - b.lesson_number);
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Lessons', href: '/lessons' },
+    { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '', href: `/lessons/${language}` },
+    { label: series.title },
+  ];
+
   return (
     <div className="page-container series-lessons-page">
       <Container maxWidth="lg">
+        <Breadcrumbs items={breadcrumbs} />
         <Typography variant="h4" component="h1" gutterBottom className="lessons-list-title">
           {series.title}
         </Typography>
         <Typography variant="body1" paragraph>
-          {series.description}
+          {series.full_description || series.description}
         </Typography>
         <div className="lessons-grid">
           {sortedLessons.map((lesson) => (
