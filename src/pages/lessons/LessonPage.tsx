@@ -126,9 +126,7 @@ export default function LessonPage() {
   }
 
   const imageUrl = lesson.main_image
-    ? `${import.meta.env.VITE_API_BASE?.replace('/graphql', '')}/images/${
-        lesson.main_image.id
-      }`
+    ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.png`
     : 'https://via.placeholder.com/1200x400';
 
   return (

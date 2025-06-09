@@ -164,10 +164,7 @@ export default function SeriesLessonsPage() {
                     className="lesson-card-media"
                     image={
                       lesson.main_image?.id
-                        ? `${import.meta.env.VITE_API_BASE?.replace(
-                            '/graphql',
-                            ''
-                          )}/images/${lesson.main_image.id}`
+                        ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.png`
                         : 'https://via.placeholder.com/345x140'
                     }
                     alt={lesson.title}
