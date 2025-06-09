@@ -12,12 +12,12 @@ import 'css/pages/lesson.scss';
 interface Language {
   code: string;
   name: string;
-  flagImage: string;
+  entryImage: string;
 }
 
 const AVAILABLE_LANGUAGES: Language[] = [
-  { code: 'es', name: 'Spanish', flagImage: '/images/language_flags/spanish.png' },
-  { code: 'fr', name: 'French', flagImage: '/images/language_flags/french.png' },
+  { code: 'es', name: 'Spanish', entryImage: '/images/language_entry/Spanish-Entry.png' },
+  { code: 'fr', name: 'French', entryImage: '/images/language_entry/French-Entry.png' },
 ];
 
 export default function LanguagesListPage() {
@@ -39,7 +39,7 @@ export default function LanguagesListPage() {
                   <CardMedia
                     component="img"
                     className="lesson-card-media"
-                    image={language.flagImage}
+                    image={language.entryImage}
                     alt={`${language.name} flag`}
                     sx={{ objectFit: 'contain', padding: 2 }}
                   />
