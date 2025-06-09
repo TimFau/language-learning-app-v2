@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import 'css/pages/lesson.scss';
 import 'css/pages/lessons.scss';
@@ -19,9 +19,18 @@ import { COLD_START_TIMEOUT } from '../../utils/constants';
 import LessonContent from './components/LessonContent';
 import LessonHeader from './components/LessonHeader';
 
+const LANGUAGE_CODE_MAP: { [key: string]: string } = {
+  'es': 'spanish',
+  'fr': 'french',
+};
+
 const GET_LESSON = gql`
-  query GetLesson($language: String!, $slug: String!) {
-    lessons(filter: { language: { _eq: $language }, slug: { _eq: $slug } }) {
+  query GetLesson($language: String!, $series: String!, $slug: String!) {
+    lessons(filter: { 
+      language: { _eq: $language },
+      lesson_series: { slug: { _eq: $series } },
+      slug: { _eq: $slug } 
+    }) {
       ...LessonCoreFields
       body
       deck_link
@@ -75,11 +84,13 @@ function LessonSkeleton() {
 }
 
 export default function LessonPage() {
-  const { language, slug } = useParams();
+  const { language, series, slug } = useParams();
   const navigate = useNavigate();
+  const fullLanguageName = language ? LANGUAGE_CODE_MAP[language] : undefined;
+
   const { loading, error, data } = useQuery(GET_LESSON, {
-    variables: { language, slug },
-    skip: !language || !slug,
+    variables: { language: fullLanguageName, series, slug },
+    skip: !fullLanguageName || !series || !slug,
   });
   const [isColdStart, setIsColdStart] = useState(false);
 
@@ -92,6 +103,12 @@ export default function LessonPage() {
       return undefined;
     }
   }, [loading]);
+
+  // Validate language code
+  const validLanguages = Object.keys(LANGUAGE_CODE_MAP);
+  if (!language || !validLanguages.includes(language)) {
+    return <Navigate to="/lessons" replace />;
+  }
 
   if (loading) {
     return isColdStart ? (
@@ -109,7 +126,7 @@ export default function LessonPage() {
   }
 
   const imageUrl = lesson.main_image
-    ? `${import.meta.env.VITE_API_BASE?.replace('/graphql', '')}/assets/${
+    ? `${import.meta.env.VITE_API_BASE?.replace('/graphql', '')}/images/${
         lesson.main_image.id
       }`
     : 'https://via.placeholder.com/1200x400';
@@ -120,17 +137,17 @@ export default function LessonPage() {
         <Box className="lesson-page-back-button">
           <Button
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(`/lessons`)}
+            onClick={() => navigate(`/lessons/${language}/${series}`)}
             variant="outlined"
           >
-            Back to Lessons
+            Back to Series
           </Button>
         </Box>
         <Card className="lesson-page-card">
           <LessonHeader 
             title={lesson.title} 
             imageUrl={imageUrl} 
-            language={language || ''} 
+            language={LANGUAGE_CODE_MAP[language] || ''} 
             lessonSeries={lesson.lesson_series}
           />
           <CardContent className="lesson-page-content">
