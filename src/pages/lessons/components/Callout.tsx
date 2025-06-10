@@ -15,9 +15,10 @@ interface CalloutProps {
       url: string;
     };
   };
+  deckLink: string;
 }
 
-export default function Callout({ section }: CalloutProps) {
+export default function Callout({ section, deckLink }: CalloutProps) {
   const renderText = () => {
     if (typeof section.text === 'object' && section.text !== null) {
       return section.text.text || '';
@@ -35,7 +36,7 @@ export default function Callout({ section }: CalloutProps) {
       </Typography>
       {section.link && (
         <Button
-          href={section.link.url}
+          href={deckLink}
           target="_blank"
           rel="noopener noreferrer"
           variant="contained"

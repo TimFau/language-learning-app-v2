@@ -53,7 +53,7 @@ export default function LessonContent({ lesson }: { lesson: any }) {
               case 'vocab_table':
                 return <VocabTable key={index} section={section} language={normalizeLanguage(lesson.language)} />;
               case 'callout':
-                return <Callout key={index} section={section} />;
+                return <Callout key={index} section={section} deckLink={lesson.deck_link} />;
               default:
                 return (
                   <div key={index}>Unknown section type: {section.type}</div>

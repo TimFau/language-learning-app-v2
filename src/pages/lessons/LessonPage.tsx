@@ -169,7 +169,7 @@ export default function LessonPage() {
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
-              {lesson.deck_link && (
+              {/* {lesson.deck_link && (
                 <Button
                   className="lesson-page-cta"
                   href={lesson.deck_link}
@@ -179,7 +179,7 @@ export default function LessonPage() {
                 >
                   Go to Deck
                 </Button>
-              )}
+              )} */}
               <Typography component="p" className="lesson-page-disclaimer">
                 Note: This lesson was created with the help of AI and reviewed
                 for clarity and usefulness. While not written by a native
