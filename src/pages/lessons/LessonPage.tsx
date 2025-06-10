@@ -150,15 +150,6 @@ export default function LessonPage() {
     <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
         <Breadcrumbs items={breadcrumbs} />
-        <Box className="lesson-page-back-button">
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(`/lessons/${language}/${series}`)}
-            variant="outlined"
-          >
-            Back to Series
-          </Button>
-        </Box>
         <Card className="lesson-page-card">
           <LessonHeader 
             title={lesson.title} 
@@ -169,17 +160,23 @@ export default function LessonPage() {
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
-              {/* {lesson.deck_link && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mb: 2 }}>
                 <Button
-                  className="lesson-page-cta"
-                  href={lesson.deck_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="contained"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => navigate(`/lessons/${language}/${series}`)}
+                  variant="outlined"
                 >
-                  Go to Deck
+                  Back to Series
                 </Button>
-              )} */}
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  // TODO: Add navigation to next lesson when available
+                  onClick={() => {}}
+                >
+                  Next Lesson
+                </Button> */}
+              </Box>
               <Typography component="p" className="lesson-page-disclaimer">
                 Note: This lesson was created with the help of AI and reviewed
                 for clarity and usefulness. While not written by a native
