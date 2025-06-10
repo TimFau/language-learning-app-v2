@@ -231,3 +231,31 @@ export const SAVE_TERM = gql`
     }
   }
 `
+
+export const CHECK_TERM_SAVED = gql`
+  query CheckTermSaved($term: String!, $language: String!) {
+    saved_terms(
+      filter: {
+        _and: [
+          { term: { _eq: $term } }
+          { language: { _eq: $language } }
+        ]
+      }
+      limit: 1
+    ) {
+      id
+    }
+  }
+`
+
+export const GET_SAVED_TERMS = gql`
+  query GetSavedTerms {
+    saved_terms(sort: ["-date_created"]) {
+      id
+      term
+      definition
+      language
+      date_created
+    }
+  }
+`

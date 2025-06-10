@@ -10,7 +10,6 @@ import DeckDialog from './components/DeckOptionsModal';
 import BottomButtonsContainer from './components/BottomButtonsContainer';
 import DeckFinishedModal from './components/DeckFinishedModal';
 import ResumeProgressDialog from './components/ResumeProgressDialog';
-import SaveTestButton from '../../components/SaveTestButton';
 
 import { keyboardModeHandleChangeEvent, handleSubmitType } from './types';
 import { wordBankHelper, generateRandomNum } from './helpers';
@@ -359,7 +358,7 @@ function Deck(props: RootState) {
                             initialCount={initialCount}
                         />
                         <form onSubmit={handleSubmit}  id="mainApp">
-                            {/* Auto-speak toggle and test button */}
+                            {/* Auto-speak toggle */}
                             <div className="auto-speak-toggle">
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                     <label className="switch">
@@ -373,7 +372,6 @@ function Deck(props: RootState) {
                                         <span className="slider" />
                                     </label>
                                     <span>Automatically speak each question</span>
-                                    <SaveTestButton />
                                 </div>
                             </div>
                             {inputMode === 'Flashcard' &&
