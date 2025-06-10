@@ -213,3 +213,21 @@ export const LOGIN = `
         }
     }
 `
+
+export const SAVE_TERM = gql`
+  mutation SaveTerm($term: String!, $definition: String!, $language: String!) {
+    create_saved_terms_item(
+      data: {
+        term: $term
+        definition: $definition
+        language: $language
+        status: "published"
+      }
+    ) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`

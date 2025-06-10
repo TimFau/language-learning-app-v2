@@ -10,6 +10,7 @@ import DeckDialog from './components/DeckOptionsModal';
 import BottomButtonsContainer from './components/BottomButtonsContainer';
 import DeckFinishedModal from './components/DeckFinishedModal';
 import ResumeProgressDialog from './components/ResumeProgressDialog';
+import SaveTestButton from '../../components/SaveTestButton';
 
 import { keyboardModeHandleChangeEvent, handleSubmitType } from './types';
 import { wordBankHelper, generateRandomNum } from './helpers';
@@ -358,19 +359,22 @@ function Deck(props: RootState) {
                             initialCount={initialCount}
                         />
                         <form onSubmit={handleSubmit}  id="mainApp">
-                            {/* Auto-speak toggle */}
+                            {/* Auto-speak toggle and test button */}
                             <div className="auto-speak-toggle">
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={autoSpeak}
-                                        onChange={e => setAutoSpeak(e.target.checked)}
-                                        aria-checked={autoSpeak}
-                                        aria-label="Automatically speak each question"
-                                    />
-                                    <span className="slider" />
-                                </label>
-                                <span>Automatically speak each question</span>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label className="switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={autoSpeak}
+                                            onChange={e => setAutoSpeak(e.target.checked)}
+                                            aria-checked={autoSpeak}
+                                            aria-label="Automatically speak each question"
+                                        />
+                                        <span className="slider" />
+                                    </label>
+                                    <span>Automatically speak each question</span>
+                                    <SaveTestButton />
+                                </div>
                             </div>
                             {inputMode === 'Flashcard' &&
                                 <FlashCard 
