@@ -6,23 +6,16 @@ import ErrorIcon from '@mui/icons-material/Error';
 import type { GraphQLError } from 'graphql';
 import { useContext, useState } from 'react';
 import AuthContext from '../context/auth-context';
-import { SAVE_TERM, CHECK_TERM_SAVED, SAVE_MULTIPLE_TERMS } from '../queries';
+import { SAVE_TERM, CHECK_TERM_SAVED } from '../queries';
 
 interface SaveToBankProps {
   term: string;
   definition: string;
   language: string;
   className?: string;
-  items?: Array<{
-    id: string;
-    term: string;
-    definition: string;
-    language: string;
-  }>;
-  isBatch?: boolean;
 }
 
-export default function SaveToBank({ term, definition, language, className, items, isBatch = false }: SaveToBankProps) {
+export default function SaveToBank({ term, definition, language, className }: SaveToBankProps) {
   const authCtx = useContext(AuthContext);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -35,7 +28,7 @@ export default function SaveToBank({ term, definition, language, className, item
         authorization: `Bearer ${authCtx.userToken}`
       }
     },
-    skip: !authCtx.userToken || isBatch // Skip query if not logged in or if batch operation
+    skip: !authCtx.userToken
   });
 
   const [saveTerm] = useMutation(SAVE_TERM, {
@@ -53,14 +46,6 @@ export default function SaveToBank({ term, definition, language, className, item
     ]
   });
 
-  const [saveMultipleTerms] = useMutation(SAVE_MULTIPLE_TERMS, {
-    context: {
-      headers: {
-        authorization: `Bearer ${authCtx.userToken}`
-      }
-    }
-  });
-
   const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
@@ -73,29 +58,15 @@ export default function SaveToBank({ term, definition, language, className, item
     setSaveError(false);
 
     try {
-      if (isBatch && items) {
-        // Batch creation of new terms
-        await saveMultipleTerms({
-          variables: {
-            items: items.map(item => ({
-              term: item.term,
-              definition: item.definition,
-              language: item.language,
-              status: "published"
-            }))
-          }
-        });
-      } else {
-        // Single item save
-        await saveTerm({
-          variables: {
-            term,
-            definition,
-            language
-          }
-        });
-      }
-      // Success state is handled by the isAlreadySaved check for single items
+      await saveTerm({
+        variables: {
+          term,
+          definition,
+          language,
+          user: authCtx.userId
+        }
+      });
+      // Success state is handled by the isAlreadySaved check
     } catch (err: any) {
       // If token is invalid, trigger login dialog
       if (err.graphQLErrors?.some((e: GraphQLError) => 
@@ -118,7 +89,7 @@ export default function SaveToBank({ term, definition, language, className, item
 
   // Determine button state
   const getButtonProps = () => {
-    if (isAlreadySaved && !isBatch) {
+    if (isAlreadySaved) {
       return {
         startIcon: <CheckCircleIcon />,
         color: 'success' as const,
@@ -154,7 +125,7 @@ export default function SaveToBank({ term, definition, language, className, item
     return {
       startIcon: <SaveIcon />,
       color: 'secondary' as const,
-      children: isSaving ? (isBatch ? 'Saving All...' : 'Saving...') : (isBatch ? 'Save All' : 'Save'),
+      children: isSaving ? 'Saving...' : 'Save',
       sx: { 
         minWidth: 'auto',
         padding: '4px 8px',
@@ -175,7 +146,7 @@ export default function SaveToBank({ term, definition, language, className, item
     <Button 
       onClick={handleSave}
       variant="text"
-      disabled={(!authCtx.userToken || checkingStatus || isSaving || (isAlreadySaved && !isBatch))}
+      disabled={(!authCtx.userToken || checkingStatus || isSaving || isAlreadySaved)}
       className={className}
       {...buttonProps}
     />

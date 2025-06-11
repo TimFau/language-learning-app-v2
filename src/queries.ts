@@ -215,19 +215,23 @@ export const LOGIN = `
 `
 
 export const SAVE_TERM = gql`
-  mutation SaveTerm($term: String!, $definition: String!, $language: String!) {
+  mutation SaveTerm($term: String!, $definition: String!, $language: String!, $user: String!) {
     create_saved_terms_item(
       data: {
         term: $term
         definition: $definition
         language: $language
         status: "published"
+        user: $user
       }
     ) {
       id
       term
       definition
       language
+      user {
+        id
+      }
     }
   }
 `
@@ -289,6 +293,9 @@ export const SAVE_MULTIPLE_TERMS = gql`
       term
       definition
       language
+      user {
+        id
+      }
     }
   }
 `

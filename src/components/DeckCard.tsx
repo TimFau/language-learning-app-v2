@@ -105,7 +105,8 @@ const DeckCard = (props: DeckCardProps) => {
                     term: item.Language1,
                     definition: item.Language2,
                     language: getLanguageCode(deck.Language1),
-                    status: 'published'
+                    status: 'published',
+                    user: authCtx.userId
                 }));
 
             if (terms.length === 0) {
