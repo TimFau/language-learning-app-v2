@@ -36,7 +36,7 @@ export default function Callout({ section, deckLink }: CalloutProps) {
       </Typography>
       {section.link && (
         <Button
-          href={deckLink}
+          href={section.link.url}
           target="_blank"
           rel="noopener noreferrer"
           variant="contained"

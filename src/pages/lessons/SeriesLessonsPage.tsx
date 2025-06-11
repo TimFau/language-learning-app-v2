@@ -19,6 +19,7 @@ import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
 const LANGUAGE_CODE_MAP: { [key: string]: string } = {
   'es': 'spanish',
   'fr': 'french',
+  'de': 'german',
 };
 
 const GET_SERIES_LESSONS = gql`

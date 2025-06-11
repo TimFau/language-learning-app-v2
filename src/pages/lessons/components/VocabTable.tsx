@@ -94,14 +94,29 @@ const normalizeSpanishText = (text: string): string => {
     .replace(/[¿¡?!.,]/g, '');
 };
 
-const renderForeignPhrase = (phrase: string, englishTranslation: string, language: 'spanish' | 'french' | 'german', wordTranslations?: { [key: string]: string }) => {
-  // TODO: remove englishTranslation if not needed
-  console.log('englishTranslation', englishTranslation);
+interface RenderForeignPhraseProps {
+  phrase: string;
+  language: 'spanish' | 'french' | 'german';
+  wordTranslations?: { [key: string]: string };
+  isMobile: boolean;
+  onWordClick: (word: string, translation: string | undefined, event: React.MouseEvent) => void;
+  selectedWord: { word: string; translation: string } | null;
+  onWordReferenceClick: () => void;
+  onSpeak: () => void;
+  setSelectedWord: (word: { word: string; translation: string } | null) => void;
+}
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [selectedWord, setSelectedWord] = useState<{word: string, translation: string} | null>(null);
-
+const renderForeignPhrase = ({
+  phrase,
+  language,
+  wordTranslations,
+  isMobile,
+  onWordClick,
+  selectedWord,
+  onWordReferenceClick,
+  onSpeak,
+  setSelectedWord
+}: RenderForeignPhraseProps) => {
   // Create normalized dictionary
   const normalizedTranslations = wordTranslations 
     ? Object.entries(wordTranslations).reduce((acc, [key, value]) => {
@@ -109,32 +124,6 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
         return acc;
       }, {} as { [key: string]: string })
     : {};
-
-  const handleWordClick = (word: string, translation: string | undefined, event: React.MouseEvent) => {
-    event.preventDefault();
-    if (isMobile) {
-      setSelectedWord({ word, translation: translation || '' });
-    } else {
-      // Remove any punctuation marks for the search
-      const searchWord = word.replace(/[¿¡?!.,]/g, '');
-      const langConfig = LANGUAGE_CONFIGS[language];
-      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
-    }
-  };
-
-  const handleWordReferenceClick = () => {
-    if (selectedWord) {
-      const searchWord = selectedWord.word.replace(/[¿¡?!.,]/g, '');
-      const langConfig = LANGUAGE_CONFIGS[language];
-      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
-    }
-  };
-
-  const handleSpeak = () => {
-    if (selectedWord) {
-      speak(selectedWord.word, LANGUAGE_CONFIGS[language].speechLang);
-    }
-  };
 
   // Process the phrase into words and separators
   const processPhrase = (phrase: string) => {
@@ -172,7 +161,7 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
                   key={index}
                   href="#"
                   className="hoverable-word"
-                  onClick={(e) => handleWordClick(word, translation, e)}
+                  onClick={(e) => onWordClick(word, translation, e)}
                 >
                   {word}
                 </a>
@@ -194,7 +183,7 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
                   <a 
                     href="#"
                     className="hoverable-word"
-                    onClick={(e) => handleWordClick(word, translation, e)}
+                    onClick={(e) => onWordClick(word, translation, e)}
                   >
                     {word}
                   </a>
@@ -210,8 +199,8 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
         onClose={() => setSelectedWord(null)}
         word={selectedWord?.word || ''}
         translation={selectedWord?.translation || ''}
-        onWordReference={handleWordReferenceClick}
-        onSpeak={handleSpeak}
+        onWordReference={onWordReferenceClick}
+        onSpeak={onSpeak}
         language={language}
       />
     </>
@@ -219,8 +208,37 @@ const renderForeignPhrase = (phrase: string, englishTranslation: string, languag
 };
 
 export default function VocabTable({ section, language }: VocabTableProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [selectedWord, setSelectedWord] = useState<{word: string, translation: string} | null>(null);
   const langConfig = LANGUAGE_CONFIGS[language];
   const langKey = LANGUAGE_KEYS[language];
+
+  const handleWordClick = (word: string, translation: string | undefined, event: React.MouseEvent) => {
+    event.preventDefault();
+    if (isMobile) {
+      setSelectedWord({ word, translation: translation || '' });
+    } else {
+      // Remove any punctuation marks for the search
+      const searchWord = word.replace(/[¿¡?!.,]/g, '');
+      const langConfig = LANGUAGE_CONFIGS[language];
+      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleWordReferenceClick = () => {
+    if (selectedWord) {
+      const searchWord = selectedWord.word.replace(/[¿¡?!.,]/g, '');
+      const langConfig = LANGUAGE_CONFIGS[language];
+      window.open(`https://www.wordreference.com/${langConfig.wordRefCode}/en/translation.asp?spen=${encodeURIComponent(searchWord)}`, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleSpeak = () => {
+    if (selectedWord) {
+      speak(selectedWord.word, LANGUAGE_CONFIGS[language].speechLang);
+    }
+  };
 
   const renderText = (text: string | TextObject | undefined) => {
     if (typeof text === 'object' && text !== null) {
@@ -263,7 +281,17 @@ export default function VocabTable({ section, language }: VocabTableProps) {
                   <TableCell className="vocab-table-cell vocab-table-cell-term">{item.en}</TableCell>
                   <TableCell className="vocab-table-cell vocab-table-cell-translation">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {foreignText && renderForeignPhrase(foreignText, item.en, language, item.word_translations)}
+                      {foreignText && renderForeignPhrase({
+                        phrase: foreignText,
+                        language,
+                        wordTranslations: item.word_translations,
+                        isMobile,
+                        onWordClick: handleWordClick,
+                        selectedWord,
+                        onWordReferenceClick: handleWordReferenceClick,
+                        onSpeak: handleSpeak,
+                        setSelectedWord
+                      })}
                       <Button
                         aria-label="Pronounce word"
                         onClick={() => speak(foreignText || '', langConfig.speechLang)}
