@@ -125,3 +125,28 @@
     }
   }
 }
+
+.hoverable-word {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: $cta-button-color;
+  }
+}
+
+.foreign-phrase {
+  display: inline;
+  
+  > span {
+    margin: 0 0.1em;
+  }
+  
+  > a {
+    margin: 0 0.1em;
+  }
+}
