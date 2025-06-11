@@ -259,3 +259,36 @@ export const GET_SAVED_TERMS = gql`
     }
   }
 `
+
+export const BATCH_UPDATE_TERMS = gql`
+  mutation BatchUpdateTerms($items: [BatchUpdateTermInput!]!) {
+    batch_update_saved_terms_items(data: $items) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`
+
+export const UPDATE_MULTIPLE_TERMS = gql`
+  mutation UpdateMultipleTerms($keys: [ID!]!, $data: update_saved_terms_input!) {
+    update_saved_terms_items(ids: $keys, data: $data) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`
+
+export const SAVE_MULTIPLE_TERMS = gql`
+  mutation SaveMultipleTerms($items: [create_saved_terms_input!]!) {
+    create_saved_terms_items(data: $items) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`
