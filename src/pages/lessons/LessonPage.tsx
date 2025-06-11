@@ -19,6 +19,7 @@ import { COLD_START_TIMEOUT } from '../../utils/constants';
 import LessonContent from './components/LessonContent';
 import LessonHeader from './components/LessonHeader';
 import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
+import { getFileExtension } from '../../utils/fileUtils';
 
 const LANGUAGE_CODE_MAP: { [key: string]: string } = {
   'es': 'spanish',
@@ -135,16 +136,12 @@ export default function LessonPage() {
     return <div className="article-not-found">Not Found</div>;
   }
 
-  const imageUrl = lesson.main_image
-    ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.png`
-    : 'https://via.placeholder.com/1200x400';
-
   const breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
     { label: 'Lessons', href: '/lessons' },
     { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '', href: `/lessons/${language}` },
-    { label: lesson.lesson_series.title, href: `/lessons/${language}/${series}` },
-    { label: lesson.title },
+    { label: lesson.lesson_series?.title || 'Untitled Series', href: `/lessons/${language}/${series}` },
+    { label: lesson.title || 'Untitled Lesson' },
   ];
 
   return (
@@ -154,9 +151,9 @@ export default function LessonPage() {
         <Card className="lesson-page-card">
           <LessonHeader 
             title={lesson.title} 
-            imageUrl={imageUrl} 
+            imageUrl={lesson.main_image ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}` : 'https://via.placeholder.com/1200x400'} 
             language={LANGUAGE_CODE_MAP[language] || ''} 
-            lessonSeries={lesson.lesson_series}
+            lessonSeries={lesson.lesson_series || { title: 'Untitled Series', slug: '' }}
           />
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />
