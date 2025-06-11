@@ -9,6 +9,7 @@ import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos, SaveAlt } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import { SAVE_MULTIPLE_TERMS } from '../queries';
+import { getLanguageCode } from '../utils/languageUtils';
 
 interface DeckTerm {
     Language1: string;
@@ -86,7 +87,6 @@ const DeckCard = (props: DeckCardProps) => {
     };
 
     const handleConfirmSaveAll = async () => {
-        setShowSaveConfirm(false);
         setIsSavingTerms(true);
         setSaveProgress(0);
         setSaveError(null);
@@ -104,7 +104,7 @@ const DeckCard = (props: DeckCardProps) => {
                 .map((item: DeckTerm) => ({
                     term: item.Language1,
                     definition: item.Language2,
-                    language: deck.Language1?.toLowerCase()?.split('-')[0] || 'en',
+                    language: getLanguageCode(deck.Language1),
                     status: 'published'
                 }));
 
@@ -122,12 +122,14 @@ const DeckCard = (props: DeckCardProps) => {
             });
 
             setSaveProgress(100);
-
-            // Show final status for 2 seconds
+            
+            // Show success for 2 seconds before closing
             await new Promise(resolve => setTimeout(resolve, 2000));
+            setShowSaveConfirm(false);
         } catch (err: any) {
             setSaveError(err.message || 'Failed to save terms');
-            console.error('Failed to save terms:', err);
+            setSaveProgress(0);
+            // Don't close dialog on error - user needs to see the error message
         } finally {
             setIsSavingTerms(false);
         }
