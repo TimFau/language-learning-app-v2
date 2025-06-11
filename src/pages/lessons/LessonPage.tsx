@@ -151,9 +151,16 @@ export default function LessonPage() {
         <Card className="lesson-page-card">
           <LessonHeader 
             title={lesson.title} 
-            imageUrl={lesson.main_image ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}` : 'https://via.placeholder.com/1200x400'} 
+            imageUrl={lesson.main_image?.filename_download 
+              ? `${import.meta.env.VITE_MEDIA_BASE || ''}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}` 
+              : 'https://via.placeholder.com/1200x400'} 
             language={LANGUAGE_CODE_MAP[language] || ''} 
-            lessonSeries={lesson.lesson_series || { title: 'Untitled Series', slug: '' }}
+            lessonSeries={lesson.lesson_series || { 
+              id: 'default',
+              title: 'Untitled Series', 
+              slug: '', 
+              description: 'No description available'
+            }}
           />
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />

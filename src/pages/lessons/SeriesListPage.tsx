@@ -149,7 +149,7 @@ export default function SeriesListPage() {
                       className="lesson-card-media"
                       image={
                         series.image?.id
-                          ? `${import.meta.env.VITE_MEDIA_BASE}/${series.image.id}.${getFileExtension(series.image.filename_download)}`
+                          ? `${import.meta.env.VITE_MEDIA_BASE || ''}/${series.image.id}.${getFileExtension(series.image.filename_download)}`
                           : 'https://via.placeholder.com/345x140'
                       }
                       alt={series.title}

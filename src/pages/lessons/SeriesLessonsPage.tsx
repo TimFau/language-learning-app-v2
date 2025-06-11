@@ -188,8 +188,8 @@ export default function SeriesLessonsPage() {
                     component="img"
                     className="lesson-card-media"
                     image={
-                      lesson.main_image?.id
-                        ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}`
+                      lesson.main_image?.id && lesson.main_image?.filename_download
+                        ? `${import.meta.env.VITE_MEDIA_BASE || ''}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}`
                         : 'https://via.placeholder.com/345x140'
                     }
                     alt={lesson.title}
