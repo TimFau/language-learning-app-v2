@@ -6,7 +6,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import type { GraphQLError } from 'graphql';
 import { useContext, useState } from 'react';
 import AuthContext from '../context/auth-context';
-import { SAVE_TERM, CHECK_TERM_SAVED, BATCH_UPDATE_TERMS } from '../queries';
+import { SAVE_TERM, CHECK_TERM_SAVED, SAVE_MULTIPLE_TERMS } from '../queries';
 
 interface SaveToBankProps {
   term: string;
@@ -53,7 +53,7 @@ export default function SaveToBank({ term, definition, language, className, item
     ]
   });
 
-  const [batchUpdateTerms] = useMutation(BATCH_UPDATE_TERMS, {
+  const [saveMultipleTerms] = useMutation(SAVE_MULTIPLE_TERMS, {
     context: {
       headers: {
         authorization: `Bearer ${authCtx.userToken}`
@@ -74,14 +74,14 @@ export default function SaveToBank({ term, definition, language, className, item
 
     try {
       if (isBatch && items) {
-        // Batch update
-        await batchUpdateTerms({
+        // Batch creation of new terms
+        await saveMultipleTerms({
           variables: {
             items: items.map(item => ({
-              id: item.id,
               term: item.term,
               definition: item.definition,
-              language: item.language
+              language: item.language,
+              status: "published"
             }))
           }
         });
