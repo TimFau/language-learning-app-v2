@@ -15,7 +15,7 @@ interface CalloutProps {
       url: string;
     };
   };
-  deckLink: string;
+  deckLink?: string; // Optional deck link that can override section.link.url
 }
 
 export default function Callout({ section, deckLink }: CalloutProps) {
@@ -26,6 +26,10 @@ export default function Callout({ section, deckLink }: CalloutProps) {
     return section.text || '';
   };
 
+  // Determine the link URL and label
+  const linkUrl = deckLink || section.link?.url;
+  const linkLabel = section.link?.label || 'Try Now';
+
   return (
     <Box className="callout-section">
       <Typography variant="h5" component="h3" className="callout-title">
@@ -34,15 +38,15 @@ export default function Callout({ section, deckLink }: CalloutProps) {
       <Typography variant="body1" className="callout-text">
         {renderText()}
       </Typography>
-      {section.link && (
+      {linkUrl && (
         <Button
-          href={section.link.url}
+          href={linkUrl}
           target="_blank"
           rel="noopener noreferrer"
           variant="contained"
           className="callout-link"
         >
-          {section.link.label}
+          {linkLabel}
         </Button>
       )}
     </Box>

@@ -15,6 +15,7 @@ import { COLD_START_TIMEOUT } from '../../utils/constants';
 import { useState, useEffect } from 'react';
 import { LESSON_CORE_FIELDS } from '../../services/graphql/fragments/lessonFragments';
 import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
+import { getFileExtension } from '../../utils/fileUtils';
 
 const LANGUAGE_CODE_MAP: { [key: string]: string } = {
   'es': 'spanish',
@@ -29,6 +30,9 @@ const GET_SERIES_LESSONS = gql`
       lesson_series: { slug: { _eq: $seriesSlug } }
     }) {
       ...LessonCoreFields
+      main_image {
+        filename_download
+      }
       lesson_series {
         id
         title
@@ -51,6 +55,7 @@ interface Lesson {
   lesson_number: number;
   main_image: {
     id: string;
+    filename_download: string;
   };
   short_description: string;
   lesson_series: {
@@ -184,7 +189,7 @@ export default function SeriesLessonsPage() {
                     className="lesson-card-media"
                     image={
                       lesson.main_image?.id
-                        ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.png`
+                        ? `${import.meta.env.VITE_MEDIA_BASE}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}`
                         : 'https://via.placeholder.com/345x140'
                     }
                     alt={lesson.title}
