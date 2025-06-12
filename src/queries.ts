@@ -306,6 +306,32 @@ export const UPDATE_MULTIPLE_TERMS = gql`
   }
 `
 
+export const CHECK_SYNCED_DECK = gql`
+  query CheckSyncedDeck($deckId: String!) {
+    synced_decks(filter: {
+      deck_id: { _eq: $deckId }
+    }) {
+      id
+      sync_preference
+    }
+  }
+`;
+
+export const CREATE_SYNCED_DECK = gql`
+  mutation CreateSyncedDeck($deckId: String!, $language: String!, $termCount: Int!) {
+    create_synced_decks_item(data: {
+      deck_id: $deckId
+      language: $language
+      sync_preference: "manual"
+      term_count_at_save: $termCount
+    }) {
+      id
+      deck_id
+      sync_preference
+    }
+  }
+`;
+
 export const SAVE_MULTIPLE_TERMS = gql`
   mutation SaveMultipleTerms($items: [create_saved_terms_input!]!) {
     create_saved_terms_items(data: $items) {
@@ -316,11 +342,9 @@ export const SAVE_MULTIPLE_TERMS = gql`
       source_deck_id
       source_term_key
       source_definition
-      sync_preference
-      last_synced_at
       user {
         id
       }
     }
   }
-`
+`;

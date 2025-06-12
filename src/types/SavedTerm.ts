@@ -9,16 +9,19 @@ export interface SavedTermInput {
   source_deck_id?: string;
   source_term_key?: string;
   source_definition?: string;
-  sync_preference?: SyncPreference;
-  last_synced_at?: Date;
 }
 
 export interface SavedTermMetadata {
   source_deck_id: string;
   source_term_key: string;
   source_definition: string;
+}
+
+export interface SyncedDeckMetadata {
+  deck_id: string;
+  language: string;
   sync_preference: SyncPreference;
-  last_synced_at?: Date;
+  term_count_at_save: number;
 }
 
 export const createSavedTermInput = (

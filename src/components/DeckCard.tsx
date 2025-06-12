@@ -7,8 +7,8 @@ import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos, SaveAlt } from '@mui/icons-material';
-import { useMutation } from '@apollo/client';
-import { SAVE_MULTIPLE_TERMS } from '../queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK } from '../queries';
 import { getLanguageCode } from '../utils/languageUtils';
 import { SavedTermMetadata, SavedTermInput, createSavedTermInput } from '../types/SavedTerm';
 
@@ -38,7 +38,26 @@ const DeckCard = (props: DeckCardProps) => {
     const [saveError, setSaveError] = useState<string | null>(null);
     const [showSaveConfirm, setShowSaveConfirm] = useState(false);
 
+    // Check if deck is already synced
+    const { data: syncedDeckData } = useQuery(CHECK_SYNCED_DECK, {
+        variables: { deckId },
+        context: {
+            headers: {
+                authorization: `Bearer ${authCtx.userToken}`
+            }
+        },
+        skip: !authCtx.userToken
+    });
+
     const [saveMultipleTerms] = useMutation(SAVE_MULTIPLE_TERMS, {
+        context: {
+            headers: {
+                authorization: `Bearer ${authCtx.userToken}`
+            }
+        }
+    });
+
+    const [createSyncedDeck] = useMutation(CREATE_SYNCED_DECK, {
         context: {
             headers: {
                 authorization: `Bearer ${authCtx.userToken}`
@@ -84,6 +103,12 @@ const DeckCard = (props: DeckCardProps) => {
             return;
         }
 
+        // Check if deck is already synced
+        if (syncedDeckData?.synced_decks?.length > 0) {
+            setSaveError("This deck has already been saved to your Word Bank");
+            return;
+        }
+
         setShowSaveConfirm(true);
     };
 
@@ -111,9 +136,7 @@ const DeckCard = (props: DeckCardProps) => {
                         {
                             source_deck_id: deckId,
                             source_term_key: `${index + 1}`, // Using row number as a stable key
-                            source_definition: item.Language2,
-                            sync_preference: 'manual', // Default to manual sync
-                            last_synced_at: new Date()
+                            source_definition: item.Language2
                         },
                         'published'
                     )
@@ -123,12 +146,23 @@ const DeckCard = (props: DeckCardProps) => {
                 throw new Error('No valid terms found in deck');
             }
 
-            setSaveProgress(50); // Show progress that we've prepared the terms
+            setSaveProgress(40); // Show progress that we've prepared the terms
 
             // Save all terms in one operation
             await saveMultipleTerms({
                 variables: {
                     items: terms
+                }
+            });
+
+            setSaveProgress(80);
+
+            // Create synced deck record
+            await createSyncedDeck({
+                variables: {
+                    deckId,
+                    language: getLanguageCode(deck.Language1),
+                    termCount: terms.length
                 }
             });
 
@@ -145,6 +179,9 @@ const DeckCard = (props: DeckCardProps) => {
             setIsSavingTerms(false);
         }
     };
+
+    // Determine if save button should be disabled
+    const isSaveDisabled = isSavingTerms || (syncedDeckData?.synced_decks?.length > 0);
 
     return (
         <>
@@ -201,10 +238,11 @@ const DeckCard = (props: DeckCardProps) => {
                                             {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
                                         </IconButton>
                                         <IconButton
-                                            aria-label="Save all terms to word bank"
+                                            aria-label={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
                                             onClick={(e) => { e.stopPropagation(); handleSaveAllTerms(); }}
                                             size="large"
-                                            disabled={isSavingTerms}
+                                            disabled={isSaveDisabled}
+                                            title={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
                                         >
                                             {isSavingTerms ? (
                                                 <CircularProgress size={24} variant="determinate" value={saveProgress} />
