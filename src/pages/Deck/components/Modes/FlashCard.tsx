@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useEffect } from 'react';
+import SaveToBank from '../../../../components/SaveToBank';
 
 interface FlashCardProps {
     showAnswer: boolean,
@@ -15,7 +16,8 @@ interface FlashCardProps {
     showAnswerFc: (event: React.UIEvent<HTMLElement>) => void,
     children: React.ReactNode,
     autoSpeak: boolean,
-    langFromLangCode: string
+    langFromLangCode: string,
+    deckId: string
 }
 
 const speak = (text: string, lang: string = 'en') => {
@@ -50,6 +52,16 @@ const flashCard = (props: FlashCardProps) => {
             <Card className={props.showAnswer ? "flash-card-container flash-card-stacked" : "flash-card-container"} data-testid="flashcard">
                 {props.showAnswer ? (
                     <CardContent data-testid="card-back" className="flash-card-stacked-content">
+                        <div className="save-button-container">
+                            <SaveToBank 
+                                term={props.langFrom[props.randomNum]}
+                                definition={props.langTo[props.randomNum]}
+                                language={props.langFromLangCode.split('-')[0]}
+                                className="save-button"
+                                deckId={props.deckId}
+                                termIndex={props.randomNum}
+                            />
+                        </div>
                         <div className="stacked-question">
                             <Typography color="textSecondary">Question</Typography>
                             <h1 className="lang-from stacked-question-text" data-testid="card-question">
@@ -58,7 +70,7 @@ const flashCard = (props: FlashCardProps) => {
                         </div>
                         <div className="stacked-divider" />
                         <div className="stacked-answer">
-                        	<Typography color="textSecondary">Answer</Typography>
+                            <Typography color="textSecondary">Answer</Typography>
                             <h2 className="lang-to stacked-answer-text" data-testid="card-answer">
                                 "{props.langTo[props.randomNum]}"
                             </h2>
@@ -66,6 +78,16 @@ const flashCard = (props: FlashCardProps) => {
                     </CardContent>
                 ) : (
                     <CardContent onClick={props.showAnswerFc} data-testid="card-front" className="card-front">
+                        <div className="save-button-container">
+                            <SaveToBank 
+                                term={props.langFrom[props.randomNum]}
+                                definition={props.langTo[props.randomNum]}
+                                language={props.langFromLangCode.split('-')[0]}
+                                className="save-button"
+                                deckId={props.deckId}
+                                termIndex={props.randomNum}
+                            />
+                        </div>
                         <Typography color="textSecondary">{props.children}</Typography>
                         <div className="flash-card-question-row">
                             <h1 className="lang-from" data-testid="card-question">

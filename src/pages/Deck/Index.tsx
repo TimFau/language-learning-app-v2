@@ -360,17 +360,19 @@ function Deck(props: RootState) {
                         <form onSubmit={handleSubmit}  id="mainApp">
                             {/* Auto-speak toggle */}
                             <div className="auto-speak-toggle">
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={autoSpeak}
-                                        onChange={e => setAutoSpeak(e.target.checked)}
-                                        aria-checked={autoSpeak}
-                                        aria-label="Automatically speak each question"
-                                    />
-                                    <span className="slider" />
-                                </label>
-                                <span>Automatically speak each question</span>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <label className="switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={autoSpeak}
+                                            onChange={e => setAutoSpeak(e.target.checked)}
+                                            aria-checked={autoSpeak}
+                                            aria-label="Automatically speak each question"
+                                        />
+                                        <span className="slider" />
+                                    </label>
+                                    <span>Automatically speak each question</span>
+                                </div>
                             </div>
                             {inputMode === 'Flashcard' &&
                                 <FlashCard 
@@ -383,6 +385,7 @@ function Deck(props: RootState) {
                                 randomNum={randomNum}
                                 autoSpeak={autoSpeak}
                                 langFromLangCode={getLangFromLangCode()}
+                                deckId={id}
                                 >
                                     Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
                                 </FlashCard>

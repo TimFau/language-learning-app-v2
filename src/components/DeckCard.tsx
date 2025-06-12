@@ -1,11 +1,24 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Link } from "@mui/material"
+import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Link, CircularProgress } from "@mui/material"
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
+import sheetService from 'services/sheetService';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import { useContext, useState } from "react";
-import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos } from '@mui/icons-material';
+import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos, SaveAlt } from '@mui/icons-material';
+import { useMutation, useQuery } from '@apollo/client';
+import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK, GET_SAVED_TERM_KEYS } from '../queries';
+import { getLanguageCode } from '../utils/languageUtils';
+import { SavedTermMetadata, SavedTermInput, createSavedTermInput } from '../types/SavedTerm';
+import { useTermBank } from '../hooks/useTermBank';
+import { TermBankDialog } from './TermBankDialog';
+
+interface DeckTerm {
+    Language1: string;
+    Language2: string;
+    [key: string]: any;
+}
 
 type DeckCardProps = {
     item: any,
@@ -16,12 +29,25 @@ const DeckCard = (props: DeckCardProps) => {
     const deck = props.item.deck_relation ? props.item.deck_relation : props.item
     const { deck_name: deckName, deck_id: deckId } = deck
     const authCtx = useContext(AuthContext);
-    const modalCtx =useContext(ModalContext);
+    const modalCtx = useContext(ModalContext);
     const userToken = authCtx.userToken || ''
     const savedDeckId = props.item.deck_relation ? props.item.id : null
 
     const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
+
+    const {
+        state: termBankState,
+        saveAllTerms,
+        isSaveDisabled,
+        isDeckSynced,
+        updateState: updateTermBankState
+    } = useTermBank({
+        deckId,
+        language: deck.Language2,
+        userToken: authCtx.userToken || '',
+        userId: authCtx.userId
+    });
 
     const handleClick = () => {
         if (savedDeckId) {
@@ -55,6 +81,20 @@ const DeckCard = (props: DeckCardProps) => {
         setConfirmOpen(false);
     };
 
+    const handleSaveAllTerms = async () => {
+        if (!authCtx.userToken) {
+            authCtx.onLoginOpen(true, false);
+            return;
+        }
+
+        if (isDeckSynced) {
+            updateTermBankState({ error: "This deck has already been saved to your Word Bank" });
+            return;
+        }
+
+        updateTermBankState({ showConfirm: true });
+    };
+
     return (
         <>
             <Card 
@@ -86,29 +126,45 @@ const DeckCard = (props: DeckCardProps) => {
                     {props.item.type !== 'user' ?
                     <>
                         {authCtx.userToken && (
-                            props.item.isOwnDeck ? (
-                                <IconButton
-                                    aria-label={`Edit "${deckName}"`}
-                                    onClick={(e) => { e.stopPropagation(); handleEditDeck() }}
-                                    size="large">
-                                    <EditIcon />
-                                </IconButton>
-                            ) : (
-                                <IconButton
-                                    aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
-                                    onClick={(e) => { 
-                                        e.stopPropagation(); 
-                                        if (authCtx.userToken) {
-                                            props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)
-                                        } else {
-                                            console.log("User must be logged in to save decks");
-                                        }
-                                    }}
-                                    size="large">
-                                    {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
-                                    
-                                </IconButton>
-                            )
+                            <>
+                                {props.item.isOwnDeck ? (
+                                    <IconButton
+                                        aria-label={`Edit "${deckName}"`}
+                                        onClick={(e) => { e.stopPropagation(); handleEditDeck() }}
+                                        size="large">
+                                        <EditIcon />
+                                    </IconButton>
+                                ) : (
+                                    <>
+                                        <IconButton
+                                            aria-label={props.item.isSaved ? "Remove from favorites" : "Add to favorites"}
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                if (authCtx.userToken) {
+                                                    props.item.isSaved ? deckService.unsaveDeck(userToken, props.item.savedDeckId, authCtx.userId) : deckService.saveDeck(userToken, deck, authCtx.userId)
+                                                } else {
+                                                    console.log("User must be logged in to save decks");
+                                                }
+                                            }}
+                                            size="large">
+                                            {props.item.isSaved ? <FavoriteIcon /> : <FavoriteBorder />}
+                                        </IconButton>
+                                        <IconButton
+                                            aria-label={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
+                                            onClick={(e) => { e.stopPropagation(); handleSaveAllTerms(); }}
+                                            size="large"
+                                            disabled={isSaveDisabled}
+                                            title={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
+                                        >
+                                            {termBankState.isSaving ? (
+                                                <CircularProgress size={24} variant="determinate" value={termBankState.progress} />
+                                            ) : (
+                                                <SaveAlt />
+                                            )}
+                                        </IconButton>
+                                    </>
+                                )}
+                            </>
                         )}
                     </>
                     :
@@ -132,6 +188,8 @@ const DeckCard = (props: DeckCardProps) => {
                     </Link>
                 </CardActions>
             </Card>
+
+            {/* Delete Confirmation Dialog */}
             <Dialog
                 open={confirmOpen}
                 onClose={handleCloseConfirm}
@@ -156,6 +214,17 @@ const DeckCard = (props: DeckCardProps) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Save All Terms Dialog */}
+            <TermBankDialog
+                open={termBankState.showConfirm}
+                onClose={() => updateTermBankState({ showConfirm: false })}
+                onConfirm={saveAllTerms}
+                deckName={deckName}
+                isSaving={termBankState.isSaving}
+                progress={termBankState.progress}
+                error={termBankState.error}
+            />
         </>
     );
 }

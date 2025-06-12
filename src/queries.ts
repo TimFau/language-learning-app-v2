@@ -213,3 +213,153 @@ export const LOGIN = `
         }
     }
 `
+
+export const SAVE_TERM = gql`
+  mutation SaveTerm(
+    $term: String!, 
+    $definition: String!, 
+    $language: String!, 
+    $user: String!,
+    $source_deck_id: String,
+    $source_term_key: String,
+    $source_definition: String,
+    $sync_preference: String,
+    $last_synced_at: Date
+  ) {
+    create_saved_terms_item(
+      data: {
+        term: $term
+        definition: $definition
+        language: $language
+        status: "published"
+        user: $user
+        source_deck_id: $source_deck_id
+        source_term_key: $source_term_key
+        source_definition: $source_definition
+        sync_preference: $sync_preference
+        last_synced_at: $last_synced_at
+      }
+    ) {
+      id
+      term
+      definition
+      language
+      source_deck_id
+      source_term_key
+      source_definition
+      sync_preference
+      last_synced_at
+      user {
+        id
+      }
+    }
+  }
+`
+
+export const CHECK_TERM_SAVED = gql`
+  query CheckTermSaved($term: String!, $language: String!) {
+    saved_terms(
+      filter: {
+        _and: [
+          { term: { _eq: $term } }
+          { language: { _eq: $language } }
+        ]
+      }
+      limit: 1
+    ) {
+      id
+    }
+  }
+`
+
+export const GET_SAVED_TERMS = gql`
+  query GetSavedTerms {
+    saved_terms(sort: ["-date_created"]) {
+      id
+      term
+      definition
+      language
+      date_created
+    }
+  }
+`
+
+export const BATCH_UPDATE_TERMS = gql`
+  mutation BatchUpdateTerms($items: [BatchUpdateTermInput!]!) {
+    batch_update_saved_terms_items(data: $items) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`
+
+export const UPDATE_MULTIPLE_TERMS = gql`
+  mutation UpdateMultipleTerms($keys: [ID!]!, $data: update_saved_terms_input!) {
+    update_saved_terms_items(ids: $keys, data: $data) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`
+
+export const CHECK_SYNCED_DECK = gql`
+  query CheckSyncedDeck($deckId: String!) {
+    synced_decks(filter: {
+      deck_id: { _eq: $deckId }
+    }) {
+      id
+      sync_preference
+    }
+  }
+`;
+
+export const CREATE_SYNCED_DECK = gql`
+  mutation CreateSyncedDeck($deckId: String!, $language: String!, $termCount: Int!) {
+    create_synced_decks_item(data: {
+      deck_id: $deckId
+      language: $language
+      sync_preference: "manual"
+      term_count_at_save: $termCount
+    }) {
+      id
+      deck_id
+      sync_preference
+    }
+  }
+`;
+
+export const SAVE_MULTIPLE_TERMS = gql`
+  mutation SaveMultipleTerms($items: [create_saved_terms_input!]!) {
+    create_saved_terms_items(data: $items) {
+      id
+      term
+      definition
+      language
+      source_deck_id
+      source_term_key
+      source_definition
+      user {
+        id
+      }
+    }
+  }
+`;
+
+export const GET_SAVED_TERM_KEYS = gql`
+  query GetSavedTermKeys($deckId: String!) {
+    saved_terms(
+      filter: {
+        source_deck_id: { _eq: $deckId }
+      }
+    ) {
+      id
+      source_term_key
+      term
+      language
+    }
+  }
+`;
