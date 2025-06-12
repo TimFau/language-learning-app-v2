@@ -385,6 +385,7 @@ function Deck(props: RootState) {
                                 randomNum={randomNum}
                                 autoSpeak={autoSpeak}
                                 langFromLangCode={getLangFromLangCode()}
+                                deckId={id}
                                 >
                                     Translate to <span>{translateMode === "1to2" ? language2 : language1}</span>
                                 </FlashCard>

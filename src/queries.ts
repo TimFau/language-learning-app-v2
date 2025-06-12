@@ -215,7 +215,17 @@ export const LOGIN = `
 `
 
 export const SAVE_TERM = gql`
-  mutation SaveTerm($term: String!, $definition: String!, $language: String!, $user: String!) {
+  mutation SaveTerm(
+    $term: String!, 
+    $definition: String!, 
+    $language: String!, 
+    $user: String!,
+    $source_deck_id: String,
+    $source_term_key: String,
+    $source_definition: String,
+    $sync_preference: String,
+    $last_synced_at: Date
+  ) {
     create_saved_terms_item(
       data: {
         term: $term
@@ -223,12 +233,22 @@ export const SAVE_TERM = gql`
         language: $language
         status: "published"
         user: $user
+        source_deck_id: $source_deck_id
+        source_term_key: $source_term_key
+        source_definition: $source_definition
+        sync_preference: $sync_preference
+        last_synced_at: $last_synced_at
       }
     ) {
       id
       term
       definition
       language
+      source_deck_id
+      source_term_key
+      source_definition
+      sync_preference
+      last_synced_at
       user {
         id
       }
@@ -293,6 +313,11 @@ export const SAVE_MULTIPLE_TERMS = gql`
       term
       definition
       language
+      source_deck_id
+      source_term_key
+      source_definition
+      sync_preference
+      last_synced_at
       user {
         id
       }

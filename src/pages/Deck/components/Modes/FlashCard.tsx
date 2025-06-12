@@ -16,7 +16,8 @@ interface FlashCardProps {
     showAnswerFc: (event: React.UIEvent<HTMLElement>) => void,
     children: React.ReactNode,
     autoSpeak: boolean,
-    langFromLangCode: string
+    langFromLangCode: string,
+    deckId: string
 }
 
 const speak = (text: string, lang: string = 'en') => {
@@ -57,6 +58,8 @@ const flashCard = (props: FlashCardProps) => {
                                 definition={props.langTo[props.randomNum]}
                                 language={props.langFromLangCode.split('-')[0]}
                                 className="save-button"
+                                deckId={props.deckId}
+                                termIndex={props.randomNum}
                             />
                         </div>
                         <div className="stacked-question">
@@ -81,6 +84,8 @@ const flashCard = (props: FlashCardProps) => {
                                 definition={props.langTo[props.randomNum]}
                                 language={props.langFromLangCode.split('-')[0]}
                                 className="save-button"
+                                deckId={props.deckId}
+                                termIndex={props.randomNum}
                             />
                         </div>
                         <Typography color="textSecondary">{props.children}</Typography>

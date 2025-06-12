@@ -10,6 +10,7 @@ import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, Arrow
 import { useMutation } from '@apollo/client';
 import { SAVE_MULTIPLE_TERMS } from '../queries';
 import { getLanguageCode } from '../utils/languageUtils';
+import { SavedTermMetadata, SavedTermInput, createSavedTermInput } from '../types/SavedTerm';
 
 interface DeckTerm {
     Language1: string;
@@ -101,13 +102,22 @@ const DeckCard = (props: DeckCardProps) => {
             // Filter and prepare terms for saving
             const terms = data
                 .filter((item: DeckTerm) => item.Language1 && item.Language2)
-                .map((item: DeckTerm) => ({
-                    term: item.Language1,
-                    definition: item.Language2,
-                    language: getLanguageCode(deck.Language1),
-                    status: 'published',
-                    user: authCtx.userId
-                }));
+                .map((item: DeckTerm, index: number): SavedTermInput => 
+                    createSavedTermInput(
+                        item.Language1,
+                        item.Language2,
+                        getLanguageCode(deck.Language1),
+                        authCtx.userId,
+                        {
+                            source_deck_id: deckId,
+                            source_term_key: `${index + 1}`, // Using row number as a stable key
+                            source_definition: item.Language2,
+                            sync_preference: 'manual', // Default to manual sync
+                            last_synced_at: new Date()
+                        },
+                        'published'
+                    )
+                );
 
             if (terms.length === 0) {
                 throw new Error('No valid terms found in deck');

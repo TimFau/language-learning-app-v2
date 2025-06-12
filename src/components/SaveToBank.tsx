@@ -7,15 +7,27 @@ import type { GraphQLError } from 'graphql';
 import { useContext, useState } from 'react';
 import AuthContext from '../context/auth-context';
 import { SAVE_TERM, CHECK_TERM_SAVED } from '../queries';
+import { SavedTermMetadata, createSavedTermInput } from '../types/SavedTerm';
 
 interface SaveToBankProps {
   term: string;
   definition: string;
   language: string;
   className?: string;
+  metadata?: Partial<SavedTermMetadata>;
+  deckId?: string;
+  termIndex?: number;
 }
 
-export default function SaveToBank({ term, definition, language, className }: SaveToBankProps) {
+export default function SaveToBank({ 
+  term, 
+  definition, 
+  language, 
+  className, 
+  metadata,
+  deckId,
+  termIndex 
+}: SaveToBankProps) {
   const authCtx = useContext(AuthContext);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
@@ -58,14 +70,27 @@ export default function SaveToBank({ term, definition, language, className }: Sa
     setSaveError(false);
 
     try {
-      await saveTerm({
-        variables: {
-          term,
-          definition,
-          language,
-          user: authCtx.userId
-        }
-      });
+      // Combine provided metadata with deck-specific metadata
+      const combinedMetadata = {
+        ...metadata,
+        ...(deckId && {
+          source_deck_id: deckId,
+          source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
+          source_definition: definition,
+          sync_preference: 'manual' as const
+        })
+      };
+
+      const variables = createSavedTermInput(
+        term, 
+        definition, 
+        language, 
+        authCtx.userId, 
+        combinedMetadata,
+        'published'
+      );
+      
+      await saveTerm({ variables });
       // Success state is handled by the isAlreadySaved check
     } catch (err: any) {
       // If token is invalid, trigger login dialog
