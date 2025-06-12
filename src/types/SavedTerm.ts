@@ -24,6 +24,42 @@ export interface SyncedDeckMetadata {
   term_count_at_save: number;
 }
 
+export interface SyncedDeckResponse {
+  synced_decks: Array<{
+    id: string;
+    sync_preference: SyncPreference;
+    term_count_at_save: number;
+  }>;
+}
+
+export interface SavedTermResponse {
+  saved_terms: Array<{
+    id: string;
+    term: string;
+    definition: string;
+    language: string;
+    source_term_key?: string;
+    source_deck_id?: string;
+    source_definition?: string;
+  }>;
+}
+
+export interface DeckTerm {
+  Language1: string;
+  Language2: string;
+  [key: string]: string;
+}
+
+// Utility type for handling GraphQL errors
+export interface GraphQLErrorResponse {
+  graphQLErrors?: Array<{
+    extensions?: {
+      code: string;
+    };
+    message: string;
+  }>;
+}
+
 export const createSavedTermInput = (
   term: string,
   definition: string,
