@@ -35,48 +35,18 @@ const DeckCard = (props: DeckCardProps) => {
 
     const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [isSavingTerms, setIsSavingTerms] = useState(false);
-    const [saveProgress, setSaveProgress] = useState(0);
-    const [saveError, setSaveError] = useState<string | null>(null);
-    const [showSaveConfirm, setShowSaveConfirm] = useState(false);
 
-    // Check if deck is already synced
-    const { data: syncedDeckData } = useQuery(CHECK_SYNCED_DECK, {
-        variables: { deckId },
-        context: {
-            headers: {
-                authorization: `Bearer ${authCtx.userToken}`
-            }
-        },
-        skip: !authCtx.userToken
-    });
-
-    const [saveMultipleTerms] = useMutation(SAVE_MULTIPLE_TERMS, {
-        context: {
-            headers: {
-                authorization: `Bearer ${authCtx.userToken}`
-            }
-        }
-    });
-
-    const [createSyncedDeck] = useMutation(CREATE_SYNCED_DECK, {
-        context: {
-            headers: {
-                authorization: `Bearer ${authCtx.userToken}`
-            }
-        }
-    });
-
-    // Fetch saved term keys for this deck and user to avoid duplicates
-    const { data: savedTermKeysData, loading: savedTermsLoading, refetch: refetchSavedTermKeys } = useQuery(GET_SAVED_TERM_KEYS, {
-        variables: { deckId },
-        context: {
-            headers: {
-                authorization: `Bearer ${authCtx.userToken}`
-            }
-        },
-        fetchPolicy: 'network-only',
-        skip: !authCtx.userToken
+    const {
+        state: termBankState,
+        saveAllTerms,
+        isSaveDisabled,
+        isDeckSynced,
+        updateState: updateTermBankState
+    } = useTermBank({
+        deckId,
+        language: deck.Language2,
+        userToken: authCtx.userToken || '',
+        userId: authCtx.userId
     });
 
     const handleClick = () => {
@@ -111,18 +81,6 @@ const DeckCard = (props: DeckCardProps) => {
         setConfirmOpen(false);
     };
 
-    const {
-        state: termBankState,
-        saveAllTerms,
-        isSaveDisabled,
-        isDeckSynced
-    } = useTermBank({
-        deckId,
-        language: deck.Language2,
-        userToken: authCtx.userToken || '',
-        userId: authCtx.userId
-    });
-
     const handleSaveAllTerms = async () => {
         if (!authCtx.userToken) {
             authCtx.onLoginOpen(true, false);
@@ -130,11 +88,11 @@ const DeckCard = (props: DeckCardProps) => {
         }
 
         if (isDeckSynced) {
-            setSaveError("This deck has already been saved to your Word Bank");
+            updateTermBankState({ error: "This deck has already been saved to your Word Bank" });
             return;
         }
 
-        setShowSaveConfirm(true);
+        updateTermBankState({ showConfirm: true });
     };
 
     return (
@@ -198,8 +156,8 @@ const DeckCard = (props: DeckCardProps) => {
                                             disabled={isSaveDisabled}
                                             title={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
                                         >
-                                            {isSavingTerms ? (
-                                                <CircularProgress size={24} variant="determinate" value={saveProgress} />
+                                            {termBankState.isSaving ? (
+                                                <CircularProgress size={24} variant="determinate" value={termBankState.progress} />
                                             ) : (
                                                 <SaveAlt />
                                             )}
@@ -259,8 +217,8 @@ const DeckCard = (props: DeckCardProps) => {
 
             {/* Save All Terms Dialog */}
             <TermBankDialog
-                open={showSaveConfirm}
-                onClose={() => setShowSaveConfirm(false)}
+                open={termBankState.showConfirm}
+                onClose={() => updateTermBankState({ showConfirm: false })}
                 onConfirm={saveAllTerms}
                 deckName={deckName}
                 isSaving={termBankState.isSaving}
