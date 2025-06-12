@@ -10,6 +10,7 @@ import Login from '../components/Unauthenticated/Login';
 import NotFound from '../pages/Article/NotFound';
 import LessonsListPage from '../pages/lessons/LessonsListPage';
 import LessonPage from '../pages/lessons/LessonPage';
+import WordBankPage from '../pages/WordBank';
 
 function RootPage (props: PropsFromRedux) {
   
@@ -38,6 +39,7 @@ function RootPage (props: PropsFromRedux) {
                 <CommunityDecks />
             }
             />
+            <Route path="/my-word-bank" element={<WordBankPage />} />
             <Route path="/lessons/:language/:slug" element={<LessonPage />} />
             <Route path="/lessons" element={<LessonsListPage />} />
             <Route path="*" element={<NotFound />} />

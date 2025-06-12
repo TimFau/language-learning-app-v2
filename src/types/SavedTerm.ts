@@ -41,6 +41,11 @@ export interface SavedTermResponse {
     source_term_key?: string;
     source_deck_id?: string;
     source_definition?: string;
+    sync_preference?: SyncPreference;
+    date_created: string;
+    deck_relation?: {
+      deck_name: string;
+    };
   }>;
 }
 

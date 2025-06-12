@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import DeckManagementModal from './Authenticated/DeckManagementModal';
-import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon, MenuBook as MenuBookIcon } from '@mui/icons-material';
+import { CollectionsBookmark as CollectionsBookmarkIcon, LocalLibrary as LocalLibraryIcon, Logout as LogoutIcon, ExitToApp as ExitToAppIcon, Add as AddIcon, MenuBook as MenuBookIcon, School as SchoolIcon } from '@mui/icons-material';
 import ExitDeckConfirmDialog from './ExitDeckConfirmDialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -93,12 +93,22 @@ export default function Nav() {
                                                         <span className="nav-label">Lessons</span>
                                                     </Button>
                                                 </Link>
+                                                <Link to="/my-word-bank" className={['nav-item', pathName === '/my-word-bank' ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<SchoolIcon />}>
+                                                        <span className="nav-label">Word Bank</span>
+                                                    </Button>
+                                                </Link>
                                             </>
                                         ) : (
                                             <>
                                                 <Link to="/lessons" className={['nav-item', pathName.startsWith('/lessons') ? 'active' : ''].join(' ')}>
                                                     <Button className="nav-item-wrapper" startIcon={<MenuBookIcon />}>
                                                         <span className="nav-label">Lessons</span>
+                                                    </Button>
+                                                </Link>
+                                                <Link to="/my-word-bank" className={['nav-item', pathName === '/my-word-bank' ? 'active' : ''].join(' ')}>
+                                                    <Button className="nav-item-wrapper" startIcon={<SchoolIcon />}>
+                                                        <span className="nav-label">Word Bank</span>
                                                     </Button>
                                                 </Link>
                                                 <Button
@@ -172,6 +182,7 @@ export default function Nav() {
                             if (newValue === '/') navigate('/');
                             if (newValue === '/decks') navigate('/decks');
                             if (newValue === '/lessons') navigate('/lessons');
+                            if (newValue === '/my-word-bank') navigate('/my-word-bank');
                         }}
                     >
                         <BottomNavigationAction
@@ -188,6 +199,11 @@ export default function Nav() {
                             label="Lessons"
                             value="/lessons"
                             icon={<MenuBookIcon />}
+                        />
+                        <BottomNavigationAction
+                            label="Word Bank"
+                            value="/my-word-bank"
+                            icon={<SchoolIcon />}
                         />
                     </BottomNavigation>
                 </Paper>
