@@ -8,7 +8,7 @@ import ModalContext from 'context/modal-context';
 import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos, SaveAlt } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client';
-import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK } from '../queries';
+import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK, GET_SAVED_TERM_KEYS } from '../queries';
 import { getLanguageCode } from '../utils/languageUtils';
 import { SavedTermMetadata, SavedTermInput, createSavedTermInput } from '../types/SavedTerm';
 
@@ -65,6 +65,18 @@ const DeckCard = (props: DeckCardProps) => {
         }
     });
 
+    // Fetch saved term keys for this deck and user to avoid duplicates
+    const { data: savedTermKeysData, loading: savedTermsLoading, refetch: refetchSavedTermKeys } = useQuery(GET_SAVED_TERM_KEYS, {
+        variables: { deckId },
+        context: {
+            headers: {
+                authorization: `Bearer ${authCtx.userToken}`
+            }
+        },
+        fetchPolicy: 'network-only',
+        skip: !authCtx.userToken
+    });
+
     const handleClick = () => {
         if (savedDeckId) {
             const now = new Date().toISOString();
@@ -118,32 +130,57 @@ const DeckCard = (props: DeckCardProps) => {
         setSaveError(null);
 
         try {
+            // Always refetch saved terms to ensure we have the latest data
+            const refetchResult = await refetchSavedTermKeys();
+            const currentSavedTerms = refetchResult.data?.saved_terms || savedTermKeysData?.saved_terms || [];
+
+            const existingKeys = new Set(
+                currentSavedTerms.map((t: any) => t.source_term_key)
+            );
+
+            const normalize = (term: string, lang: string) => `${term.trim().toLowerCase()}||${lang.trim().toLowerCase()}`;
+
+            const existingTermLang = new Set(
+                currentSavedTerms.map((t: any) => normalize(t.term, t.language))
+            );
+
+            const termLanguageCode = getLanguageCode(deck.Language2);
+
             // Fetch terms from Google Sheet
-            const data = await sheetService.getSheet(deckId);
-            if (!data || data.error || data.length === 0) {
-                throw new Error(data.error || 'Failed to load deck terms');
+            const sheetData = await sheetService.getSheet(deckId);
+            if (!sheetData || sheetData.error || sheetData.length === 0) {
+                throw new Error(sheetData.error || 'Failed to load deck terms');
             }
 
-            // Filter and prepare terms for saving
-            const terms = data
+            // Filter and prepare terms for saving (skip already-saved terms)
+            const terms = sheetData
                 .filter((item: DeckTerm) => item.Language1 && item.Language2)
-                .map((item: DeckTerm, index: number): SavedTermInput => 
-                    createSavedTermInput(
+                .map((item: DeckTerm, index: number): SavedTermInput | null => {
+                    const sourceKey = `${index + 1}`; // Row number as stable key
+                    if (existingKeys.has(sourceKey) || existingTermLang.has(normalize(item.Language1, termLanguageCode))) {
+                        return null; // Skip duplicates
+                    }
+                    const langCode = termLanguageCode;
+                    return createSavedTermInput(
                         item.Language1,
                         item.Language2,
-                        getLanguageCode(deck.Language1),
+                        langCode,
                         authCtx.userId,
                         {
                             source_deck_id: deckId,
-                            source_term_key: `${index + 1}`, // Using row number as a stable key
+                            source_term_key: sourceKey,
                             source_definition: item.Language2
                         },
                         'published'
-                    )
-                );
+                    );
+                })
+                .filter(Boolean) as SavedTermInput[];
 
+            // If no new terms remain after filtering, inform the user and exit early
             if (terms.length === 0) {
-                throw new Error('No valid terms found in deck');
+                setSaveError('All terms from this deck are already saved to your Word Bank');
+                setIsSavingTerms(false);
+                return;
             }
 
             setSaveProgress(40); // Show progress that we've prepared the terms
@@ -161,7 +198,7 @@ const DeckCard = (props: DeckCardProps) => {
             await createSyncedDeck({
                 variables: {
                     deckId,
-                    language: getLanguageCode(deck.Language1),
+                    language: termLanguageCode,
                     termCount: terms.length
                 }
             });
@@ -181,7 +218,7 @@ const DeckCard = (props: DeckCardProps) => {
     };
 
     // Determine if save button should be disabled
-    const isSaveDisabled = isSavingTerms || (syncedDeckData?.synced_decks?.length > 0);
+    const isSaveDisabled = isSavingTerms || savedTermsLoading || (syncedDeckData?.synced_decks?.length > 0);
 
     return (
         <>

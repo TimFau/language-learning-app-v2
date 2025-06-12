@@ -348,3 +348,18 @@ export const SAVE_MULTIPLE_TERMS = gql`
     }
   }
 `;
+
+export const GET_SAVED_TERM_KEYS = gql`
+  query GetSavedTermKeys($deckId: String!) {
+    saved_terms(
+      filter: {
+        source_deck_id: { _eq: $deckId }
+      }
+    ) {
+      id
+      source_term_key
+      term
+      language
+    }
+  }
+`;
