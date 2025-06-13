@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Cookies from 'universal-cookie';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { cookieExists } from './../scripts/Helpers';
+import {cookieExists} from './../scripts/Helpers';
 
 interface IAuthContext {
     userToken: string,
@@ -9,7 +8,7 @@ interface IAuthContext {
     userName: string,
     isNewUser: boolean,
     loginOpen: boolean,
-    onLogout: (options?: { reason?: string; redirectPath?: string }) => void,
+    onLogout: () => void,
     onLogin: (accessToken: string, userId: string, userName: string) => void,
     onLoginOpen: (open: boolean, newUser: boolean) => void,
     authLoading: boolean
@@ -32,8 +31,6 @@ const cookies = new Cookies();
 const AuthContext = React.createContext<IAuthContext>(defaultState);
 
 export const AuthContextProvider = (props: any) => {
-    const navigate = useNavigate();
-    const location = useLocation();
     const [userToken, setUserToken] = useState('');
     const [userId, setUserId] = useState('');
     const [userName, setUserName] = useState('');
@@ -57,7 +54,7 @@ export const AuthContextProvider = (props: any) => {
         setAuthLoading(false);
 	}, [])
 
-    const logoutHandler = (options?: { reason?: string; redirectPath?: string }) => {
+    const logoutHandler = () => {
         console.log('logoutHandler')
         cookies.remove('token', { path: '/' });
         cookies.remove('userId', { path: '/' });
@@ -66,13 +63,6 @@ export const AuthContextProvider = (props: any) => {
         setUserId('');
         setUserName('');
         setIsNewUser(false);
-
-        // Handle session expiration redirect
-        if (options?.reason === 'session-expired') {
-            const currentPath = location.pathname + location.search;
-            const redirectPath = options.redirectPath || currentPath;
-            navigate(`/login?redirectTo=${encodeURIComponent(redirectPath)}&reason=session-expired`, { replace: true });
-        }
     }
 
     const loginHandler = (accessToken: string, usersId: string, userName: string) => {
