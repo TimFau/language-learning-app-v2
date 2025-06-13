@@ -14,11 +14,21 @@ export default function LoginPage() {
     const reason = searchParams.get('reason');
 
     useEffect(() => {
+        // Open the login dialog when the page loads
+        authCtx.onLoginOpen(true, false);
+
         // If user is already logged in, redirect them
         if (authCtx.userToken) {
             navigate(redirectTo, { replace: true });
         }
-    }, [authCtx.userToken, redirectTo, navigate]);
+    }, [authCtx.userToken]);
+
+    // Listen for successful login
+    useEffect(() => {
+        if (authCtx.userToken) {
+            navigate(redirectTo, { replace: true });
+        }
+    }, [authCtx.userToken, redirectTo]);
 
     return (
         <Container maxWidth="sm">
