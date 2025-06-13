@@ -74,7 +74,8 @@ const WordBankPage = () => {
   }
 
   const savedTerms = data?.saved_terms || [];
-  const hasMore = savedTerms.length >= TERMS_PER_PAGE + offset;
+  // Check if the last fetch returned a full page of results
+  const hasMore = (data?.saved_terms?.slice(offset)?.length ?? 0) >= TERMS_PER_PAGE;
 
   return (
     <Container className="word-bank-page">
