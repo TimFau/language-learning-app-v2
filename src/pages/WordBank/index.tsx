@@ -12,13 +12,17 @@ const TERMS_PER_PAGE = 20;
 const WordBankPage = () => {
   const authCtx = useContext(AuthContext);
   const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const { loading, error, data, fetchMore } = useQuery<SavedTermResponse>(GET_SAVED_TERMS, {
     variables: {
       limit: TERMS_PER_PAGE,
       offset: 0
     },
-    skip: !authCtx.userToken
+    skip: !authCtx.userToken,
+    onCompleted: (data) => {
+      setHasMore(data.saved_terms.length === TERMS_PER_PAGE);
+    }
   });
 
   const [deleteTerm] = useMutation(DELETE_SAVED_TERM, {
@@ -34,6 +38,7 @@ const WordBankPage = () => {
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
+        setHasMore(fetchMoreResult.saved_terms.length === TERMS_PER_PAGE);
         return {
           saved_terms: [...prev.saved_terms, ...fetchMoreResult.saved_terms]
         };
@@ -74,8 +79,6 @@ const WordBankPage = () => {
   }
 
   const savedTerms = data?.saved_terms || [];
-  // Check if the last fetch returned a full page of results
-  const hasMore = (data?.saved_terms?.slice(offset)?.length ?? 0) >= TERMS_PER_PAGE;
 
   return (
     <Container className="word-bank-page">
