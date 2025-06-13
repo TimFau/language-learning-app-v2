@@ -13,9 +13,13 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ColdStartMessage from 'components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
+import Box from '@mui/material/Box';
 
-export default function Login() {
+interface LoginProps {
+    isModal?: boolean;
+}
 
+export default function Login({ isModal = true }: LoginProps) {
     const [emailError, setEmailError] = useState('');
     const [passError, setPassError] = useState('');
     const [email, setEmail] = useState('');
@@ -113,6 +117,73 @@ export default function Login() {
         if (passError) setPassError('');
     }
 
+    const LoginForm = () => (
+        <form style={{ width: '100%' }} onSubmit={login}>
+            <TextField
+                autoFocus
+                margin="dense"
+                value={email}
+                onChange={handleEmail}
+                error={emailError !== ''}
+                helperText={emailError}
+                label="Email Address"
+                fullWidth
+                variant="outlined"
+                inputProps={{ "data-testid": "login-email-input" } as any}
+                type="email"
+                sx={{ mb: 2 }}
+            />
+            <TextField
+                margin="dense"
+                value={password}
+                onChange={handlePassword}
+                error={passError !== ''}
+                helperText={passError}
+                label="Password"
+                type="password"
+                fullWidth
+                variant="outlined"
+                inputProps={{ "data-testid": "login-password-input" } as any}
+                sx={{ mb: 2 }}
+            />
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                data-testid="login-submit-button"
+                disabled={loading}
+                fullWidth
+                sx={{ mt: 1, mb: 1 }}
+            >
+                {loading ? (
+                    isColdStart ? <ColdStartMessage maxSeconds={30} /> : <CircularProgress size={24} color="inherit" />
+                ) : 'Log in'}
+            </Button>
+        </form>
+    );
+
+    if (!isModal) {
+        return (
+            <Box sx={{ 
+                backgroundColor: 'white', 
+                borderRadius: 3,
+                p: 4,
+                boxShadow: 3
+            }}>
+                <Box sx={{ mb: 3 }}>
+                    <h2 style={{ margin: 0, fontWeight: 700, fontSize: 24, color: '#23234B' }}>
+                        {authCtx.isNewUser ? 'Account Created!' : 'Log in'}
+                    </h2>
+                </Box>
+                {apiError ? (
+                    <FetchErrorMessage error={apiError} onRetry={() => setApiError(null)} title="Error" />
+                ) : (
+                    <LoginForm />
+                )}
+            </Box>
+        );
+    }
+
     return (
         <Dialog
             open={authCtx.loginOpen}
@@ -143,50 +214,9 @@ export default function Login() {
                 {apiError ? (
                     <FetchErrorMessage error={apiError} onRetry={() => setApiError(null)} title="Error" />
                 ) : (
-                <form style={{ width: '100%' }} onSubmit={login}>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        value={email}
-                        onChange={handleEmail}
-                        error={emailError !== ''}
-                        helperText={emailError}
-                        label="Email Address"
-                        fullWidth
-                        variant="outlined"
-                        inputProps={{ "data-testid": "login-email-input" } as any}
-                        type="email"
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        margin="dense"
-                        value={password}
-                        onChange={handlePassword}
-                        error={passError !== ''}
-                        helperText={passError}
-                        label="Password"
-                        type="password"
-                        fullWidth
-                        variant="outlined"
-                        inputProps={{ "data-testid": "login-password-input" } as any}
-                        sx={{ mb: 2 }}
-                    />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        data-testid="login-submit-button"
-                        disabled={loading}
-                        fullWidth
-                        sx={{ mt: 1, mb: 1 }}
-                    >
-                        {loading ? (
-                            isColdStart ? <ColdStartMessage maxSeconds={30} /> : <CircularProgress size={24} color="inherit" />
-                        ) : 'Log in'}
-                    </Button>
-                </form>
+                    <LoginForm />
                 )}
             </DialogContent>
         </Dialog>
-    )
+    );
 }

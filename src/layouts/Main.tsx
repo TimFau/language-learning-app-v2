@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
-
+import { Route, Routes, useLocation } from 'react-router-dom';
 import connector, { PropsFromRedux } from "../containers/Main.connector"
 
 import Header from '../components/Header';
@@ -13,7 +12,9 @@ import LessonPage from '../pages/lessons/LessonPage';
 import WordBankPage from '../pages/WordBank';
 
 function RootPage (props: PropsFromRedux) {
-  
+    const location = useLocation();
+    const showLoginModal = location.pathname !== '/login';
+    
     return (
     <>
         <Header />
@@ -44,7 +45,8 @@ function RootPage (props: PropsFromRedux) {
             <Route path="/lessons" element={<LessonsListPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
-        <Login />
+        {/* Show login modal only when not on the login page */}
+        {showLoginModal && <Login isModal={true} />}
     </>
     )
 }

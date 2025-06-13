@@ -1,11 +1,11 @@
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { BrowserRouter } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import AuthContext, { AuthContextProvider } from 'context/auth-context';
 import { ModalContextProvider } from 'context/modal-context';
-
+import client from './services/graphql/apollo-client';
 import MainLayout from './layouts/Main';
-
+import LoginPage from './pages/login';
 import './css/main.scss';
 import { useContext, useEffect } from 'react';
 
@@ -54,12 +54,6 @@ const theme = createTheme({
   },
 });
 
-// Create an instance of ApolloClient
-export const client = new ApolloClient({
-  uri: import.meta.env.VITE_API_BASE,
-  cache: new InMemoryCache(),
-});
-
 function AppContent() {
   const authContext = useContext(AuthContext);
 
@@ -74,25 +68,34 @@ function AppContent() {
     }
   }, [authContext.authLoading, authContext.userToken]);
 
+  // Expose auth context to window for Apollo error handling
+  useEffect(() => {
+    (window as any).__AUTH_CONTEXT__ = authContext;
+    return () => {
+      delete (window as any).__AUTH_CONTEXT__;
+    };
+  }, [authContext]);
+
   return (
-    <>
-      <MainLayout />
-    </>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/*" element={<MainLayout />} />
+    </Routes>
   );
 }
 
 export default function TranslationApp() {
   return (
-    <AuthContextProvider>
-      <ModalContextProvider>
-        <ApolloProvider client={client}>
-          <BrowserRouter basename="/">
+    <BrowserRouter basename="/">
+      <AuthContextProvider>
+        <ModalContextProvider>
+          <ApolloProvider client={client}>
             <ThemeProvider theme={theme}>
               <AppContent />
             </ThemeProvider>
-          </BrowserRouter>
-        </ApolloProvider>
-      </ModalContextProvider>
-    </AuthContextProvider>
+          </ApolloProvider>
+        </ModalContextProvider>
+      </AuthContextProvider>
+    </BrowserRouter>
   );
 }
