@@ -94,7 +94,6 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
           term: item.Language1,
           definition: item.Language2,
           language: termLanguageCode,
-          user: { id: userId } as any,
           status: 'published',
           source_deck: {
             deck_name: deckId,

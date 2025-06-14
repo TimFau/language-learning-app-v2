@@ -57,7 +57,7 @@ const WordBankPage = () => {
   };
 
   if (!authCtx.userToken) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (loading) {

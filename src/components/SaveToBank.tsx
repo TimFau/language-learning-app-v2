@@ -93,11 +93,9 @@ export default function SaveToBank({
           term, 
           definition, 
           language, 
-          authCtx.userId,
           combinedMetadata,
           'published'
         ),
-        userId: authCtx.userId
       };
       
       await saveTerm({ variables });

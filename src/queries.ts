@@ -219,7 +219,6 @@ export const SAVE_TERM = gql`
     $term: String!, 
     $definition: String!, 
     $language: String!, 
-    $userId: ID!,
     $source_deck: create_decks_input!,
     $source_term_key: String,
     $source_definition: String,
@@ -232,7 +231,6 @@ export const SAVE_TERM = gql`
         definition: $definition
         language: $language
         status: "published"
-        user: { id: $userId }
         source_deck: $source_deck
         source_term_key: $source_term_key
         source_definition: $source_definition
@@ -254,11 +252,8 @@ export const SAVE_TERM = gql`
         Language2
         status
       }
-      user {
+      user_created {
         id
-        email
-        first_name
-        last_name
       }
     }
   }
@@ -276,6 +271,12 @@ export const CHECK_TERM_SAVED = gql`
       limit: 1
     ) {
       id
+      source_deck {
+        id
+        deck_name
+        Language2
+        status
+      }
     }
   }
 `
@@ -342,9 +343,6 @@ export const SAVE_MULTIPLE_TERMS = gql`
         deck_name
         Language2
         status
-      }
-      user {
-        id
       }
     }
   }

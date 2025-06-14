@@ -4,7 +4,6 @@ export interface SavedTermInput {
   term: string;
   definition: string;
   language: string;
-  user: string;  // User ID
   status?: 'published' | 'draft' | 'archived';
   source_deck?: {
     deck_name: string;
@@ -79,14 +78,12 @@ export const createSavedTermInput = (
   term: string,
   definition: string,
   language: string,
-  userId: string,  // User ID
   metadata?: Partial<SavedTermMetadata>,
   status: SavedTermInput['status'] = 'published'
-): SavedTermInput => ({
+): Omit<SavedTermInput, 'user'> => ({
   term,
   definition,
   language,
-  user: userId,
   status,
   ...(metadata?.source_deck_id && {
     source_deck: {

@@ -181,6 +181,19 @@ const DeckCard = (props: DeckCardProps) => {
                             size="large">
                             <EditIcon />
                         </IconButton>
+                        <IconButton
+                            aria-label={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
+                            onClick={(e) => { e.stopPropagation(); handleSaveAllTerms(); }}
+                            size="large"
+                            disabled={isSaveDisabled}
+                            title={isSaveDisabled ? "Terms already saved to Word Bank" : "Save all terms to Word Bank"}
+                        >
+                            {termBankState.isSaving ? (
+                                <CircularProgress size={24} variant="determinate" value={termBankState.progress} />
+                            ) : (
+                                <SaveAlt />
+                            )}
+                        </IconButton>
                     </>
                     }
                     <Link href="#" onClick={(e) => {e.preventDefault(); handleClick();}} className="try-now-link" data-testid="try-now-link">
