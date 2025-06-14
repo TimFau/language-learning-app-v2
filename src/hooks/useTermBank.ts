@@ -63,13 +63,31 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
     );
 
     const termLanguageCode = getLanguageCode(language);
+    // TODO: Update when we add support for more source languages
+    const sourceLanguageCode = 'en';
+
+    const isTermAlreadySaved = (item: DeckTerm) => {
+      const term1 = item.Language1;
+      const term2 = item.Language2;
+
+      // Check for term in both directions
+      const forward = normalize(term1, termLanguageCode);
+      const backward = normalize(term2, termLanguageCode);
+      
+      const forward_alt = normalize(term1, sourceLanguageCode);
+      const backward_alt = normalize(term2, sourceLanguageCode);
+
+      return existingTermLang.has(forward) || 
+        existingTermLang.has(backward) ||
+        existingTermLang.has(forward_alt) ||
+        existingTermLang.has(backward_alt);
+    }
 
     return sheetData
       .filter(item => item.Language1 && item.Language2)
       .map((item, index): SavedTermInput | null => {
         const sourceKey = `${index + 1}`;
-        if (existingKeys.has(sourceKey) || 
-            existingTermLang.has(normalize(item.Language1, termLanguageCode))) {
+        if (existingKeys.has(sourceKey) || isTermAlreadySaved(item)) {
           return null;
         }
         return {
