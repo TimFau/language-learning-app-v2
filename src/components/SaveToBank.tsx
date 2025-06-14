@@ -66,6 +66,16 @@ export default function SaveToBank({
       return;
     }
 
+    if (!authCtx.userId) {
+      console.error("No user ID available");
+      return;
+    }
+
+    if (!deckId) {
+      console.error("No deck ID provided");
+      return;
+    }
+
     setIsSaving(true);
     setSaveError(false);
 
@@ -73,22 +83,22 @@ export default function SaveToBank({
       // Combine provided metadata with deck-specific metadata
       const combinedMetadata = {
         ...metadata,
-        ...(deckId && {
-          source_deck_id: deckId,
-          source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
-          source_definition: definition,
-          sync_preference: 'manual' as const
-        })
+        source_deck_id: deckId,
+        source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
+        source_definition: definition
       };
 
-      const variables = createSavedTermInput(
-        term, 
-        definition, 
-        language, 
-        authCtx.userId, 
-        combinedMetadata,
-        'published'
-      );
+      const variables = {
+        ...createSavedTermInput(
+          term, 
+          definition, 
+          language, 
+          authCtx.userId,
+          combinedMetadata,
+          'published'
+        ),
+        userId: authCtx.userId
+      };
       
       await saveTerm({ variables });
       // Success state is handled by the isAlreadySaved check

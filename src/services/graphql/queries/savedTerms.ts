@@ -11,11 +11,16 @@ export const GET_SAVED_TERMS = gql`
       term
       definition
       language
-      source_deck_id
       sync_preference
       date_created
       source_term_key
       source_definition
+      source_deck {
+        id
+        deck_name
+        Language2
+        status
+      }
     }
   }
 `;

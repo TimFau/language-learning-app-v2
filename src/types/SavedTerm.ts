@@ -4,11 +4,19 @@ export interface SavedTermInput {
   term: string;
   definition: string;
   language: string;
-  user: string;
+  user: string;  // User ID
   status?: 'published' | 'draft' | 'archived';
-  source_deck_id?: string;
+  source_deck?: {
+    deck_name: string;
+    deck_id: string; // This is the google sheet id
+    Language1: string;
+    Language2: string;
+    status?: string;
+  };
   source_term_key?: string;
   source_definition?: string;
+  sync_preference?: SyncPreference;
+  last_synced_at?: Date;
 }
 
 export interface SavedTermMetadata {
@@ -39,12 +47,14 @@ export interface SavedTermResponse {
     definition: string;
     language: string;
     source_term_key?: string;
-    source_deck_id?: string;
     source_definition?: string;
     sync_preference?: SyncPreference;
     date_created: string;
-    deck_relation?: {
+    source_deck?: {
+      id: string;
       deck_name: string;
+      Language2: string;
+      status: string;
     };
   }>;
 }
@@ -69,14 +79,24 @@ export const createSavedTermInput = (
   term: string,
   definition: string,
   language: string,
-  user: string,
+  userId: string,  // User ID
   metadata?: Partial<SavedTermMetadata>,
   status: SavedTermInput['status'] = 'published'
 ): SavedTermInput => ({
   term,
   definition,
   language,
-  user,
+  user: userId,
   status,
-  ...metadata
+  ...(metadata?.source_deck_id && {
+    source_deck: {
+      deck_name: metadata.source_deck_id,
+      deck_id: metadata.source_deck_id, // Pass the original deckId here
+      Language1: 'en', // Default source language
+      Language2: language, // Target language
+      status: 'published'
+    }
+  }),
+  source_term_key: metadata?.source_term_key,
+  source_definition: metadata?.source_definition
 }); 

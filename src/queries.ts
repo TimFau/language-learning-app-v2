@@ -219,8 +219,8 @@ export const SAVE_TERM = gql`
     $term: String!, 
     $definition: String!, 
     $language: String!, 
-    $user: String!,
-    $source_deck_id: String,
+    $userId: ID!,
+    $source_deck: create_decks_input!,
     $source_term_key: String,
     $source_definition: String,
     $sync_preference: String,
@@ -232,8 +232,8 @@ export const SAVE_TERM = gql`
         definition: $definition
         language: $language
         status: "published"
-        user: $user
-        source_deck_id: $source_deck_id
+        user: { id: $userId }
+        source_deck: $source_deck
         source_term_key: $source_term_key
         source_definition: $source_definition
         sync_preference: $sync_preference
@@ -244,13 +244,21 @@ export const SAVE_TERM = gql`
       term
       definition
       language
-      source_deck_id
       source_term_key
       source_definition
       sync_preference
       last_synced_at
+      source_deck {
+        id
+        deck_name
+        Language2
+        status
+      }
       user {
         id
+        email
+        first_name
+        last_name
       }
     }
   }
@@ -268,18 +276,6 @@ export const CHECK_TERM_SAVED = gql`
       limit: 1
     ) {
       id
-    }
-  }
-`
-
-export const GET_SAVED_TERMS = gql`
-  query GetSavedTerms {
-    saved_terms(sort: ["-date_created"]) {
-      id
-      term
-      definition
-      language
-      date_created
     }
   }
 `
@@ -315,7 +311,7 @@ export const CHECK_SYNCED_DECK = gql`
       sync_preference
     }
   }
-`;
+`
 
 export const CREATE_SYNCED_DECK = gql`
   mutation CreateSyncedDeck($deckId: String!, $language: String!, $termCount: Int!) {
@@ -330,7 +326,7 @@ export const CREATE_SYNCED_DECK = gql`
       sync_preference
     }
   }
-`;
+`
 
 export const SAVE_MULTIPLE_TERMS = gql`
   mutation SaveMultipleTerms($items: [create_saved_terms_input!]!) {
@@ -339,21 +335,28 @@ export const SAVE_MULTIPLE_TERMS = gql`
       term
       definition
       language
-      source_deck_id
       source_term_key
       source_definition
+      source_deck {
+        id
+        deck_name
+        Language2
+        status
+      }
       user {
         id
       }
     }
   }
-`;
+`
 
 export const GET_SAVED_TERM_KEYS = gql`
   query GetSavedTermKeys($deckId: String!) {
     saved_terms(
       filter: {
-        source_deck_id: { _eq: $deckId }
+        source_deck: {
+          deck_id: { _eq: $deckId }
+        }
       }
     ) {
       id
@@ -362,4 +365,4 @@ export const GET_SAVED_TERM_KEYS = gql`
       language
     }
   }
-`;
+`

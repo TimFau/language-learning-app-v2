@@ -14,8 +14,8 @@ const SavedTermCard = ({ term, onDelete }: SavedTermCardProps) => {
 
   const handleDeckClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (term.source_deck_id) {
-      navigate(`/deck?id=${term.source_deck_id}`);
+    if (term.source_deck) {
+      navigate(`/deck?id=${term.source_deck.id}`);
     }
   };
 
@@ -49,14 +49,14 @@ const SavedTermCard = ({ term, onDelete }: SavedTermCardProps) => {
           {term.definition}
         </Typography>
 
-        {term.source_deck_id ? (
+        {term.source_deck ? (
           <Link 
             href="#" 
             onClick={handleDeckClick}
             className="source-deck-link"
             variant="body2"
           >
-            From Deck: {term.source_deck_id}
+            From Deck: {term.source_deck.deck_name}
           </Link>
         ) : (
           <Typography variant="body2" color="text.secondary" className="source-info">
