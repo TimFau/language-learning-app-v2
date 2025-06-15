@@ -388,7 +388,7 @@ function Deck(props: RootState) {
                                 deckId={id}
                                 deckName={name}
                                 >
-                                    {language1} to {language2}
+                                    {translateMode === '1to2' ? `${language1} to ${language2}` : `${language2} to ${language1}`}
                                 </FlashCard>
                             }
                             {inputMode === 'Keyboard' &&
