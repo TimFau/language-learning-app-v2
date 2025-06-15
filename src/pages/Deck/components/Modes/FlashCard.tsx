@@ -17,7 +17,8 @@ interface FlashCardProps {
     children: React.ReactNode,
     autoSpeak: boolean,
     langFromLangCode: string,
-    deckId: string
+    deckId: string,
+    deckName: string,
 }
 
 const speak = (text: string, lang: string = 'en') => {
@@ -59,6 +60,7 @@ const flashCard = (props: FlashCardProps) => {
                                 language={props.langFromLangCode.split('-')[0]}
                                 className="save-button"
                                 deckId={props.deckId}
+                                deckName={props.deckName}
                                 termIndex={props.randomNum}
                             />
                         </div>
@@ -85,6 +87,7 @@ const flashCard = (props: FlashCardProps) => {
                                 language={props.langFromLangCode.split('-')[0]}
                                 className="save-button"
                                 deckId={props.deckId}
+                                deckName={props.deckName}
                                 termIndex={props.randomNum}
                             />
                         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK, GET_SAVED_TERM_KEYS } from '../queries';
+import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK, GET_SAVED_TERM_KEYS, GET_DECK_BY_SHEET_ID } from '../queries';
 import { getLanguageCode } from '../utils/languageUtils';
 import { SavedTermInput, DeckTerm, SyncedDeckResponse, SavedTermResponse } from '../types/SavedTerm';
 import sheetService from '../services/sheetService';
@@ -28,6 +28,12 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
   });
 
   const { data: syncedDeckData } = useQuery<SyncedDeckResponse>(CHECK_SYNCED_DECK, {
+    variables: { deckId },
+    context: { headers: { authorization: `Bearer ${userToken}` } },
+    skip: !userToken
+  });
+
+  const { data: deckData } = useQuery(GET_DECK_BY_SHEET_ID, {
     variables: { deckId },
     context: { headers: { authorization: `Bearer ${userToken}` } },
     skip: !userToken
@@ -83,6 +89,12 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
         existingTermLang.has(backward_alt);
     }
 
+    if (!deckData?.decks?.[0]?.id) {
+      throw new Error('Could not find deck UUID');
+    }
+
+    const sourceDeckId = deckData.decks[0].id;
+
     return sheetData
       .filter(item => item.Language1 && item.Language2)
       .map((item, index): SavedTermInput | null => {
@@ -95,13 +107,7 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
           definition: item.Language2,
           language: termLanguageCode,
           status: 'published',
-          source_deck: {
-            deck_name: deckId,
-            deck_id: deckId,
-            Language1: 'en',
-            Language2: termLanguageCode,
-            status: 'published'
-          },
+          source_deck: { id: sourceDeckId },
           source_term_key: sourceKey,
           source_definition: item.Language2
         };

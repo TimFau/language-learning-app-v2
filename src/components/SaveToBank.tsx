@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useLazyQuery } from '@apollo/client';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -6,7 +6,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import type { GraphQLError } from 'graphql';
 import { useContext, useState } from 'react';
 import AuthContext from '../context/auth-context';
-import { SAVE_TERM, CHECK_TERM_SAVED } from '../queries';
+import { SAVE_TERM, CHECK_TERM_SAVED, GET_DECK_BY_SHEET_ID } from '../queries';
 import { SavedTermMetadata, createSavedTermInput } from '../types/SavedTerm';
 
 interface SaveToBankProps {
@@ -16,6 +16,7 @@ interface SaveToBankProps {
   className?: string;
   metadata?: Partial<SavedTermMetadata>;
   deckId?: string;
+  deckName?: string;
   termIndex?: number;
 }
 
@@ -26,6 +27,7 @@ export default function SaveToBank({
   className, 
   metadata,
   deckId,
+  deckName,
   termIndex 
 }: SaveToBankProps) {
   const authCtx = useContext(AuthContext);
@@ -41,6 +43,15 @@ export default function SaveToBank({
       }
     },
     skip: !authCtx.userToken
+  });
+
+  // Get deck UUID by sheet ID
+  const [getDeckId, { loading: loadingDeckId }] = useLazyQuery(GET_DECK_BY_SHEET_ID, {
+    context: {
+      headers: {
+        authorization: `Bearer ${authCtx.userToken}`
+      }
+    }
   });
 
   const [saveTerm] = useMutation(SAVE_TERM, {
@@ -76,29 +87,35 @@ export default function SaveToBank({
       return;
     }
 
+    if (!deckName) {
+      console.error("No deck name provided");
+      return;
+    }
+
     setIsSaving(true);
     setSaveError(false);
 
     try {
-      // Combine provided metadata with deck-specific metadata
-      const combinedMetadata = {
-        ...metadata,
-        source_deck_id: deckId,
-        source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
-        source_definition: definition
-      };
-
-      const variables = {
-        ...createSavedTermInput(
-          term, 
-          definition, 
-          language, 
-          combinedMetadata,
-          'published'
-        ),
-      };
+      // First, get the deck's UUID
+      const { data: deckData } = await getDeckId({ variables: { deckId } });
       
-      await saveTerm({ variables });
+      if (!deckData?.decks?.[0]?.id) {
+        throw new Error('Could not find deck UUID');
+      }
+
+      const sourceDeckId = deckData.decks[0].id;
+
+      // Save the term with the deck's UUID
+      await saveTerm({
+        variables: {
+          term,
+          definition,
+          language,
+          source_deck_id: sourceDeckId,
+          source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
+          source_definition: definition
+        }
+      });
       // Success state is handled by the isAlreadySaved check
     } catch (err: any) {
       // If token is invalid, trigger login dialog
@@ -158,7 +175,7 @@ export default function SaveToBank({
     return {
       startIcon: <SaveIcon />,
       color: 'secondary' as const,
-      children: isSaving ? 'Saving...' : 'Save',
+      children: isSaving || loadingDeckId ? 'Saving...' : 'Save',
       sx: { 
         minWidth: 'auto',
         padding: '4px 8px',
@@ -179,7 +196,7 @@ export default function SaveToBank({
     <Button 
       onClick={handleSave}
       variant="text"
-      disabled={(!authCtx.userToken || checkingStatus || isSaving || isAlreadySaved)}
+      disabled={(!authCtx.userToken || checkingStatus || isSaving || loadingDeckId || isAlreadySaved)}
       className={className}
       {...buttonProps}
     />

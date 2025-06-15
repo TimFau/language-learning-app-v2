@@ -6,10 +6,11 @@ export interface SavedTermInput {
   language: string;
   status?: 'published' | 'draft' | 'archived';
   source_deck?: {
-    deck_name: string;
-    deck_id: string; // This is the google sheet id
-    Language1: string;
-    Language2: string;
+    id?: string; // For linking to existing deck
+    deck_name?: string;
+    deck_id?: string; // This is the google sheet id
+    Language1?: string;
+    Language2?: string;
     status?: string;
   };
   source_term_key?: string;
@@ -22,6 +23,7 @@ export interface SavedTermMetadata {
   source_deck_id: string;
   source_term_key: string;
   source_definition: string;
+  source_deck_name: string;
 }
 
 export interface SyncedDeckMetadata {
@@ -51,6 +53,7 @@ export interface SavedTermResponse {
     date_created: string;
     source_deck?: {
       id: string;
+      deck_id: string;
       deck_name: string;
       Language2: string;
       status: string;
@@ -87,7 +90,7 @@ export const createSavedTermInput = (
   status,
   ...(metadata?.source_deck_id && {
     source_deck: {
-      deck_name: metadata.source_deck_id,
+      deck_name: metadata.source_deck_name || metadata.source_deck_id,
       deck_id: metadata.source_deck_id, // Pass the original deckId here
       Language1: 'en', // Default source language
       Language2: language, // Target language

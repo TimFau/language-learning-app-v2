@@ -15,7 +15,7 @@ const SavedTermCard = ({ term, onDelete }: SavedTermCardProps) => {
   const handleDeckClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (term.source_deck) {
-      navigate(`/deck?id=${term.source_deck.id}`);
+      navigate(`/deck?id=${term.source_deck.deck_id}&name=${term.source_deck.deck_name}`);
     }
   };
 

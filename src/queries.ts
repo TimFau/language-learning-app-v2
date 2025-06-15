@@ -214,12 +214,26 @@ export const LOGIN = `
     }
 `
 
+export const GET_DECK_BY_SHEET_ID = gql`
+  query GetDeckBySheetId($deckId: String!) {
+    decks(filter: {
+      deck_id: { _eq: $deckId }
+    }, limit: 1) {
+      id
+      deck_name
+      Language1
+      Language2
+      status
+    }
+  }
+`
+
 export const SAVE_TERM = gql`
   mutation SaveTerm(
     $term: String!, 
     $definition: String!, 
     $language: String!, 
-    $source_deck: create_decks_input!,
+    $source_deck_id: ID!,
     $source_term_key: String,
     $source_definition: String,
     $sync_preference: String,
@@ -231,7 +245,7 @@ export const SAVE_TERM = gql`
         definition: $definition
         language: $language
         status: "published"
-        source_deck: $source_deck
+        source_deck: { id: $source_deck_id }
         source_term_key: $source_term_key
         source_definition: $source_definition
         sync_preference: $sync_preference
@@ -364,3 +378,37 @@ export const GET_SAVED_TERM_KEYS = gql`
     }
   }
 `
+
+export const GET_SAVED_TERMS = gql`
+  query GetSavedTerms($limit: Int, $offset: Int) {
+    saved_terms(
+      limit: $limit
+      offset: $offset
+      sort: ["-date_created"]
+    ) {
+      id
+      term
+      definition
+      language
+      sync_preference
+      date_created
+      source_term_key
+      source_definition
+      source_deck {
+        id
+        deck_id
+        deck_name
+        Language2
+        status
+      }
+    }
+  }
+`;
+
+export const DELETE_SAVED_TERM = gql`
+  mutation DeleteSavedTerm($id: ID!) {
+    delete_saved_terms_item(id: $id) {
+      id
+    }
+  }
+`;

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Container, Typography, Grid, Button, Box, CircularProgress } from '@mui/material';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_SAVED_TERMS, DELETE_SAVED_TERM } from '../../services/graphql/queries/savedTerms';
+import { GET_SAVED_TERMS, DELETE_SAVED_TERM } from '../../queries';
 import SavedTermCard from '../../components/SavedTermCard';
 import AuthContext from '../../context/auth-context';
 import { Navigate } from 'react-router-dom';
