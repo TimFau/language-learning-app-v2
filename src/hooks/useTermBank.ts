@@ -7,7 +7,7 @@ import sheetService from '../services/sheetService';
 
 interface UseTermBankProps {
   deckId: string;
-  language: string;
+  language: string; // Target language (e.g., "Spanish")
   userToken: string;
   userId: string;
 }
@@ -93,26 +93,36 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
       throw new Error('Could not find deck UUID');
     }
 
-    const sourceDeckId = deckData.decks[0].id;
+    const deckInfo = deckData.decks[0];
+    const sourceDeckId = deckInfo.id;
+
+    // Ensure deckInfo.Language1 is a string before calling toLowerCase
+    const isLang1English = typeof deckInfo.Language1 === 'string' && 
+                           deckInfo.Language1.toLowerCase().includes('english');
 
     return sheetData
       .filter(item => item.Language1 && item.Language2)
-      .map((item, index): SavedTermInput | null => {
+      .flatMap((item, index): SavedTermInput[] => {
         const sourceKey = `${index + 1}`;
         if (existingKeys.has(sourceKey) || isTermAlreadySaved(item)) {
-          return null;
+          return [];
         }
-        return {
-          term: item.Language1,
-          definition: item.Language2,
+
+        const englishTerm = isLang1English ? item.Language1 : item.Language2;
+        const otherTerm = isLang1English ? item.Language2 : item.Language1;
+
+        const newTerm: SavedTermInput = {
+          term: englishTerm,
+          definition: otherTerm,
           language: termLanguageCode,
           status: 'published',
           source_deck: { id: sourceDeckId },
           source_term_key: sourceKey,
-          source_definition: item.Language2
+          source_definition: otherTerm,
         };
-      })
-      .filter(Boolean) as SavedTermInput[];
+
+        return [newTerm];
+      });
   };
 
   const saveAllTerms = async () => {

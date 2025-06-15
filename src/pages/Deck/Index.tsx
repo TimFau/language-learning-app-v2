@@ -194,9 +194,7 @@ function Deck(props: RootState) {
         setShowAnswer(true);
     }
 
-    // Helper to determine language code for langFrom
-    const getLangFromLangCode = () => {
-        const lang = translateMode === '1to2' ? language1 : language2;
+    const getLangCode = (lang: string | undefined) => {
         const langMap: { [key: string]: string } = {
             spanish: 'es-ES',
             french: 'fr-FR',
@@ -214,7 +212,18 @@ function Deck(props: RootState) {
             }
         }
         return 'en-US';
+    }
+
+    // Helper to determine language code for langFrom
+    const getLangFromLangCode = () => {
+        const lang = translateMode === '1to2' ? language1 : language2;
+        return getLangCode(lang);
     };
+
+    const getLangToLangCode = () => {
+        const lang = translateMode === '1to2' ? language2 : language1;
+        return getLangCode(lang);
+    }
 
     useEffect(() => {
         function getDeckData(value: string) {
@@ -385,6 +394,7 @@ function Deck(props: RootState) {
                                 randomNum={randomNum}
                                 autoSpeak={autoSpeak}
                                 langFromLangCode={getLangFromLangCode()}
+                                langToLangCode={getLangToLangCode()}
                                 deckId={id}
                                 deckName={name}
                                 >

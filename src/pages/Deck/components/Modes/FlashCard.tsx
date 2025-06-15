@@ -17,6 +17,7 @@ interface FlashCardProps {
     children: React.ReactNode,
     autoSpeak: boolean,
     langFromLangCode: string,
+    langToLangCode: string,
     deckId: string,
     deckName: string,
 }
@@ -48,6 +49,11 @@ const flashCard = (props: FlashCardProps) => {
         // Only run when question changes or autoSpeak toggles
     }, [props.langFrom, props.randomNum, props.showAnswer, props.autoSpeak, props.langFromLangCode]);
 
+    const isLangFromEnglish = props.langFromLangCode.startsWith('en');
+    const term = isLangFromEnglish ? props.langFrom[props.randomNum] : props.langTo[props.randomNum];
+    const definition = isLangFromEnglish ? props.langTo[props.randomNum] : props.langFrom[props.randomNum];
+    const targetLanguageCode = isLangFromEnglish ? props.langToLangCode : props.langFromLangCode;
+
     return(
         <div className="flash-card-outer-container">
             <Card className={props.showAnswer ? "flash-card-container flash-card-stacked" : "flash-card-container"} data-testid="flashcard">
@@ -55,9 +61,9 @@ const flashCard = (props: FlashCardProps) => {
                     <CardContent data-testid="card-back" className="flash-card-stacked-content">
                         <div className="save-button-container">
                             <SaveToBank 
-                                term={props.langFrom[props.randomNum]}
-                                definition={props.langTo[props.randomNum]}
-                                language={props.langFromLangCode.split('-')[0]}
+                                term={term}
+                                definition={definition}
+                                language={targetLanguageCode.split('-')[0]}
                                 className="save-button"
                                 deckId={props.deckId}
                                 deckName={props.deckName}
@@ -82,9 +88,9 @@ const flashCard = (props: FlashCardProps) => {
                     <CardContent onClick={props.showAnswerFc} data-testid="card-front" className="card-front">
                         <div className="save-button-container">
                             <SaveToBank 
-                                term={props.langFrom[props.randomNum]}
-                                definition={props.langTo[props.randomNum]}
-                                language={props.langFromLangCode.split('-')[0]}
+                                term={term}
+                                definition={definition}
+                                language={targetLanguageCode.split('-')[0]}
                                 className="save-button"
                                 deckId={props.deckId}
                                 deckName={props.deckName}

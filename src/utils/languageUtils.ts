@@ -31,7 +31,7 @@ export const getLanguageCode = (languageName: string): string => {
     if (!languageName) return 'en';
     
     // Clean up the input by removing any region specifiers and trimming
-    const cleanName = languageName.split('-')[0].split('(')[0].trim();
+    const cleanName = languageName.split('-')[0].split('(')[0].trim().toLowerCase();
     
     // Try to find an exact match
     const code = languageNameToCode[cleanName];

@@ -44,7 +44,7 @@ const DeckCard = (props: DeckCardProps) => {
         updateState: updateTermBankState
     } = useTermBank({
         deckId,
-        language: deck.Language2,
+        language: deck.Language1.toLowerCase().includes('english') ? deck.Language2 : deck.Language1,
         userToken: authCtx.userToken || '',
         userId: authCtx.userId
     });
