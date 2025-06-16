@@ -2,23 +2,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Card, CardContent, Typography, CardActions, CardActionArea, IconButton, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Link, CircularProgress } from "@mui/material"
 import { useNavigate } from "react-router";
 import deckService from 'services/deckService';
-import sheetService from 'services/sheetService';
 import AuthContext from 'context/auth-context';
 import ModalContext from 'context/modal-context';
 import { useContext, useState } from "react";
 import { FavoriteBorder, Language, Delete as DeleteIcon, Edit as EditIcon, ArrowForwardIos, SaveAlt } from '@mui/icons-material';
-import { useMutation, useQuery } from '@apollo/client';
-import { SAVE_MULTIPLE_TERMS, CHECK_SYNCED_DECK, CREATE_SYNCED_DECK, GET_SAVED_TERM_KEYS } from '../queries';
-import { getLanguageCode } from '../utils/languageUtils';
-import { SavedTermMetadata, SavedTermInput, createSavedTermInput } from '../types/SavedTerm';
 import { useTermBank } from '../hooks/useTermBank';
 import { TermBankDialog } from './TermBankDialog';
-
-interface DeckTerm {
-    Language1: string;
-    Language2: string;
-    [key: string]: any;
-}
 
 type DeckCardProps = {
     item: any,
