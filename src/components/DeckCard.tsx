@@ -36,6 +36,13 @@ const DeckCard = (props: DeckCardProps) => {
     const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
 
+    // Safely determine the target language for the Word Bank.
+    // Protect against null/undefined or non-string values for Language1/Language2.
+    const lang1 = typeof deck.Language1 === 'string' ? deck.Language1 : '';
+    const lang2 = typeof deck.Language2 === 'string' ? deck.Language2 : '';
+    const isLanguage1English = lang1.toLowerCase().includes('english');
+    const targetLanguage = isLanguage1English ? lang2 : lang1 || lang2;
+
     const {
         state: termBankState,
         saveAllTerms,
@@ -44,7 +51,7 @@ const DeckCard = (props: DeckCardProps) => {
         updateState: updateTermBankState
     } = useTermBank({
         deckId,
-        language: deck.Language1.toLowerCase().includes('english') ? deck.Language2 : deck.Language1,
+        language: targetLanguage,
         userToken: authCtx.userToken || '',
         userId: authCtx.userId
     });
