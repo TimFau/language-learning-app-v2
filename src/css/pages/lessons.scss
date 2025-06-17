@@ -1,0 +1,41 @@
+@import '../partials/base/variables';
+
+.lessons-list-page {
+    padding: $spacing-lg 0;
+  
+    .series-group {
+        margin-bottom: $spacing-xl;
+    }
+
+    .lessons-list-title {
+      text-align: center;
+      font-family: $font-family-secondary;
+      color: $primary-dark;
+      &.MuiTypography-root {
+        margin-bottom: $spacing-xl;
+      }
+    }
+  
+    .lesson-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+    }
+  
+    .lesson-card-media {
+      height: auto;
+      width: 100%;
+    }
+  
+    .lessons-loading,
+    .lessons-error,
+    .lessons-empty {
+      text-align: center;
+      margin-top: $spacing-lg;
+      color: $text-secondary;
+      font-size: $font-size-lg;
+    }
+  }

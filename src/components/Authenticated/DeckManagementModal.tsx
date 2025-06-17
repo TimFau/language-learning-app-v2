@@ -226,7 +226,7 @@ const DeckManagementModal = (props: DeckManagementModalProps) => {
                                 <li>Click <b>Copy link</b> and paste it above.</li>
                             </ol>
                             <div className="deck-management-modal-sheet-modal-img-placeholder">
-                                <img src="/images/sharing-sheet-with-anyone.jpg" alt="How to share Google Sheet" />
+                                <img src={`/images/sharing-sheet-with-anyone.jpg`} alt="How to share Google Sheet" />
                             </div>
                             <div style={{fontSize: '0.9em', marginTop: 8}}>
                                 <a href="https://support.google.com/docs/answer/2494822?hl=en" target="_blank" rel="noopener noreferrer">See Google's official help</a>

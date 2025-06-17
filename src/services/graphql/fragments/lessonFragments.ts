@@ -16,8 +16,15 @@ export const LESSON_CORE_FIELDS = gql`
       width
       height
     }
-    Series
-    lesson_number
+    lesson_series {
+      id
+      title
+      slug
+      description
+      image {
+        id
+      }
+    }
     tags
   }
 `; 

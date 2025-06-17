@@ -5,10 +5,15 @@ interface LessonHeaderProps {
   title: string;
   imageUrl: string;
   language: string;
-  series?: string[];
+  lessonSeries?: {
+    id: string;
+    title: string;
+    slug: string;
+    description: string;
+  };
 }
 
-export default function LessonHeader({ title, imageUrl, language, series }: LessonHeaderProps) {
+export default function LessonHeader({ title, imageUrl, language, lessonSeries }: LessonHeaderProps) {
   const [flagError, setFlagError] = useState(false);
 
   return (
@@ -22,16 +27,14 @@ export default function LessonHeader({ title, imageUrl, language, series }: Less
         />
       )}
       <Box className="lesson-header-content">
-        {series && series.length > 0 && (
+        {lessonSeries && (
             <Box className="lesson-series-container">
-              {series.map((seriesName, index) => (
-                <Chip
-                  key={index}
-                  label={seriesName}
-                  className="series-chip"
-                  variant="outlined"
-                />
-              ))}
+              <Chip
+                key={lessonSeries.id}
+                label={lessonSeries.title}
+                className="series-chip"
+                variant="outlined"
+              />
             </Box>
         )}
         <Box className="lesson-header-text">

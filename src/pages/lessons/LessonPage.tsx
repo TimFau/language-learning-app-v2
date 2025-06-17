@@ -1,6 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import 'css/pages/lesson.scss';
+import 'css/pages/lessons.scss';
 import { useState, useEffect } from 'react';
 import {
   Box,
@@ -17,10 +18,22 @@ import ColdStartMessage from '../../components/ColdStartMessage';
 import { COLD_START_TIMEOUT } from '../../utils/constants';
 import LessonContent from './components/LessonContent';
 import LessonHeader from './components/LessonHeader';
+import Breadcrumbs, { BreadcrumbItem } from '../../components/Breadcrumbs';
+import { getFileExtension } from '../../utils/fileUtils';
+
+const LANGUAGE_CODE_MAP: { [key: string]: string } = {
+  'es': 'spanish',
+  'fr': 'french',
+  'de': 'german'
+};
 
 const GET_LESSON = gql`
-  query GetLesson($language: String!, $slug: String!) {
-    lessons(filter: { language: { _eq: $language }, slug: { _eq: $slug } }) {
+  query GetLesson($language: String!, $series: String!, $slug: String!) {
+    lessons(filter: { 
+      language: { _eq: $language },
+      lesson_series: { slug: { _eq: $series } },
+      slug: { _eq: $slug } 
+    }) {
       ...LessonCoreFields
       body
       deck_link
@@ -30,10 +43,11 @@ const GET_LESSON = gql`
   ${LESSON_CORE_FIELDS}
 `;
 
-function LessonSkeleton() {
+function LessonSkeleton({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) {
   return (
     <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
+        <Breadcrumbs items={breadcrumbs} />
         <Box className="lesson-page-back-button">
           <Skeleton variant="rectangular" width={150} height={36} />
         </Box>
@@ -69,16 +83,18 @@ function LessonSkeleton() {
           </CardContent>
         </Card>
       </Container>
-    </Box>
+  </Box>
   );
 }
 
 export default function LessonPage() {
-  const { language, slug } = useParams();
+  const { language, series, slug } = useParams();
   const navigate = useNavigate();
+  const fullLanguageName = language ? LANGUAGE_CODE_MAP[language] : undefined;
+
   const { loading, error, data } = useQuery(GET_LESSON, {
-    variables: { language, slug },
-    skip: !language || !slug,
+    variables: { language: fullLanguageName, series, slug },
+    skip: !fullLanguageName || !series || !slug,
   });
   const [isColdStart, setIsColdStart] = useState(false);
 
@@ -92,11 +108,24 @@ export default function LessonPage() {
     }
   }, [loading]);
 
+  // Validate language code
+  const validLanguages = Object.keys(LANGUAGE_CODE_MAP);
+  if (!language || !validLanguages.includes(language)) {
+    return <Navigate to="/lessons" replace />;
+  }
+
   if (loading) {
+    const breadcrumbs: BreadcrumbItem[] = [
+      { label: 'Home', href: '/' },
+      { label: 'Lessons', href: '/lessons' },
+      { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '', href: `/lessons/${language}` },
+      { label: series || '' },
+    ];
+
     return isColdStart ? (
       <ColdStartMessage />
     ) : (
-      <LessonSkeleton />
+      <LessonSkeleton breadcrumbs={breadcrumbs} />
     );
   }
   if (error) {
@@ -107,45 +136,52 @@ export default function LessonPage() {
     return <div className="article-not-found">Not Found</div>;
   }
 
-  const imageUrl = lesson.main_image
-    ? `${import.meta.env.VITE_API_BASE?.replace('/graphql', '')}/assets/${
-        lesson.main_image.id
-      }`
-    : 'https://via.placeholder.com/1200x400';
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Lessons', href: '/lessons' },
+    { label: LANGUAGE_CODE_MAP[language]?.charAt(0).toUpperCase() + LANGUAGE_CODE_MAP[language]?.slice(1) || '', href: `/lessons/${language}` },
+    { label: lesson.lesson_series?.title || 'Untitled Series', href: `/lessons/${language}/${series}` },
+    { label: lesson.title || 'Untitled Lesson' },
+  ];
 
   return (
     <Box className="page-container lesson-page-container">
       <Container maxWidth="md">
-        <Box className="lesson-page-back-button">
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(`/lessons`)}
-            variant="outlined"
-          >
-            Back to Lessons
-          </Button>
-        </Box>
+        <Breadcrumbs items={breadcrumbs} />
         <Card className="lesson-page-card">
           <LessonHeader 
             title={lesson.title} 
-            imageUrl={imageUrl} 
-            language={language || ''} 
-            series={lesson.Series}
+            imageUrl={lesson.main_image?.filename_download 
+              ? `${import.meta.env.VITE_MEDIA_BASE || ''}/${lesson.main_image.id}.${getFileExtension(lesson.main_image.filename_download)}` 
+              : 'https://via.placeholder.com/1200x400'} 
+            language={LANGUAGE_CODE_MAP[language] || ''} 
+            lessonSeries={lesson.lesson_series || { 
+              id: 'default',
+              title: 'Untitled Series', 
+              slug: '', 
+              description: 'No description available'
+            }}
           />
           <CardContent className="lesson-page-content">
             <LessonContent lesson={lesson} />
             <Box className="lesson-page-footer">
-              {lesson.deck_link && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mb: 2 }}>
                 <Button
-                  className="lesson-page-cta"
-                  href={lesson.deck_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="contained"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => navigate(`/lessons/${language}/${series}`)}
+                  variant="outlined"
                 >
-                  Go to Deck
+                  Back to Series
                 </Button>
-              )}
+                {/* <Button
+                  variant="contained"
+                  color="primary"
+                  // TODO: Add navigation to next lesson when available
+                  onClick={() => {}}
+                >
+                  Next Lesson
+                </Button> */}
+              </Box>
               <Typography component="p" className="lesson-page-disclaimer">
                 Note: This lesson was created with the help of AI and reviewed
                 for clarity and usefulness. While not written by a native
