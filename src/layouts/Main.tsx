@@ -11,6 +11,7 @@ import NotFound from '../pages/Article/NotFound';
 import LessonsListPage from '../pages/lessons/LessonsListPage';
 import LessonPage from '../pages/lessons/LessonPage';
 import WordBankPage from '../pages/WordBank';
+import ReviewPage from '../pages/Review';
 
 function RootPage (props: PropsFromRedux) {
   
@@ -42,6 +43,7 @@ function RootPage (props: PropsFromRedux) {
             <Route path="/my-word-bank" element={<WordBankPage />} />
             <Route path="/lessons/:language/:slug" element={<LessonPage />} />
             <Route path="/lessons" element={<LessonsListPage />} />
+            <Route path="/review" element={<ReviewPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
         <Login />

@@ -412,3 +412,33 @@ export const DELETE_SAVED_TERM = gql`
     }
   }
 `;
+
+export const GET_SAVED_TERMS_FOR_REVIEW_BY_LANGUAGE = gql`
+  query GetSavedTermsForReviewByLanguage($language: String!, $limit: Int) {
+    saved_terms(
+      filter: {
+        language: { _eq: $language }
+      },
+      limit: $limit,
+      sort: "random"
+    ) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`;
+
+export const GET_ALL_SAVED_TERMS_FOR_REVIEW = gql`
+  query GetAllSavedTermsForReview($limit: Int) {
+    saved_terms(
+      limit: $limit,
+    ) {
+      id
+      term
+      definition
+      language
+    }
+  }
+`;
