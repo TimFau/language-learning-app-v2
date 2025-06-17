@@ -28,6 +28,14 @@ const ReviewSession = () => {
 
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Determine what appears on each side of the flashcard based on the selected review direction
+  const getCardTexts = () => {
+    if (!currentTerm) return { front: '', back: '' };
+    return options.direction === 'term_to_definition'
+      ? { front: currentTerm.term, back: currentTerm.definition }
+      : { front: currentTerm.definition, back: currentTerm.term };
+  };
+
   const handleFlip = () => {
     if (sessionState === 'active') {
       setIsFlipped(!isFlipped);
@@ -64,6 +72,15 @@ const ReviewSession = () => {
           <MenuItem value={25}>25 Cards</MenuItem>
           <MenuItem value={50}>50 Cards</MenuItem>
         </Select>
+        <Select
+          value={options.direction}
+          onChange={(e) =>
+            updateOptions({ direction: e.target.value as 'term_to_definition' | 'definition_to_term' })
+          }
+        >
+          <MenuItem value="term_to_definition">English → Translation</MenuItem>
+          <MenuItem value="definition_to_term">Translation → English</MenuItem>
+        </Select>
         <Button variant="contained" onClick={startSession}>
           Start Review
         </Button>
@@ -92,6 +109,7 @@ const ReviewSession = () => {
   }
 
   if (sessionState === 'active' && currentTerm) {
+    const { front, back } = getCardTexts();
     return (
       <Box className="review-active">
         <Box className="progress-bar">
@@ -102,10 +120,10 @@ const ReviewSession = () => {
         <Box className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
           <Box className="card-inner">
             <Box className="card-front">
-              <Typography variant="h2">{currentTerm.term}</Typography>
+              <Typography variant="h2">{front}</Typography>
             </Box>
             <Box className="card-back">
-              <Typography variant="h3">{currentTerm.definition}</Typography>
+              <Typography variant="h3">{back}</Typography>
             </Box>
           </Box>
         </Box>

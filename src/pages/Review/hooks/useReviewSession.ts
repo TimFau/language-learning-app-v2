@@ -10,6 +10,7 @@ interface UseReviewSessionProps {
 interface ReviewOptions {
   language: string; // 'all' or a specific language code like 'es'
   cardCount: number;
+  direction: 'term_to_definition' | 'definition_to_term';
 }
 
 export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
@@ -17,6 +18,7 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
   const [options, setOptions] = useState<ReviewOptions>({
     language: 'all',
     cardCount: 25,
+    direction: 'term_to_definition',
   });
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, 'hard' | 'okay' | 'easy'>>({});
