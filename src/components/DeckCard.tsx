@@ -99,7 +99,7 @@ const DeckCard = (props: DeckCardProps) => {
                     props.item.type === 'user' ? 'isUser' : 'notUser',
                     props.item.isOwnDeck ? 'is-own-deck' : ''
                 ].join(' ')}
-                data-testid={`deck-card-${deckName.replace(/\s+/g, '-')}-${deck.id}`}
+                data-testid={`deck-card-${deckName?.replace(/\s+/g, '-')}-${deck.id}`}
             >
                 <CardActionArea onClick={() => handleClick()} data-testid={`deck-card-action-area`} className="deck-card__action-area-top">
                     <CardContent className="deck-card__action-area-top__content">

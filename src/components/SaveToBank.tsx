@@ -37,6 +37,8 @@ export default function SaveToBank({
   // Check if term is already saved
   const { data: savedData, loading: checkingStatus } = useQuery(CHECK_TERM_SAVED, {
     variables: { term, language },
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'network-only',
     context: {
       headers: {
         authorization: `Bearer ${authCtx.userToken}`

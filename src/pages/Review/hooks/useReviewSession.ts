@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { useQuery, DocumentNode } from '@apollo/client';
 import { GET_ALL_SAVED_TERMS_FOR_REVIEW, GET_SAVED_TERMS_FOR_REVIEW_BY_LANGUAGE } from 'queries';
 import { Term } from 'types/Term';
+import AuthContext from 'context/auth-context';
 
 interface UseReviewSessionProps {
   userId: string;
@@ -14,6 +15,7 @@ interface ReviewOptions {
 }
 
 export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
+  const { userToken } = useContext(AuthContext);
   const [sessionState, setSessionState] = useState<'configuring' | 'active' | 'finished'>('configuring');
   const [options, setOptions] = useState<ReviewOptions>({
     language: 'all',
@@ -43,6 +45,13 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
   const { data, loading, error, refetch } = useQuery(query, {
     variables,
     skip: sessionState !== 'active',
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'network-only',
+    context: {
+      headers: {
+        Authorization: userToken ? `Bearer ${userToken}` : '',
+      },
+    },
   });
 
   const terms: Term[] = data?.saved_terms || [];

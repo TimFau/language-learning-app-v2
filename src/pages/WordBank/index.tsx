@@ -20,13 +20,28 @@ const WordBankPage = () => {
       offset: 0
     },
     skip: !authCtx.userToken,
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'network-only',
+    context: {
+      headers: {
+        authorization: `Bearer ${authCtx.userToken}`
+      }
+    },
     onCompleted: (data) => {
       setHasMore(data.saved_terms.length === TERMS_PER_PAGE);
     }
   });
 
   const [deleteTerm] = useMutation(DELETE_SAVED_TERM, {
-    refetchQueries: [{ query: GET_SAVED_TERMS, variables: { limit: TERMS_PER_PAGE, offset: 0 } }]
+    context: {
+      headers: {
+        authorization: `Bearer ${authCtx.userToken}`
+      }
+    },
+    refetchQueries: [{ 
+      query: GET_SAVED_TERMS, 
+      variables: { limit: TERMS_PER_PAGE, offset: 0 }
+    }]
   });
 
   const handleLoadMore = () => {
@@ -93,7 +108,7 @@ const WordBankPage = () => {
 
       <Grid container spacing={3}>
         {savedTerms.map((term) => (
-          <Grid item key={term.id} xs={12} sm={6} md={4}>
+          <Grid item={true} key={term.id} xs={12} sm={6} md={4}>
             <SavedTermCard term={term} onDelete={handleDelete} />
           </Grid>
         ))}
@@ -114,4 +129,4 @@ const WordBankPage = () => {
   );
 };
 
-export default WordBankPage; 
+export default WordBankPage;
