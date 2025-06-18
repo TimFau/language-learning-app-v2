@@ -25,6 +25,7 @@ export default function Nav() {
     const modalCtx = useContext(ModalContext);
 
     let pathName = useLocation().pathname;
+    const isReviewPath = pathName.startsWith('/review');
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -68,7 +69,7 @@ export default function Nav() {
                     <div className="end">
                         {deckStarted &&
                             <Button className="nav-item" onClick={() => setExitDialogOpen(true)} startIcon={<ExitToAppIcon />}>
-                                <span className="nav-label">Exit Deck</span>
+                                <span className="nav-label">{isReviewPath ? 'Exit Review' : 'Exit Deck'}</span>
                             </Button>
                         }
                         {/* Show nav items in header if authenticated and not mobile, or if guest (regardless of mobile) */}
@@ -137,7 +138,7 @@ export default function Nav() {
                             </>
                         )}
                         {/* Always show logout button in header when logged in and not on /deck */}
-                        {isLoggedIn() && pathName !== "/deck" && (
+                        {isLoggedIn() && !deckStarted && pathName !== "/deck" && (
                             <Button
                                 onClick={handleLogout}
                                 color="secondary"
@@ -154,7 +155,7 @@ export default function Nav() {
         </AppBar>
         }
         {/* Bottom Navigation for mobile - only for authenticated users */}
-        {isMobile && isLoggedIn() && pathName !== '/deck' && (
+        {isMobile && isLoggedIn() && !deckStarted && pathName !== '/deck' && (
             <>
                 {/* Floating Action Button for Add Deck */}
                 <Fab
@@ -212,7 +213,25 @@ export default function Nav() {
         <ExitDeckConfirmDialog
             open={exitDialogOpen}
             onClose={() => setExitDialogOpen(false)}
-            onConfirm={() => { setExitDialogOpen(false); goToDeckSelector(); }}
+            title={isReviewPath ? 'Exit Review?' : 'Exit Deck?'}
+            description={
+              isReviewPath ? (
+                <>
+                  Are you sure you want to exit the review session? <br />
+                  <strong>Your progress is saved on this device.</strong> You can pick up where you left off if you resume a review on the same device.
+                </>
+              ) : undefined
+            }
+            confirmLabel={isReviewPath ? 'Exit Review' : 'Exit Deck'}
+            onConfirm={() => {
+              setExitDialogOpen(false);
+              if (isReviewPath) {
+                dispatch({ type: 'deck/setDeckStarted', value: false });
+                navigate('/review');
+              } else {
+                goToDeckSelector();
+              }
+            }}
         />
         <DeckManagementModal userId={authCtx.userId} addListDialogOpen={modalCtx.isModalOpen} closeDialog={() => modalCtx.closeModal()} />
         </>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from 'hooks/useAuth';
 import { useReviewSession } from './hooks/useReviewSession';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import {
   Button,
   Select,
@@ -9,9 +10,15 @@ import {
   Box,
   Typography,
 } from '@mui/material';
+import StackedFlashCard from '../../components/StackedFlashCard';
+import AutoSpeakToggle from '../../components/AutoSpeakToggle';
+import ProgressBar from '../Deck/components/ProgressBar';
+import { speak } from '../../utils/speech';
 
 const ReviewSession = () => {
   const { user } = useAuth();
+  const dispatch = useAppDispatch();
+  const deckStarted = useAppSelector(state => state.deckStarted);
   const {
     sessionState,
     options,
@@ -27,6 +34,32 @@ const ReviewSession = () => {
   } = useReviewSession({ userId: user?.id || '' });
 
   const [isFlipped, setIsFlipped] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState<boolean>(() => {
+    const stored = sessionStorage.getItem('autoSpeakReview');
+    return stored ? stored === 'true' : false;
+  });
+
+  // Persist autoSpeak preference for session
+  useEffect(() => {
+    sessionStorage.setItem('autoSpeakReview', autoSpeak.toString());
+  }, [autoSpeak]);
+
+  // Sync global deckStarted flag to hide nav and show exit button during review
+  useEffect(() => {
+    dispatch({ type: 'deck/setDeckStarted', value: sessionState === 'active' });
+    // Cleanup on unmount
+    return () => {
+      dispatch({ type: 'deck/setDeckStarted', value: false });
+    };
+  }, [sessionState, dispatch]);
+
+  // When the global flag is cleared (e.g., via Exit Review), reset the local session
+  useEffect(() => {
+    if (!deckStarted && sessionState === 'active') {
+      restartSession();
+      setIsFlipped(false);
+    }
+  }, [deckStarted]);
 
   // Determine what appears on each side of the flashcard based on the selected review direction
   const getCardTexts = () => {
@@ -36,10 +69,25 @@ const ReviewSession = () => {
       : { front: currentTerm.definition, back: currentTerm.term };
   };
 
-  const handleFlip = () => {
+  // Auto-speak question when card loads
+  useEffect(() => {
+    if (!currentTerm || isFlipped || !autoSpeak) return;
+    const { front } = getCardTexts();
+    const langCode = options.direction === 'term_to_definition' ? currentTerm.language : 'en';
+    speak(front, langCode);
+  }, [currentTerm?.id, isFlipped, autoSpeak, options.direction]);
+
+  const handleReveal = () => {
     if (sessionState === 'active') {
       setIsFlipped(!isFlipped);
     }
+  };
+
+  const handleSpeak = () => {
+    if (!currentTerm) return;
+    const { front } = getCardTexts();
+    const langCode = options.direction === 'term_to_definition' ? currentTerm.language : 'en';
+    speak(front, langCode);
   };
 
   const handleResponse = (rating: 'hard' | 'okay' | 'easy') => {
@@ -49,18 +97,16 @@ const ReviewSession = () => {
     }
   };
 
-  if (!user) {
-    return <Typography>Please log in to start a review session.</Typography>;
-  }
+  // Build content based on session state
+  let content: React.ReactNode = null;
 
-  if (sessionState === 'configuring') {
-    return (
+  if (!user) {
+    content = <Typography>Please log in to start a review session.</Typography>;
+  } else if (sessionState === 'configuring') {
+    content = (
       <Box className="review-config">
         <Typography variant="h4">Setup Review</Typography>
-        <Select
-          value={options.language}
-          onChange={(e) => updateOptions({ language: e.target.value })}
-        >
+        <Select value={options.language} onChange={(e) => updateOptions({ language: e.target.value })}>
           <MenuItem value="all">All Languages</MenuItem>
           {/* TODO: Populate with user's languages */}
         </Select>
@@ -86,18 +132,12 @@ const ReviewSession = () => {
         </Button>
       </Box>
     );
-  }
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Typography color="error">Error: {error.message}</Typography>;
-  }
-
-  if (sessionState === 'finished') {
-    return (
+  } else if (loading) {
+    content = <CircularProgress />;
+  } else if (error) {
+    content = <Typography color="error">Error: {error.message}</Typography>;
+  } else if (sessionState === 'finished') {
+    content = (
       <Box className="review-summary">
         <Typography variant="h4">Session Complete!</Typography>
         <Typography>You reviewed {terms.length} terms.</Typography>
@@ -106,46 +146,63 @@ const ReviewSession = () => {
         </Button>
       </Box>
     );
-  }
-
-  if (sessionState === 'active' && currentTerm) {
+  } else if (sessionState === 'active' && currentTerm) {
     const { front, back } = getCardTexts();
-    return (
-      <Box className="review-active">
-        <Box className="progress-bar">
-          <Typography>
-            Card {currentCardIndex + 1} of {terms.length}
-          </Typography>
-        </Box>
-        <Box className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={handleFlip}>
-          <Box className="card-inner">
-            <Box className="card-front">
-              <Typography variant="h2">{front}</Typography>
-            </Box>
-            <Box className="card-back">
-              <Typography variant="h3">{back}</Typography>
-            </Box>
+    content = (
+      <>
+        <ProgressBar initialCount={terms.length} langOneArrLength={terms.length - currentCardIndex} />
+        <form id="mainApp">
+          <AutoSpeakToggle value={autoSpeak} onChange={setAutoSpeak} />
+          <StackedFlashCard
+            showAnswer={isFlipped}
+            question={front}
+            answer={back}
+            onReveal={handleReveal}
+            onSpeak={handleSpeak}
+          />
+          <Box className="btn-container flash-card-button-row">
+            {isFlipped ? (
+              <>
+                <Button variant="contained" color="primary" onClick={() => handleResponse('hard')}>
+                  Hard
+                </Button>
+                <Button variant="contained" color="warning" onClick={() => handleResponse('okay')}>
+                  Okay
+                </Button>
+                <Button variant="contained" color="success" onClick={() => handleResponse('easy')}>
+                  Easy
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleReveal}
+                data-testid="show-answer-button"
+              >
+                See Answer
+              </Button>
+            )}
           </Box>
-        </Box>
-        {isFlipped && (
-          <Box className="response-buttons">
-            <Button onClick={() => handleResponse('hard')}>Hard</Button>
-            <Button onClick={() => handleResponse('okay')}>Okay</Button>
-            <Button onClick={() => handleResponse('easy')}>Easy</Button>
-          </Box>
-        )}
-      </Box>
+        </form>
+      </>
     );
-  }
-
-  return (
-    <Box className="review-empty">
+  } else {
+    content = (
+      <Box className="review-empty">
         <Typography variant="h5">No terms found for this review session.</Typography>
         <Typography>Try adjusting your filters or adding more words to your Word Bank.</Typography>
         <Button variant="contained" onClick={restartSession}>
           Back to Setup
         </Button>
       </Box>
+    );
+  }
+
+  return (
+    <div className="container page-container Flashcard">
+      <div className="wrapper">{content}</div>
+    </div>
   );
 };
 
