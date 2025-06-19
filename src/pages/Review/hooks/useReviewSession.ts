@@ -49,7 +49,7 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
     nextFetchPolicy: 'network-only',
     context: {
       headers: {
-        Authorization: userToken ? `Bearer ${userToken}` : '',
+        authorization: userToken ? `Bearer ${userToken}` : '',
       },
     },
   });
