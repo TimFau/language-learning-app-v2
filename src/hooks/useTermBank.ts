@@ -111,6 +111,8 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
         const englishTerm = isLang1English ? item.Language1 : item.Language2;
         const otherTerm = isLang1English ? item.Language2 : item.Language1;
 
+        const today = new Date().toISOString().split('T')[0];
+
         const newTerm: SavedTermInput = {
           term: englishTerm,
           definition: otherTerm,
@@ -119,6 +121,10 @@ export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBank
           source_deck: { id: sourceDeckId },
           source_term_key: sourceKey,
           source_definition: otherTerm,
+          next_review_at: today,
+          interval: 0,
+          ease_factor: 2.5,
+          repetition: 0,
         };
 
         return [newTerm];

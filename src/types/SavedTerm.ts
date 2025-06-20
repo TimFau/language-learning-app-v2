@@ -17,6 +17,10 @@ export interface SavedTermInput {
   source_definition?: string;
   sync_preference?: SyncPreference;
   last_synced_at?: Date;
+  next_review_at?: string;
+  interval?: number;
+  ease_factor?: number;
+  repetition?: number;
 }
 
 export interface SavedTermMetadata {

@@ -234,6 +234,7 @@ export const SAVE_TERM = gql`
     $definition: String!, 
     $language: String!, 
     $source_deck_id: ID!,
+    $today: Date!,
     $source_term_key: String,
     $source_definition: String,
     $sync_preference: String,
@@ -250,6 +251,10 @@ export const SAVE_TERM = gql`
         source_definition: $source_definition
         sync_preference: $sync_preference
         last_synced_at: $last_synced_at
+        next_review_at: $today
+        interval: 0
+        ease_factor: 2.5
+        repetition: 0
       }
     ) {
       id
@@ -260,6 +265,10 @@ export const SAVE_TERM = gql`
       source_definition
       sync_preference
       last_synced_at
+      next_review_at
+      interval
+      ease_factor
+      repetition
       source_deck {
         id
         deck_name
@@ -439,6 +448,62 @@ export const GET_ALL_SAVED_TERMS_FOR_REVIEW = gql`
       term
       definition
       language
+    }
+  }
+`;
+
+// === Spaced Repetition (SRS) ===
+
+export const UPDATE_SRS_DATA = gql`
+  mutation UpdateSrsData($termId: ID!, $data: update_saved_terms_input!) {
+    update_saved_terms_item(id: $termId, data: $data) {
+      id
+      next_review_at
+      interval
+      ease_factor
+      repetition
+    }
+  }
+`;
+
+export const GET_DUE_SAVED_TERMS_FOR_REVIEW_BY_LANGUAGE = gql`
+  query GetDueSavedTermsForReviewByLanguage($language: String!, $limit: Int, $today: String!) {
+    saved_terms(
+      filter: {
+        _and: [
+          { language: { _eq: $language } },
+          { next_review_at: { _lte: $today } }
+        ]
+      },
+      limit: $limit,
+      sort: "random"
+    ) {
+      id
+      term
+      definition
+      language
+      next_review_at
+      interval
+      ease_factor
+      repetition
+    }
+  }
+`;
+
+export const GET_ALL_DUE_SAVED_TERMS_FOR_REVIEW = gql`
+  query GetAllDueSavedTermsForReview($limit: Int, $today: String!) {
+    saved_terms(
+      filter: { next_review_at: { _lte: $today } },
+      limit: $limit
+    ) {
+      id
+      term
+      definition
+      language
+      next_review_at
+      interval
+      ease_factor
+      repetition
     }
   }
 `;

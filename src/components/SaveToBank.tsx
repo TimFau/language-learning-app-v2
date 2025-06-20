@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useLazyQuery } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import { Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import type { GraphQLError } from 'graphql';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/auth-context';
 import { SAVE_TERM, CHECK_TERM_SAVED, GET_DECK_BY_SHEET_ID } from '../queries';
 import { SavedTermMetadata, createSavedTermInput } from '../types/SavedTerm';
@@ -34,18 +34,26 @@ export default function SaveToBank({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   
-  // Check if term is already saved
-  const { data: savedData, loading: checkingStatus } = useQuery(CHECK_TERM_SAVED, {
-    variables: { term, language },
+  // Lazy query to check if term is already saved (requires valid auth token)
+  const [checkTermSaved, {
+    data: savedData,
+    loading: checkingStatus
+  }] = useLazyQuery(CHECK_TERM_SAVED, {
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'network-only',
     context: {
       headers: {
         authorization: `Bearer ${authCtx.userToken}`
       }
-    },
-    skip: !authCtx.userToken
+    }
   });
+
+  // Trigger check once token is available or when term/language change
+  useEffect(() => {
+    if (authCtx.userToken) {
+      checkTermSaved({ variables: { term, language } });
+    }
+  }, [authCtx.userToken, term, language]);
 
   // Get deck UUID by sheet ID
   const [getDeckId, { loading: loadingDeckId }] = useLazyQuery(GET_DECK_BY_SHEET_ID, {
@@ -62,13 +70,10 @@ export default function SaveToBank({
         authorization: `Bearer ${authCtx.userToken}`
       }
     },
-    // Refetch the check query after saving
-    refetchQueries: [
-      {
-        query: CHECK_TERM_SAVED,
-        variables: { term, language }
-      }
-    ]
+    // Re-run saved check after successful save
+    onCompleted: () => {
+      checkTermSaved({ variables: { term, language } });
+    }
   });
 
   const handleSave = async (e: React.MouseEvent) => {
@@ -108,12 +113,15 @@ export default function SaveToBank({
       const sourceDeckId = deckData.decks[0].id;
 
       // Save the term with the deck's UUID
+      const today = new Date().toISOString().split('T')[0];
+
       await saveTerm({
         variables: {
           term,
           definition,
           language,
           source_deck_id: sourceDeckId,
+          today,
           source_term_key: termIndex !== undefined ? `${termIndex + 1}` : undefined,
           source_definition: definition
         }

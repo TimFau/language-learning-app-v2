@@ -27,6 +27,8 @@ const ReviewSession = () => {
     currentCardIndex,
     loading,
     error,
+    dueCount,
+    nextSessionInDays,
     startSession,
     restartSession,
     recordResponse,
@@ -106,6 +108,7 @@ const ReviewSession = () => {
     content = (
       <Box className="review-config">
         <Typography variant="h4">Setup Review</Typography>
+        <Typography variant="subtitle1">{dueCount} terms Due Today</Typography>
         <Select value={options.language} onChange={(e) => updateOptions({ language: e.target.value })}>
           <MenuItem value="all">All Languages</MenuItem>
           {/* TODO: Populate with user's languages */}
@@ -127,9 +130,14 @@ const ReviewSession = () => {
           <MenuItem value="term_to_definition">English → Translation</MenuItem>
           <MenuItem value="definition_to_term">Translation → English</MenuItem>
         </Select>
-        <Button variant="contained" onClick={startSession}>
+        <Button variant="contained" onClick={startSession} disabled={dueCount === 0}>
           Start Review
         </Button>
+        {dueCount === 0 && (
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            No terms are due right now. You can come back later or enable extra review.
+          </Typography>
+        )}
       </Box>
     );
   } else if (loading) {
@@ -141,6 +149,11 @@ const ReviewSession = () => {
       <Box className="review-summary">
         <Typography variant="h4">Session Complete!</Typography>
         <Typography>You reviewed {terms.length} terms.</Typography>
+        {nextSessionInDays !== null && (
+          <Typography sx={{ mt: 1 }}>
+            Next session available in {nextSessionInDays} {nextSessionInDays === 1 ? 'day' : 'days'}.
+          </Typography>
+        )}
         <Button variant="contained" onClick={restartSession}>
           Review Again
         </Button>
