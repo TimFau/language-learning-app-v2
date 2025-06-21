@@ -1,11 +1,16 @@
 import { useContext, useState } from 'react';
-import { Container, Typography, Grid, Button, Box, CircularProgress } from '@mui/material';
+import { Container, Typography, Button, Box, CircularProgress } from '@mui/material';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_SAVED_TERMS, DELETE_SAVED_TERM } from '../../queries';
 import SavedTermCard from '../../components/SavedTermCard';
 import AuthContext from '../../context/auth-context';
 import { Navigate } from 'react-router-dom';
 import { SavedTermResponse } from '../../types/SavedTerm';
+import Grid from '@mui/material/Grid';
+
+// Temporary alias to bypass strict type constraints in MUI v7 until their Grid typings stabilize
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MGrid: any = Grid;
 
 const TERMS_PER_PAGE = 20;
 
@@ -106,13 +111,13 @@ const WordBankPage = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={3}>
+      <MGrid container spacing={3}>
         {savedTerms.map((term) => (
-          <Grid item={true} key={term.id} xs={12} sm={6} md={4}>
+          <MGrid item key={term.id} xs={12} sm={6} md={4}>
             <SavedTermCard term={term} onDelete={handleDelete} />
-          </Grid>
+          </MGrid>
         ))}
-      </Grid>
+      </MGrid>
 
       {hasMore && (
         <Box mt={4} display="flex" justifyContent="center">

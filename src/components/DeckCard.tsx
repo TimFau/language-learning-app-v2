@@ -42,7 +42,6 @@ const DeckCard = (props: DeckCardProps) => {
         deckId,
         language: targetLanguage,
         userToken: authCtx.userToken || '',
-        userId: authCtx.userId
     });
 
     const handleClick = () => {

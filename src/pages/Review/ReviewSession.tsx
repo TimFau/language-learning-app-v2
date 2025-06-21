@@ -33,7 +33,7 @@ const ReviewSession = () => {
     restartSession,
     recordResponse,
     updateOptions,
-  } = useReviewSession({ userId: user?.id || '' });
+  } = useReviewSession({});
 
   const [isFlipped, setIsFlipped] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState<boolean>(() => {

@@ -9,7 +9,6 @@ interface UseTermBankProps {
   deckId: string;
   language: string; // Target language (e.g., "Spanish")
   userToken: string;
-  userId: string;
 }
 
 interface TermBankState {
@@ -19,7 +18,7 @@ interface TermBankState {
   showConfirm: boolean;
 }
 
-export const useTermBank = ({ deckId, language, userToken, userId }: UseTermBankProps) => {
+export const useTermBank = ({ deckId, language, userToken }: UseTermBankProps) => {
   const [state, setState] = useState<TermBankState>({
     isSaving: false,
     progress: 0,

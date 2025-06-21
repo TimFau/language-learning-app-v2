@@ -9,9 +9,7 @@ import { Term } from 'types/Term';
 import AuthContext from 'context/auth-context';
 import { applySm2 } from '../../../utils/srs';
 
-interface UseReviewSessionProps {
-  userId: string;
-}
+interface UseReviewSessionProps {}
 
 interface ReviewOptions {
   language: string; // 'all' or a specific language code like 'es'
@@ -19,7 +17,7 @@ interface ReviewOptions {
   direction: 'term_to_definition' | 'definition_to_term';
 }
 
-export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
+export const useReviewSession = ({}: UseReviewSessionProps) => {
   const { userToken, authLoading } = useContext(AuthContext);
   const [sessionState, setSessionState] = useState<'configuring' | 'active' | 'finished'>('configuring');
   const [options, setOptions] = useState<ReviewOptions>({
@@ -28,7 +26,6 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
     direction: 'term_to_definition',
   });
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, 'hard' | 'okay' | 'easy'>>({});
   const [nextIntervals, setNextIntervals] = useState<number[]>([]);
   const [nextSessionInDays, setNextSessionInDays] = useState<number | null>(null);
 
@@ -76,7 +73,6 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
 
   const startSession = () => {
     setCurrentCardIndex(0);
-    setResponses({});
     setNextIntervals([]);
     setNextSessionInDays(null);
     setSessionState('active');
@@ -96,7 +92,7 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
   };
 
   const recordResponse = async (termId: string, rating: 'hard' | 'okay' | 'easy') => {
-    setResponses(prev => ({ ...prev, [termId]: rating }));
+    // reset any per-card response tracking if needed (currently not stored)
 
     const qualityMap: Record<'hard' | 'okay' | 'easy', 0 | 3 | 5> = {
       hard: 0,

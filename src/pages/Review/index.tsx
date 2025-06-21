@@ -1,4 +1,3 @@
-import React from 'react';
 import ReviewSession from './ReviewSession';
 import '../../css/pages/review.scss';
 

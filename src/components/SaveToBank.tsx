@@ -7,14 +7,12 @@ import type { GraphQLError } from 'graphql';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/auth-context';
 import { SAVE_TERM, CHECK_TERM_SAVED, GET_DECK_BY_SHEET_ID } from '../queries';
-import { SavedTermMetadata, createSavedTermInput } from '../types/SavedTerm';
 
 interface SaveToBankProps {
   term: string;
   definition: string;
   language: string;
   className?: string;
-  metadata?: Partial<SavedTermMetadata>;
   deckId?: string;
   deckName?: string;
   termIndex?: number;
@@ -24,8 +22,7 @@ export default function SaveToBank({
   term, 
   definition, 
   language, 
-  className, 
-  metadata,
+  className,
   deckId,
   deckName,
   termIndex 
