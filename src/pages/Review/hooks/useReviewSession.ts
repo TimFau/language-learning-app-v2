@@ -20,7 +20,7 @@ interface ReviewOptions {
 }
 
 export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
-  const { userToken } = useContext(AuthContext);
+  const { userToken, authLoading } = useContext(AuthContext);
   const [sessionState, setSessionState] = useState<'configuring' | 'active' | 'finished'>('configuring');
   const [options, setOptions] = useState<ReviewOptions>({
     language: 'all',
@@ -51,7 +51,7 @@ export const useReviewSession = ({ userId }: UseReviewSessionProps) => {
 
   const { data, loading, error, refetch } = useQuery(query, {
     variables,
-    skip: false,
+    skip: authLoading || !userToken,
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'network-only',
     context: {
